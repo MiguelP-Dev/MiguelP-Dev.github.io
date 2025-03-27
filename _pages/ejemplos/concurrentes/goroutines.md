@@ -1,3 +1,13 @@
+---
+layout: default
+title: Goroutines | Miguel's Programing Notes
+description: Guía completa sobre el uso de goroutines en Go
+permalink: /ejemplos/concurrentes/goroutines/
+categories: ejemplos
+icon: ⚡
+destacado: true
+---
+
 # Aprendiendo Goroutines
 
 ## 1 Introducción a Goroutines
@@ -178,4 +188,4 @@ go func(ctx context.Context) {
 cancel()
 ```
 
-El uso del paquete **`context`** permite un control más flexible de las Goroutines, proporcionando capacidades de tiempo de espera y cancelación. En aplicaciones grandes o microservicios, **`context`** es la forma recomendada de controlar los ciclos de vida de las Goroutines.
+El uso del paquete **`context`** permite un control más flexible de las Goroutines, proporcionando capacidades de tiempo de espera y cancelación. En aplicaciones grandes o microservicios, **`context`** es la forma recomendada de controlar los ciclos de vida de las Goroutines. 

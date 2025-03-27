@@ -1,3 +1,12 @@
+---
+layout: default
+title: net | Miguel's Programing Notes
+description: Guía del paquete net de Go para desarrollo de aplicaciones en red
+permalink: /paquetes/net/
+categories: paquetes
+icon: 🌐
+---
+
 # Paquete `net` en Go: Guía Completa con Ejemplos Prácticos
 
 El paquete `net` en Go es fundamental para desarrollar aplicaciones de red, ofreciendo funcionalidades para manejar conexiones TCP/UDP, resolver direcciones DNS y trabajar con interfaces de red. A continuación, se presenta una guía detallada con ejemplos y mejores prácticas.

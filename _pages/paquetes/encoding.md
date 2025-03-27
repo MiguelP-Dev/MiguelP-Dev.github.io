@@ -1,3 +1,12 @@
+---
+layout: default
+title: encoding | Miguel's Programing Notes
+description: Guía del paquete encoding de Go para codificación y decodificación de datos
+permalink: /paquetes/encoding/
+categories: paquetes
+icon: 🔄
+---
+
 # Paquete encoding en Go
 
 El paquete `encoding` proporciona interfaces y subpaquetes para codificar y decodificar datos en varios formatos. Este documento explora en detalle sus características y casos de uso prácticos.

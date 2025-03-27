@@ -1,3 +1,12 @@
+---
+layout: default
+title: fmt | Miguel's Programing Notes
+description: Guía completa del paquete fmt de Go para formateo e I/O
+permalink: /paquetes/fmt/
+categories: paquetes
+icon: 📝
+---
+
 # Paquete `fmt` en Go: Guía Completa con Ejemplos Avanzados
 
 El paquete `fmt` es fundamental para operaciones de entrada/salida en Go. Esta guía cubre todas sus funciones con ejemplos realistas y técnicas avanzadas.

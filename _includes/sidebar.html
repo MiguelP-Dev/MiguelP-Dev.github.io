@@ -1,7 +1,11 @@
 <aside class="sidebar" id="dynamic-sidebar">
+    <div class="sidebar-header">
+        <h3 class="sidebar-title">{{ site.title }}</h3>
+    </div>
+    
     <div class="sidebar-content">
         {% for section in site.data.navigation.sections %}
-            {% if page.url contains section.path %}
+            {% if page.url contains section.path or page.url == "/" %}
                 <h3 class="sidebar-title">{{ section.icon }} {{ section.title }}</h3>
                 <nav class="sidebar-nav">
                     {% for item in section.items %}
