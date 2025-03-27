@@ -1,0 +1,22 @@
+<nav class="navbar">
+    <div class="nav-container">
+        <a href="{{ '/' | relative_url }}" class="nav-brand">
+            {{ site.title }}
+        </a>
+
+        <div class="nav-sections">
+            {% for section in site.data.navigation.sections %}
+                {% assign is_active = false %}
+                {% if page.url contains section.path %}
+                    {% assign is_active = true %}
+                {% endif %}
+                
+                <a href="{{ section.path | relative_url }}"
+                    class="nav-section {% if is_active %}active{% endif %}"
+                    data-section="{{ section.title | slugify }}">
+                    {{ section.icon }} {{ section.title }}
+                </a>
+            {% endfor %}
+        </div>
+    </div>
+</nav>

@@ -1,222 +1,31 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MiguelP-Dev - Documentos de Programación</title>
-    <link rel="stylesheet" href="/static/css/styles.css" />
-</head>
-<body>
-    <div class="app">
-        <nav class="navbar main-navbar">
-            <div class="nav-group">
-                <button><a href="#" data-page="home" class="active">Inicio</a></button>
-                <button><a href="goPackages/index.html" data-page="home">Paquetes de Go</a></button>
-                <button><a href="#" data-page="home">Ejemplos en Go</a></button>
-                <button><a href="#" data-page="home">Ejemplos en SQL</a></button>
-                <button><a href="#" data-page="home"Patrones de Diseño en Go">Patrones de Diseño</a></button>
-            </div> 
-        </nav>
-
-        <div class="container">
-            <main class="main-content">
-                <article class="article">
-                    <h1>Bienvenido a Go Docs</h1>
-                    <p>Esta es una plataforma de documentación con un enfoque en desarrollo backend, diseñada para tener a mano mis recursos de programación.</p>
-
-                    <h2>📚 Paquetes de Golang Principales</h2>
-
-                    <div class="main-grid">
-                        <a class="card" href="#" target="_blank"><div >
-                            <div class="card-icon">📦</div>
-                            <h3>fmt</h3>
-                            <p>Manejo de formato de entrada/salida. Paquete fundamental para operaciones de E/S formateadas.</p>
-                        </div></a>
-                        
-                        <a class="card" href="#" target="_blank"><div>
-                            <div class="card-icon">🌐</div>
-                            <h3>net/http</h3>
-                            <p>Construcción de aplicaciones web. Creación de servidores HTTP y clientes Web.</p>
-                        </div></a>
-                        
-                        <a class="card" href="#" target="_blank"><div>
-                            <div class="card-icon">📤</div>
-                            <h3>encoding/json</h3>
-                            <p>Manejo de datos JSON. Serialización y deserialización de estructuras JSON.</p>
-                        </div></a>
-                        
-                        <a class="card" href="#" target="_blank"><div>
-                            <div class="card-icon">💾</div>
-                            <h3>os</h3>
-                            <p>Interacción con el sistema operativo. Operaciones con archivos y variables de entorno.</p>
-                        </div></a>
-                        
-                        <a class="card" href="#" target="_blank"><div>
-                            <div class="card-icon">🔄</div>
-                            <h3>sync</h3>
-                            <p>Programación concurrente. Sincronización de goroutines con WaitGroup y Mutex.</p>
-                        </div></a>
-                        
-                        <a class="card" href="#" target="_blank"><div>
-                            <div class="card-icon">🕰️</div>
-                            <h3>context</h3>
-                            <p>Manejo de contextos. Control de tiempos de espera y cancelación de operaciones.</p>
-                        </div></a>
-                        
-                        <a class="card" href="#" target="_blank"><div>
-                            <div class="card-icon">🔌</div>
-                            <h3>database/sql</h3>
-                            <p>Acceso a bases de datos. Interacción con bases de datos relacionales.</p>
-                        </div></a>
-                        
-                        <a class="card" href="#" target="_blank"><div>
-                            <div class="card-icon">🧪</div>
-                            <h3>testing</h3>
-                            <p>Pruebas unitarias. Pruebas automatizadas para asegurar la calidad del código.</p>
-                        </div></a>
-                        
-                        <a class="card" href="#" target="_blank"><div>
-                            <div class="card-icon">🔤</div>
-                            <h3>strings</h3>
-                            <p>Manipulación de cadenas. Funciones para trabajar con cadenas de texto.</p>
-                        </div></a>
-                        
-                        <a class="card" href="#" target="_blank"><div>
-                            <div class="card-icon">📅</div>
-                            <h3>time</h3>
-                            <p>Manejo de fechas y horas. Operaciones con fechas y horas.</p>
-                        </div></a>
-                        
-                        <a class="card" href="#" target="_blank"><div>
-                            <div class="card-icon">🔄</div>
-                            <h3>sort</h3>
-                            <p>Ordenación de datos. Funciones para ordenar colecciones de datos.</p>
-                        </div></a>
-                        
-                        <a class="card" href="#" target="_blank"><div>
-                            <div class="card-icon">🔍</div>
-                            <h3>regexp</h3>
-                            <p>Expresiones regulares. Operaciones con expresiones regulares.</p>
-                        </div></a>
-                    </div>
-
-                    <h2>📚 Paquetes de Golang Secundarios</h2>
-                    <div class="main-grid">
-                        <a class="card" href="#" target="_blank"><div>
-                            <div class="card-icon">📦</div>
-                            <h3>log</h3>
-                            <p>Manejo de logs. Operaciones para registrar y gestionar logs.</p>
-                        </div></a>
-                        
-                        <a class="card" href="#" target="_blank"><div>
-                            <div class="card-icon">📤</div>
-                            <h3>yaml</h3>
-                            <p>Serialización y deserialización de datos YAML.</p>
-                        </div></a>
-                        
-                        <a class="card" href="#" target="_blank"><div>
-                            <div class="card-icon">📤</div>
-                            <h3>toml</h3>
-                            <p>Serialización y deserialización de datos TOML.</p>
-                        </div></a>
-                        
-                        <a class="card" href="#" target="_blank"><div>
-                            <div class="card-icon">📤</div>
-                            <h3>xml</h3>
-                            <p>Serialización y deserialización de datos XML.</p>
-                        </div></a>
-                        
-                        <a class="card" href="#" target="_blank"><div>
-                            <div class="card-icon">📤</div>
-                            <h3>csv</h3>
-                            <p>Serialización y deserialización de datos CSV.</p>
-                        </div></a>
-                        
-                        <a class="card" href="#" target="_blank"><div>
-                            <div class="card-icon">📤</div>
-                            <h3>xml</h3>
-                            <p>Serialización y deserialización de datos XML.</p>
-                        </div></a>
-                        
-                        <a class="card" href="#" target="_blank"><div>
-                            <div class="card-icon">📤</div>
-                            <h3>html</h3>
-                            <p>Serialización y deserialización de datos HTML.</p>
-                        </div></a>
-                        
-                        <a class="card" href="#" target="_blank"><div>
-                            <div class="card-icon">📤</div>
-                            <h3>svg</h3>
-                            <p>Serialización y deserialización de datos SVG.</p>
-                        </div></a>
-                        
-                        <a class="card" href="#" target="_blank"><div>
-                            <div class="card-icon">📤</div>
-                            <h3>png</h3>
-                            <p>Serialización y deserialización de datos PNG.</p>
-                        </div></a>
-                        
-                        <a class="card" href="#" target="_blank"><div>
-                            <div class="card-icon">📤</div>
-                            <h3>jpg</h3>
-                            <p>Serialización y deserialización de datos JPG.</p>
-                        </div></a>
-                        
-                        <a class="card" href="#" target="_blank"><div>
-                            <div class="card-icon">📤</div>
-                            <h3>jpeg</h3>
-                            <p>Serialización y deserialización de datos JPEG.</p>
-                        </div></a>
-                        
-                        <a class="card" href="#" target="_blank"><div>
-                            <div class="card-icon">📤</div>
-                            <h3>gif</h3>
-                            <p>Serialización y deserialización de datos GIF.</p>
-                        </div></a>
-                    </div>
-
-                    <h2>🚀 Ejemplos de Código en Golang</h2>
-                    <div class="main-grid">
-                        <a class="card" href="#" target="_blank"><div>
-                            <div class="card-icon">🌳</div>
-                            <h3>Búsqueda y Creación en Árboles Binarios</h3>
-                        </div></a>
-                        
-                        <a class="card" href="#" target="_blank"><div>
-                            <div class="card-icon">🧪</div>
-                            <h3>Testing con Go</h3>
-                        </div></a>
-                        
-                        <a class="card" href="#" target="_blank"><div>
-                            <div class="card-icon">🧱</div>
-                            <h3>Clase de Pilas y Colas</h3>
-                        </div></a>
-                        
-                        <a class="card" href="#" target="_blank"><div>
-                            <div class="card-icon">🔍</div>
-                            <h3>Expresiones Regulares</h3>
-                        </div></a>
-                        
-                        <a class="card" href="#" target="_blank"><div>
-                            <div class="card-icon">🎚️</div>
-                            <h3>Enum e Iteraciones</h3>
-                        </div></a>
-                        
-                        <a class="card" href="#" target="_blank"><div>
-                            <div class="card-icon">⚡</div>
-                            <h3>Gorutinas Avanzadas</h3>
-                        </div></a>
-                    </div>
-                </article>
-            </main>
+---
+# Front Matter de Jekyll
+layout: default
+title: Inicio | Miguel's Programing Notes
+---
+<!-- index.html -->
+<div class="home-content">
+    <article class="article">
+        <h1 class="page-heading">{{ site.title }}</h1>
+        
+        <div class="intro">
+            <p>Plataforma de documentación para desarrollo backend y arquitectura de software</p>
         </div>
-    </div>
-        <!-- Icono flotante de GitHub -->
-        <a href="https://github.com/MiguelP-Dev" target="_blank" class="github-floating">
-            <img src="https://cdn-icons-png.flaticon.com/512/25/25231.png" 
-                alt="MiguelP-Dev" 
-                class="github-icon"
-                onerror="this.style.display='none'">
-        </a>
-    </body>
-</html>
+
+        <h2>📚 Paquetes Destacados</h2>
+        
+        <div class="grid-container">
+            <!-- Generación dinámica de tarjetas -->
+            {% assign sorted_pages = site.pages | where:"categories","paquetes" | sort:"title" %}
+            {% for package in sorted_pages %}
+                <a href="{{ package.url | relative_url }}" class="card">
+                    <div>
+                        <div class="card-icon">{{ package.icon }}</div>
+                        <h3>{{ package.title }}</h3>
+                        <p>{{ package.description }}</p>
+                    </div>
+                </a>
+            {% endfor %}
+        </div>
+    </article>
+</div>

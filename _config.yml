@@ -1,0 +1,8 @@
+title: Miguel's Programing Notes
+theme: minima
+markdown: kramdown
+permalink: pretty
+include: ['_pages']
+sass:
+  sass_dir: _sass
+github_username: MiguelP-Dev

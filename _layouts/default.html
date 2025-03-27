@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ page.title | default: site.title }}</title>
+    <link rel="stylesheet" href="{{ '/assets/css/styles.css' | relative_url }}">
+</head>
+<body>
+    <div class="app">
+        {% include navbar.html %}
+        
+        <div class="container">
+            {% include sidebar.html %}
+            
+            <main class="content">
+                {{ content }}
+            </main>
+        </div>
+        
+        {% include github-floating.html %}
+    </div>
+    
+    <script src="{{ '/assets/js/scripts.js' | relative_url }}"></script>
+</body>
+</html>

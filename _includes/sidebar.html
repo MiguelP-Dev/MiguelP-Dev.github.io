@@ -1,0 +1,18 @@
+<aside class="sidebar" id="dynamic-sidebar">
+    <div class="sidebar-content">
+        {% for section in site.data.navigation.sections %}
+            {% if page.url contains section.path %}
+                <h3 class="sidebar-title">{{ section.icon }} {{ section.title }}</h3>
+                <nav class="sidebar-nav">
+                    {% for item in section.items %}
+                        <a href="{{ item.path | relative_url }}"
+                            class="sidebar-item {% if page.url == item.path %}active{% endif %}"
+                            data-item="{{ item.name | slugify }}">
+                            {{ item.name }}
+                        </a>
+                    {% endfor %}
+                </nav>
+            {% endif %}
+        {% endfor %}
+    </div>
+</aside>

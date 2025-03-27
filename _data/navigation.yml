@@ -1,0 +1,42 @@
+# # _data/navigation.yml
+# - name: Inicio
+#   link: /
+# - name: Paquetes de Go
+#   link: /_pages/paquetes/
+# - name: Ejemplos de Go
+#   link: /_pages/ejemplos/
+
+# _data/navigation.yml
+sections:
+  - title: Paquetes
+    path: /paquetes/
+    icon: 📦
+    items:
+      - name: fmt
+        path: /paquetes/fmt
+      - name: net/http
+        path: /paquetes/net
+      - name: encoding
+        path: /paquetes/encoding
+
+  - title: Ejemplos
+    path: /ejemplos/
+    icon: 🧩
+    items:
+      - name: API REST
+        path: /ejemplos/api-rest/
+      - name: Concurrentes
+        path: /ejemplos/concurrentes/
+      - name: Test Unitarios
+        path: /ejemplos/tests/
+
+  # - title: SQL
+  #   path: /sql/
+  #   icon: 🗃️
+  #   items:
+  #     - name: Consultas
+  #       path: /sql/consultas/
+  #     - name: Transacciones
+  #       path: /sql/transacciones/
+  #     - name: ORM
+  #       path: /sql/orm/

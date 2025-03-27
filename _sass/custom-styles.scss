@@ -1,0 +1,33 @@
+
+### 6. **Adaptación de estilos (`_sass/custom-styles.scss`)**
+```scss
+// Integración con tema Jekyll
+@import "minima";
+
+// Tus estilos personalizados
+.app {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.sidebar {
+    // Mantén tus estilos originales
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    
+    &.active {
+        transform: translateX(0);
+    }
+}
+
+// Responsive design mejorado
+@include media-query($on-palm) {
+    .sidebar {
+        width: 80vw;
+    }
+    
+    .grid-container {
+        grid-template-columns: 1fr !important;
+    }
+}
