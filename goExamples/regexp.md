@@ -1,4 +1,4 @@
-# Guía detallada de expresiones regulares
+# Guía detallada de expresiones regulares en GO
 
 ## **¿Que son las expresiones regulares?**
 

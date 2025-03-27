@@ -1,8 +1,10 @@
-¡Con mucho gusto! Trabajar con archivos XML y JSON en Go es bastante directo gracias a los paquetes estándar `encoding/xml` y `encoding/json`. A continuación, te proporcionaré ejemplos para ambos casos.
+# Clase sobre el manejo de archivos XML y JSON
 
-### Trabajar con XML en Go
+Trabajar con archivos XML y JSON en Go es bastante directo gracias a los paquetes estándar `encoding/xml` y `encoding/json`.
 
-#### Leer XML
+## 2 Trabajar con XML en Go
+
+### Leer XML
 
 Supongamos que tienes un archivo `personas.xml` con el siguiente contenido:
 
@@ -62,7 +64,7 @@ func main() {
 }
 ```
 
-#### Escribir XML
+### Escribir XML
 
 Para crear un archivo XML a partir de estructuras de Go, puedes hacer lo siguiente:
 
@@ -111,9 +113,9 @@ func main() {
 }
 ```
 
-### Trabajar con JSON en Go
+## Trabajar con JSON en Go
 
-#### Leer JSON
+### Leer JSON
 
 Supongamos que tienes un archivo `personas.json` con el siguiente contenido:
 
@@ -167,7 +169,7 @@ func main() {
 }
 ```
 
-#### Escribir JSON
+### Escribir JSON
 
 Para crear un archivo JSON a partir de estructuras de Go, puedes hacer lo siguiente:
 
@@ -213,5 +215,3 @@ func main() {
 
 - **XML**: Usa el paquete `encoding/xml` para leer y escribir archivos XML.
 - **JSON**: Usa el paquete `encoding/json` para leer y escribir archivos JSON.
-
-Espero que estos ejemplos te sean útiles para trabajar con archivos XML y JSON en Go. Si tienes más preguntas o necesitas ayuda adicional, ¡estaré encantado de asistirte!

@@ -1,5 +1,7 @@
 # Aprendiendo Goroutines
+
 ## 1 Introducción a Goroutines
+
 **`1.1 Conceptos básicos de Concurrencia y Paralelismo`**
 
 La concurrencia y el paralelismo son dos conceptos comunes en la programación multi-hilos. Se utilizan para describir eventos o ejecuciones de programas que pueden ocurrir simultáneamente.
@@ -25,31 +27,33 @@ Las Goroutines son el concepto principal para lograr la programación concurrent
 `Diseño no bloqueante:` Las Goroutines no bloquean a otras Goroutines para ejecutarse en ciertas operaciones. Por ejemplo, mientras una Goroutine está esperando operaciones de E/S, otras Goroutines pueden continuar ejecutándose.
 
 ## 2 Creación y Gestión de Goroutines
+
 **`2.1 Cómo Crear una Goroutine`**
 
 En el lenguaje Go, puedes crear fácilmente una Goroutine usando la palabra clave go. Cuando precedes una llamada de función con la palabra clave go, la función se ejecutará de forma asíncrona en una nueva Goroutine.
 
 `Veamos un ejemplo simple:`
+
 ```go
 package main
 
 import (
-	"fmt"
-	"time"
-)
+    "fmt"
+    "time"
+        )
 
 // Define una función para imprimir Hola
 func decirHola() {
-	fmt.Println("Hola")
+    fmt.Println("Hola")
 }
 
 func main() {
-	// Inicia una nueva Goroutine usando la palabra clave go
-	go decirHola()
+    // Inicia una nueva Goroutine usando la palabra clave go
+    go decirHola()
 
-	// La Goroutine principal espera un tiempo para permitir que decirHola se ejecute
-	time.Sleep(1 * time.Second)
-	fmt.Println("Función principal")
+// La Goroutine principal espera un tiempo para permitir que decirHola se ejecute
+    time.Sleep(1 * time.Second)
+    fmt.Println("Función principal")
 }
 ```
 
@@ -136,6 +140,7 @@ Detener Goroutines
 En general, el final del programa implícitamente terminará todas las Goroutines. Sin embargo, en servicios de larga duración, es posible que necesitemos detener activamente las Goroutines.
 
 Usar canales para enviar señales de detención: Las Goroutines pueden sondear los canales para verificar señales de detención.
+
 ```go
 stop := make(chan struct{})
 
@@ -171,6 +176,6 @@ go func(ctx context.Context) {
 
 // cuando desees detener la Goroutine
 cancel()
-
 ```
+
 El uso del paquete **`context`** permite un control más flexible de las Goroutines, proporcionando capacidades de tiempo de espera y cancelación. En aplicaciones grandes o microservicios, **`context`** es la forma recomendada de controlar los ciclos de vida de las Goroutines.

@@ -1,4 +1,4 @@
-Aquí tienes una clase completa sobre HTTP en Go, incluyendo mejores prácticas:
+# Clase completa sobre HTTP en Go, incluyendo mejores prácticas
 
 ```go
 package main
@@ -206,6 +206,7 @@ func createUser(w http.ResponseWriter, r *http.Request) {
 **Prácticas recomendadas adicionales:**
 
 1. **Seguridad avanzada:**
+
    ```go
    func securityHeadersMiddleware(next http.Handler) http.Handler {
        return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -218,6 +219,7 @@ func createUser(w http.ResponseWriter, r *http.Request) {
    ```
 
 2. **Manejo de CORS:**
+
    ```go
    func corsMiddleware(next http.Handler) http.Handler {
        return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -236,6 +238,7 @@ func createUser(w http.ResponseWriter, r *http.Request) {
    ```
 
 3. **Rate Limiting:**
+
    ```go
    func rateLimitMiddleware(next http.Handler) http.Handler {
        limiter := NewLimiter(100) // 100 solicitudes por minuto
@@ -250,6 +253,7 @@ func createUser(w http.ResponseWriter, r *http.Request) {
    ```
 
 4. **Pruebas unitarias (ejemplo):**
+
    ```go
    func TestGetUsers(t *testing.T) {
        req := httptest.NewRequest(http.MethodGet, "/users", nil)

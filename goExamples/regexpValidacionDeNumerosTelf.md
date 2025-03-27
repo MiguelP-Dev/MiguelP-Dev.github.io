@@ -1,3 +1,5 @@
+# Ejemplo de Validación de números de teléfonos con Regexp
+
 Para validar números telefónicos, hay varios criterios que podemos considerar. Estos criterios pueden variar según el país y el formato específico de los números, pero aquí te dejo una guía general:
 
 1. **Longitud**: Verificar que el número tenga una cantidad adecuada de dígitos (normalmente entre 10 y 15 dígitos).
@@ -42,5 +44,3 @@ func main() {
 ```
 
 Este código en Go verifica que el número telefónico siga un formato correcto y contenga solo caracteres válidos. Si un número no cumple con estos criterios, se considera inválido.
-
-¡Espero que esto te sea útil! Si necesitas más detalles o tienes alguna otra pregunta, estoy aquí para ayudarte.

@@ -1,9 +1,12 @@
+# Ejemplo de laberinto con pseudocódigo
+
 Resolver un laberinto utilizando recursividad es una técnica elegante y efectiva. Aquí te explicaré paso a paso cómo puedes hacerlo:
 
-### Concepto Básico
+## Concepto Básico
+
 La idea principal es intentar moverse en diferentes direcciones (arriba, abajo, izquierda, derecha) desde la posición actual y usar recursividad para explorar el laberinto. Si llegamos a un punto sin salida, retrocedemos (backtracking) y probamos una ruta diferente.
 
-### Paso a Paso
+## Paso a Paso
 
 1. **Definir el laberinto y los movimientos posibles**:
    - Representa el laberinto como una matriz (array bidimensional).
@@ -19,7 +22,7 @@ La idea principal es intentar moverse en diferentes direcciones (arriba, abajo, 
    - Si alguno de los movimientos lleva a la salida, retorna `true`.
    - Si ninguno de los movimientos funciona, desmarca la celda y retorna `false` (backtracking).
 
-### Ejemplo Simplificado (Pseudocódigo)
+## Ejemplo Simplificado (Pseudocódigo)
 
 ```plaintext
 función resolverLaberinto(laberinto, x, y, solución)
@@ -51,7 +54,7 @@ función principal()
         imprimir "No hay solución"
 ```
 
-### Explicación:
+## Explicación
 
 1. **Definir el laberinto**: Representa el laberinto como una matriz 2D donde 1s representan paredes y 0s representan caminos.
 
@@ -61,4 +64,4 @@ función principal()
 
 4. **Backtracking**: Si un movimiento no lleva a la solución, desmarca la celda actual y retorna falso para intentar una nueva ruta.
 
-Este es un enfoque general para resolver un laberinto de manera recursiva utilizando backtracking. Si deseas implementar esto en un lenguaje de programación específico o necesitas más detalles, ¡házmelo saber! Estoy aquí para ayudarte.
+Este es un enfoque general para resolver un laberinto de manera recursiva utilizando backtracking.

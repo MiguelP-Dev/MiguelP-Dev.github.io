@@ -1,3 +1,5 @@
+# Ejemplo de validación de Url usando Regexp
+
 Para que una URL sea válida según un algoritmo sencillo, podemos considerar las siguientes características clave:
 
 1. **Formato Correcto**: La URL debe seguir el formato estándar, por ejemplo, `http://www.example.com`. Esto incluye el protocolo (http, https), el nombre de dominio, y opcionalmente una ruta y parámetros.
@@ -65,4 +67,4 @@ func main() {
 }
 ```
 
-Este código en Go verifica la longitud de la URL, el protocolo, y el formato del nombre de dominio. Si una URL no cumple con estos criterios, se considera inválida. ¡Espero que esto te sea útil! Si necesitas más detalles o tienes alguna otra pregunta, ¡adelante!
+Este código en Go verifica la longitud de la URL, el protocolo, y el formato del nombre de dominio. Si una URL no cumple con estos criterios, se considera inválida.

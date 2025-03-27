@@ -1,6 +1,8 @@
-Para validar una dirección de correo electrónico, podemos considerar varios criterios clave:
+# Ejemplo de validación de direcciones de email con Regex
 
-1. **Formato Correcto**: La dirección debe seguir el formato estándar `local-part@domain`. 
+Para validar una dirección de correo electrónico, podemos considerar varios criterios clave
+
+1. **Formato Correcto**: La dirección debe seguir el formato estándar `local-part@domain`.
 2. **Caracteres Válidos**: Verificar que la dirección contenga solo caracteres válidos (letras, números, puntos, guiones y guiones bajos).
 3. **Presencia del Símbolo "@"**: Asegurarse de que la dirección contenga un solo símbolo "@".
 4. **Longitud**: Comprobar que la longitud total de la dirección no exceda el límite razonable (por ejemplo, 254 caracteres).
@@ -44,5 +46,3 @@ func main() {
 ```
 
 Este código en Go verifica que la dirección de correo electrónico siga el formato correcto, contenga caracteres válidos, y tenga un dominio apropiado. Si una dirección de correo electrónico no cumple con estos criterios, se considera inválida.
-
-Espero que esto te sea útil. Si tienes más preguntas o necesitas más detalles, ¡házmelo saber!

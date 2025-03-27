@@ -1,6 +1,6 @@
 # Emum en Golang
 
-Los enums no existen de la misma manera que en otros lenguajes de programación como C++ o Java. Sin embargo, puedes lograr un comportamiento similar utilizando tipos definidos por el usuario junto con constantes. La idea es definir un tipo y luego crear constantes que representen los valores posibles de ese tipo.
+Los enums en `Go` no existen de la misma manera que en otros lenguajes de programación como C++ o Java. Sin embargo, puedes lograr un comportamiento similar utilizando tipos definidos por el usuario junto con constantes. La idea es definir un tipo y luego crear constantes que representen los valores posibles de ese tipo.
 
 Aquí tienes una explicación teórica de cómo puedes implementar enums en Go:
 
@@ -38,7 +38,7 @@ Esta línea de código en Go implementa una técnica común para manejar enumera
 
 Por ejemplo, si `status` es `0`, devolverá "Pending", si es `1` devolverá "Shipped", y así sucesivamente.
 
-### Consideraciones importantes:
+## Consideraciones importantes
 
 - Este patrón es una forma concisa de implementar una especie de enumeración en Go
 - Es importante asegurarse de que `status` esté dentro del rango válido (0-3), ya que Go entrará en pánico si intentas acceder a un índice fuera de rango
@@ -71,6 +71,4 @@ func getStatusString(status int) string {
 - **Creación de Constantes**: `const` define las constantes `Pending`, `Shipped`, `Delivered` y `Cancelled`, todas del tipo `OrderStatus`. `iota` se utiliza para generar valores consecutivos para estas constantes.
 - **Función `String()`**: Esta función convierte el valor del estado de la orden en una cadena legible.
 
-Este patrón es común en Go y se utiliza para crear enumeraciones que son fáciles de entender y utilizar.
-
-¿Hay algún aspecto específico que te gustaría profundizar más sobre los enums en Go o algún otro tema que te interese?
+Este patrón es común en Go y se utiliza para crear enumeraciones que son fáciles de entender y utiliza.

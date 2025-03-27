@@ -1,6 +1,8 @@
-¡Por supuesto! Aquí tienes ejemplos de cómo implementar pilas (stack) y colas (queue) utilizando las estructuras (`struct`) en Go.
+# Trabajando con Pilas(Stack) y Colas(Queue) en GO
 
-### Pila (Stack)
+Aquí hay ejemplos de cómo implementar pilas (stack) y colas (queue) utilizando las estructuras (`struct`) en Go.
+
+## Pila (Stack)
 
 Una pila es una estructura de datos LIFO (Last In, First Out), donde el último elemento en entrar es el primero en salir.
 
@@ -48,7 +50,7 @@ func main() {
 }
 ```
 
-### Cola (Queue)
+## Cola (Queue)
 
 Una cola es una estructura de datos FIFO (First In, First Out), donde el primer elemento en entrar es el primero en salir.
 
@@ -107,5 +109,3 @@ En estos ejemplos:
   - La estructura `Queue` también tiene un slice `items` para almacenar los elementos.
   - La función `Enqueue` agrega un elemento al final del slice.
   - La función `Dequeue` elimina y devuelve el primer elemento del slice, asegurándose de que la cola no esté vacía.
-
-Estos ejemplos demuestran cómo puedes implementar pilas y colas utilizando estructuras en Go. Si tienes alguna pregunta adicional o necesitas más detalles, ¡háblame! Estoy aquí para ayudarte.
