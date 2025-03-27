@@ -1,3 +1,12 @@
+---
+layout: default
+title: unsafe | Miguel's Programing Notes
+description: Guía del paquete unsafe de Go para manipulación de memoria de bajo nivel
+permalink: /paquetes/unsafe/
+categories: paquetes
+icon: ⚠️
+---
+
 # Paquete `unsafe` en Go
 
 El paquete `unsafe` permite manipular memoria directamente, rompiendo las garantías de seguridad de tipos de Go. **Úsalo con extrema precaución**, ya que errores pueden causar crashes o vulnerabilidades.  

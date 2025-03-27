@@ -1,3 +1,12 @@
+---
+layout: default
+title: hash | Miguel's Programing Notes
+description: Guía del paquete hash de Go para algoritmos de hashing
+permalink: /paquetes/hash/
+categories: paquetes
+icon: 🔐
+---
+
 # Paquete `hash` en Go: Guía Completa con Ejemplos y Mejores Prácticas
 
 El paquete `hash` en Go proporciona interfaces y algoritmos para calcular resúmenes criptográficos y de integridad. Esta guía cubre su uso avanzado, comparativas de algoritmos y aplicaciones realistas.

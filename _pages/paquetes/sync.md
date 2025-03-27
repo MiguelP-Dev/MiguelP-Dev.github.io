@@ -1,3 +1,12 @@
+---
+layout: default
+title: sync | Miguel's Programing Notes
+description: Guía del paquete sync de Go para sincronización y concurrencia
+permalink: /paquetes/sync/
+categories: paquetes
+icon: 🔒
+---
+
 # Paquete `sync` en Go
 
 El paquete `sync` proporciona primitivas para manejar concurrencia y sincronización en Go. Esta guía ampliada incluye ejemplos avanzados, mejores prácticas y análisis de rendimiento.  

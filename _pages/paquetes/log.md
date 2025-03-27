@@ -1,3 +1,12 @@
+---
+layout: default
+title: log | Miguel's Programing Notes
+description: Guía del paquete log de Go para registro de eventos
+permalink: /paquetes/log/
+categories: paquetes
+icon: 📝
+---
+
 # Paquete `log` en Go: Guía Completa de Logging con Ejemplos Avanzados
 
 El paquete `log` en Go ofrece herramientas fundamentales para el registro de eventos en aplicaciones. Esta guía ampliada cubre técnicas avanzadas, mejores prácticas y ejemplos prácticos para implementar un sistema de logging robusto.

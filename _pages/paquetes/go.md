@@ -1,3 +1,12 @@
+---
+layout: default
+title: go | Miguel's Programing Notes
+description: Guía de los comandos del CLI de Go para desarrollo
+permalink: /paquetes/go/
+categories: paquetes
+icon: 🛠️
+---
+
 # Guía Completa de los Comandos `go` en Golang
 
 El ecosistema de Go incluye una amplia variedad de comandos para gestionar el ciclo de vida completo de un proyecto. A continuación, se presenta una guía detallada con ejemplos avanzados y casos de uso realistas.

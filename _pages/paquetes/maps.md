@@ -1,3 +1,12 @@
+---
+layout: default
+title: maps | Miguel's Programing Notes
+description: Guía del paquete maps de Go para manipulación de mapas
+permalink: /paquetes/maps/
+categories: paquetes
+icon: 🗺️
+---
+
 # Paquete `golang.org/x/exp/maps` en Go: Guía Completa
 
 El paquete `maps` del repositorio experimental de Go (`golang.org/x/exp/maps`) ofrece utilidades para manipular mapas. A continuación, se detallan sus funciones clave con ejemplos mejorados y consideraciones importantes.

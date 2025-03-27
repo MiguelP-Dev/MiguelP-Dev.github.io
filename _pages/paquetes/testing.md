@@ -1,3 +1,12 @@
+---
+layout: default
+title: testing | Miguel's Programing Notes
+description: Guía completa del paquete testing de Go para pruebas unitarias
+permalink: /paquetes/testing/
+categories: paquetes
+icon: 🧪
+---
+
 # Paquete `testing` en Go
 
 El paquete `testing` es esencial para crear pruebas robustas en Go. Esta guía ampliada cubre desde fundamentos hasta técnicas avanzadas, incluyendo mejores prácticas y ejemplos del mundo real.  

@@ -1,3 +1,12 @@
+---
+layout: default
+title: os | Miguel's Programing Notes
+description: Guía del paquete os de Go para interacción con el sistema operativo
+permalink: /paquetes/os/
+categories: paquetes
+icon: 💻
+---
+
 # Paquete `os` en Go: Guía Práctica con Ejemplos
 
 El paquete `os` en Go permite interactuar con el sistema operativo, gestionando archivos, directorios, variables de entorno y procesos. Aquí se presenta una guía práctica con ejemplos y explicaciones detalladas.

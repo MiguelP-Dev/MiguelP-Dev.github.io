@@ -1,3 +1,12 @@
+---
+layout: default
+title: html | Miguel's Programing Notes
+description: Guía del paquete html de Go para manipulación segura de HTML
+permalink: /paquetes/html/
+categories: paquetes
+icon: 🌐
+---
+
 # Paquete `html` en Go: Guía Completa para Manejo Seguro de HTML
 
 El paquete `html` en Go proporciona herramientas esenciales para trabajar con contenido HTML de manera segura, previniendo ataques comunes como XSS (Cross-Site Scripting). Esta guía cubre tanto el paquete principal `html` como el subpaquete `html/template` con ejemplos avanzados y mejores prácticas.

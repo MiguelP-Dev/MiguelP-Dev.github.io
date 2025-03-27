@@ -1,3 +1,12 @@
+---
+layout: default
+title: structs | Miguel's Programing Notes
+description: Guía del paquete structs de Fatih para manipulación de estructuras
+permalink: /paquetes/structs/
+categories: paquetes
+icon: 🧱
+---
+
 # Paquete `structs` de Fatih para Go
 
 El paquete `github.com/fatih/structs` simplifica el trabajo con estructuras en Go mediante reflexión. Esta guía ampliada cubre sus funcionalidades clave, ejemplos avanzados y mejores prácticas.  

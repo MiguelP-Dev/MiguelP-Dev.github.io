@@ -1,3 +1,12 @@
+---
+layout: default
+title: compress | Miguel's Programing Notes
+description: Guía del paquete compress de Go para compresión de datos
+permalink: /paquetes/compress/
+categories: paquetes
+icon: 🗜️
+---
+
 # Paquete compress en Go
 
 El paquete `compress` en Go proporciona varios subpaquetes para trabajar con diferentes algoritmos de compresión y formatos de archivo comprimido. Este documento explora en detalle cada subpaquete con ejemplos prácticos.

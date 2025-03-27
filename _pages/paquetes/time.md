@@ -1,3 +1,12 @@
+---
+layout: default
+title: time | Miguel's Programing Notes
+description: Guía completa del paquete time de Go para manejo de fechas y horas
+permalink: /paquetes/time/
+categories: paquetes
+icon: 🕒
+---
+
 # Guía Completa del Paquete `time` en Go
 
 ## Introducción

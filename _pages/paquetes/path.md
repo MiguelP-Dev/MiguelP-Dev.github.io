@@ -1,3 +1,12 @@
+---
+layout: default
+title: path | Miguel's Programing Notes
+description: Guía del paquete path de Go para manipulación de rutas
+permalink: /paquetes/path/
+categories: paquetes
+icon: 🛣️
+---
+
 # Paquete `path` en Go: Guía Completa con Ejemplos Avanzados
 
 El paquete `path` en Go ofrece utilidades para manipular rutas de archivos y directorios usando la sintaxis de barras (`/`). Es ideal para trabajar con URLs y rutas independientes del sistema operativo. A continuación, se presenta una guía detallada con ejemplos prácticos y mejores prácticas.

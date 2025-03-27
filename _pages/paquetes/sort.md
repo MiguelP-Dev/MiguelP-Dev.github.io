@@ -1,3 +1,12 @@
+---
+layout: default
+title: sort | Miguel's Programing Notes
+description: Guía del paquete sort de Go para ordenamiento y búsqueda
+permalink: /paquetes/sort/
+categories: paquetes
+icon: 📊
+---
+
 # Paquete `sort` en Go
 
 El paquete `sort` de Go ofrece herramientas robustas para ordenar y buscar en colecciones. A continuación, se amplían las descripciones, ejemplos y mejores prácticas para aprovechar al máximo sus funcionalidades.  

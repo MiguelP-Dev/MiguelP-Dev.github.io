@@ -1,3 +1,12 @@
+---
+layout: default
+title: reflect | Miguel's Programing Notes
+description: Guía del paquete reflect de Go para introspección y metaprogramación
+permalink: /paquetes/reflect/
+categories: paquetes
+icon: 🔍
+---
+
 # Paquete `reflect` en Go: Guía Práctica con Ejemplos
 
 El paquete `reflect` en Go permite inspeccionar y manipular tipos y valores en tiempo de ejecución. A continuación, se presenta una guía detallada con ejemplos prácticos y casos de uso comunes.

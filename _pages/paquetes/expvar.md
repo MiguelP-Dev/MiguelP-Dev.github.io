@@ -1,3 +1,12 @@
+---
+layout: default
+title: expvar | Miguel's Programing Notes
+description: Guía del paquete expvar de Go para exposición de variables
+permalink: /paquetes/expvar/
+categories: paquetes
+icon: 📊
+---
+
 # Paquete expvar en Go
 
 El paquete `expvar` proporciona una interfaz estandarizada para publicar variables en tiempo de ejecución que pueden ser accedidas mediante HTTP. Este documento explora sus características y usos prácticos.

@@ -1,3 +1,12 @@
+---
+layout: default
+title: debug | Miguel's Programing Notes
+description: Guía del paquete runtime/debug de Go para depuración
+permalink: /paquetes/debug/
+categories: paquetes
+icon: 🔍
+---
+
 # Paquete runtime/debug en Go
 
 El paquete `runtime/debug` proporciona funcionalidades avanzadas para depurar y controlar el comportamiento del runtime de Go. Este documento explora en detalle sus características y casos de uso prácticos.

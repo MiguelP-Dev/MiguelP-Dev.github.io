@@ -1,3 +1,12 @@
+---
+layout: default
+title: io | Miguel's Programing Notes
+description: Guía completa del paquete io de Go para entrada/salida
+permalink: /paquetes/io/
+categories: paquetes
+icon: 📤
+---
+
 # Paquete `io` en Go: Guía Completa con Ejemplos Prácticos
 
 El paquete `io` en Go es fundamental para operaciones de entrada/salida (E/S), ofreciendo funciones versátiles para manejar flujos de datos. A continuación, se presenta una guía detallada con ejemplos y casos de uso para cada función clave.

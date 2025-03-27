@@ -1,3 +1,12 @@
+---
+layout: default
+title: mime | Miguel's Programing Notes
+description: Guía del paquete mime de Go para manejo de tipos MIME
+permalink: /paquetes/mime/
+categories: paquetes
+icon: 📋
+---
+
 # Paquete `mime` en Go: Guía Detallada y Consideraciones Prácticas
 
 El paquete `mime` en Go facilita el manejo de tipos MIME (Multipurpose Internet Mail Extensions), esenciales para identificar el tipo de contenido de archivos y datos. A continuación, se presenta una guía ampliada con ejemplos, consideraciones y casos de uso avanzados.

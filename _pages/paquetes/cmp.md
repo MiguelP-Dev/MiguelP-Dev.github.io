@@ -1,3 +1,12 @@
+---
+layout: default
+title: cmp | Miguel's Programing Notes
+description: Guía del paquete cmp de Go para comparación de valores
+permalink: /paquetes/cmp/
+categories: paquetes
+icon: 🔍
+---
+
 # Paquete cmp en Go
 
 El paquete `cmp` en Go proporciona funciones útiles para comparar valores ordenados. Este documento explora en detalle sus funcionalidades y usos prácticos.

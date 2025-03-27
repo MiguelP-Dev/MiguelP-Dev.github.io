@@ -1,3 +1,12 @@
+---
+layout: default
+title: strconv | Miguel's Programing Notes
+description: Guía del paquete strconv de Go para conversión de tipos
+permalink: /paquetes/strconv/
+categories: paquetes
+icon: 🔢
+---
+
 # Paquete `strconv` en Go
 
 El paquete `strconv` permite convertir entre tipos primitivos y cadenas de manera segura y eficiente. A continuación, se amplían las funciones clave con ejemplos detallados, casos de uso avanzados y mejores prácticas.  

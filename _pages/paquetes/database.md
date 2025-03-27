@@ -1,3 +1,12 @@
+---
+layout: default
+title: database/sql | Miguel's Programing Notes
+description: Guía del paquete database/sql de Go para bases de datos SQL
+permalink: /paquetes/database/
+categories: paquetes
+icon: 💾
+---
+
 # Paquete database/sql en Go
 
 El paquete `database/sql` en Go proporciona una interfaz genérica para interactuar con bases de datos SQL. Este documento explora en detalle sus funcionalidades y usos prácticos.

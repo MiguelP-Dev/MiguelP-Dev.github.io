@@ -1,3 +1,12 @@
+---
+layout: default
+title: context | Miguel's Programing Notes
+description: Guía del paquete context de Go para manejo de contextos y cancelación
+permalink: /paquetes/context/
+categories: paquetes
+icon: 🔄
+---
+
 # Paquete context en Go
 
 El paquete `context` en Go es fundamental para el manejo de cancelaciones, timeouts y valores a través de la jerarquía de llamadas. Este documento explora en detalle sus características y usos comunes.

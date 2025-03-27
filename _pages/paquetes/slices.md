@@ -1,3 +1,12 @@
+---
+layout: default
+title: slices | Miguel's Programing Notes
+description: Guía del paquete slices de Go para manipulación eficiente de arreglos
+permalink: /paquetes/slices/
+categories: paquetes
+icon: 🔪
+---
+
 # Paquete `slices` en Go
 
 El paquete `slices`, parte de `golang.org/x/exp/slices`, ofrece funciones útiles para manipular slices de manera eficiente y segura. A continuación, se amplían las descripciones y ejemplos de sus funciones principales, incluyendo casos de uso avanzados y mejores prácticas.  

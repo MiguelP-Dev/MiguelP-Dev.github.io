@@ -1,3 +1,12 @@
+---
+layout: default
+title: container | Miguel's Programing Notes
+description: Guía del paquete container de Go para estructuras de datos
+permalink: /paquetes/container/
+categories: paquetes
+icon: 📚
+---
+
 # Paquete container en Go
 
 El paquete `container` proporciona implementaciones de estructuras de datos básicas como listas, anillos y montículos (heaps). Este documento explora en detalle cada subpaquete con ejemplos prácticos.

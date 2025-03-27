@@ -1,3 +1,12 @@
+---
+layout: default
+title: strings | Miguel's Programing Notes
+description: Guía completa del paquete strings de Go para manipulación de cadenas
+permalink: /paquetes/strings/
+categories: paquetes
+icon: 📝
+---
+
 # Paquete `strings` en Go
 
 El paquete `strings` ofrece herramientas completas para manipular y analizar cadenas en Go. Esta guía ampliada incluye ejemplos detallados, mejores prácticas y casos de uso avanzados.  
@@ -80,8 +89,8 @@ func main() {
 
     // Sanitizar UTF-8  
     corrupto := "Hola\x80Mundo"  
-    seguro := strings.ToValidUTF8(corrupto, "�")  
-    fmt.Println("Sanitizado:", seguro) // Hola�Mundo  
+    seguro := strings.ToValidUTF8(corrupto, "")  
+    fmt.Println("Sanitizado:", seguro) // HolaMundo  
 }  
 ```  
 

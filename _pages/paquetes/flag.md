@@ -1,3 +1,11 @@
+---
+layout: default
+title: flag | Miguel's Programing Notes
+description: Guía del paquete flag de Go para procesamiento de argumentos
+permalink: /paquetes/flag/
+categories: paquetes
+icon: 🚩
+---
 
 # Paquete `flag` en Go: Guía Completa con Ejemplos
 

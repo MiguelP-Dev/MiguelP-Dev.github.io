@@ -1,3 +1,12 @@
+---
+layout: default
+title: runtime | Miguel's Programing Notes
+description: Guía del paquete runtime de Go para interactuar con el entorno de ejecución
+permalink: /paquetes/runtime/
+categories: paquetes
+icon: ⚙️
+---
+
 # Paquete `runtime` en Go: Guía Práctica con Ejemplos y Explicaciones
 
 El paquete `runtime` en Go ofrece herramientas para interactuar con el entorno de ejecución, incluyendo gestión de goroutines, memoria, y recursos del sistema. Aquí se presenta una guía detallada con ejemplos y mejores prácticas.

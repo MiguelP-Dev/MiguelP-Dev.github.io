@@ -1,3 +1,12 @@
+---
+layout: default
+title: plugin | Miguel's Programing Notes
+description: Guía del paquete plugin de Go para carga dinámica de módulos
+permalink: /paquetes/plugin/
+categories: paquetes
+icon: 🔌
+---
+
 # Paquete `plugin` en Go: Guía Práctica con Ejemplos y Consideraciones
 
 El paquete `plugin` en Go permite cargar módulos compilados dinámicamente (`.so` en Linux/macOS) para extender aplicaciones en tiempo de ejecución. A continuación, se presenta una guía detallada con ejemplos, mejores prácticas y advertencias clave.

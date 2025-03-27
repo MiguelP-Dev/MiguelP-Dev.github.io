@@ -1,3 +1,12 @@
+---
+layout: default
+title: archive | Miguel's Programing Notes
+description: Guía del paquete archive de Go para manejo de archivos comprimidos
+permalink: /paquetes/archive/
+categories: paquetes
+icon: 📦
+---
+
 # Paquete archive en Go
 
 El paquete `archive` en Go proporciona funciones para trabajar con archivos comprimidos. Este documento explora en detalle los subpaquetes `archive/tar` y `archive/zip`, incluyendo ejemplos prácticos de uso.

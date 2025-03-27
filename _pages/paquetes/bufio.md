@@ -1,3 +1,12 @@
+---
+layout: default
+title: bufio | Miguel's Programing Notes
+description: Guía del paquete bufio de Go para operaciones de I/O optimizadas
+permalink: /paquetes/bufio/
+categories: paquetes
+icon: 📝
+---
+
 # Paquete bufio en Go
 
 El paquete `bufio` en Go implementa operaciones de E/S (entrada/salida) buffered, proporcionando una capa de abstracción que mejora el rendimiento al reducir el número de llamadas al sistema operativo. Este documento explora en profundidad sus características y usos.

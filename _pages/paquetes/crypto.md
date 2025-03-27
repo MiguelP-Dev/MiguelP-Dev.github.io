@@ -1,3 +1,12 @@
+---
+layout: default
+title: crypto | Miguel's Programing Notes
+description: Guía del paquete crypto de Go para criptografía
+permalink: /paquetes/crypto/
+categories: paquetes
+icon: 🔐
+---
+
 # Paquete crypto en Go
 
 El paquete `crypto` en Go es una colección de subpaquetes que proporcionan diversas funcionalidades criptográficas. Este documento explora en detalle cada subpaquete con ejemplos prácticos y casos de uso.

@@ -1,3 +1,12 @@
+---
+layout: default
+title: builtin | Miguel's Programing Notes
+description: Guía del paquete builtin de Go con funciones y tipos predefinidos
+permalink: /paquetes/builtin/
+categories: paquetes
+icon: 🧰
+---
+
 # Paquete builtin en Go
 
 El paquete `builtin` en Go no es un paquete tradicional que requiera importación. Representa las funciones, tipos y constantes predefinidas en el lenguaje Go que están disponibles globalmente sin necesidad de importación.

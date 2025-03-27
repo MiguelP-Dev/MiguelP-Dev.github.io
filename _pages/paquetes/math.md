@@ -1,3 +1,12 @@
+---
+layout: default
+title: math | Miguel's Programing Notes
+description: Guía del paquete math de Go para cálculos matemáticos
+permalink: /paquetes/math/
+categories: paquetes
+icon: 🧮
+---
+
 # Paquete `math` en Go: Guía Completa con Ejemplos Avanzados
 
 El paquete `math` en Go proporciona una amplia gama de funciones matemáticas esenciales para aplicaciones científicas, de ingeniería y análisis de datos. Esta guía ampliada incluye ejemplos prácticos, casos especiales y aplicaciones del mundo real.

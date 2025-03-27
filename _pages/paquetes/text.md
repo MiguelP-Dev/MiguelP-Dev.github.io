@@ -1,3 +1,12 @@
+---
+layout: default
+title: text | Miguel's Programing Notes
+description: Guía del paquete text de Go para manipulación avanzada de texto
+permalink: /paquetes/text/
+categories: paquetes
+icon: 📝
+---
+
 # Paquete `text` en Go
 
 El paquete `text` en Go ofrece herramientas especializadas para manipulación avanzada de texto. Esta guía ampliada explora sus subpaquetes principales con ejemplos prácticos, mejores prácticas y técnicas avanzadas.  

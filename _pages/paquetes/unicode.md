@@ -1,3 +1,12 @@
+---
+layout: default
+title: unicode | Miguel's Programing Notes
+description: Guía completa del paquete unicode de Go para manejo de caracteres internacionales
+permalink: /paquetes/unicode/
+categories: paquetes
+icon: 🔤
+---
+
 # Guía Completa del Paquete `unicode` en Go
 
 El paquete `unicode` en Go proporciona funcionalidades robustas para manejar caracteres Unicode, facilitando operaciones como clasificación, conversión y manipulación de texto en diferentes idiomas. Esta guía explora en profundidad las funciones disponibles con ejemplos prácticos.

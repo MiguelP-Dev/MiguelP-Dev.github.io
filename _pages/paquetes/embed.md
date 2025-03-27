@@ -1,3 +1,12 @@
+---
+layout: default
+title: embed | Miguel's Programing Notes
+description: Guía del paquete embed de Go para incrustación de archivos
+permalink: /paquetes/embed/
+categories: paquetes
+icon: 📦
+---
+
 # Paquete embed en Go
 
 El paquete `embed` en Go permite incrustar archivos y directorios en un binario Go. Este documento explora en profundidad sus características y casos de uso prácticos.

@@ -1,3 +1,12 @@
+---
+layout: default
+title: image | Miguel's Programing Notes
+description: Guía del paquete image de Go para manipulación de imágenes
+permalink: /paquetes/image/
+categories: paquetes
+icon: 🖼️
+---
+
 # Paquete `image` en Go: Guía Completa para Manipulación de Imágenes
 
 El paquete `image` en Go proporciona herramientas fundamentales para crear, manipular y procesar imágenes rasterizadas. Esta guía ampliada incluye ejemplos prácticos avanzados, comparativas de formatos y técnicas de optimización.
