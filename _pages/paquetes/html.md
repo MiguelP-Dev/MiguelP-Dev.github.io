@@ -68,8 +68,8 @@ func main() {
 3. Ejecutar con datos
 
 **Ejemplo de Plantilla con Estructuras**:
-```go
 {% raw %}
+```go
 type User struct {
     Name    string
     Email   string
@@ -78,7 +78,6 @@ type User struct {
 
 func main() {
     const tpl = `
-    {% raw %}
     <!DOCTYPE html>
     <html>
         <head>
@@ -94,14 +93,14 @@ func main() {
     tmpl := template.Must(template.New("profile").Parse(tpl))
     user := User{"Ana", "ana@example.com", true}
     tmpl.Execute(os.Stdout, user)
-    {% endraw %}
 }
 ```
+{% endraw %}
 
 ### 2.2 **Funciones de Plantilla Personalizadas**
 **Registro de Funciones**:
-```go
 {% raw %}
+```go
 func formatDate(t time.Time) string {
     return t.Format("2006-01-02")
 }
@@ -113,8 +112,8 @@ func main() {
     
     tmpl.Execute(os.Stdout, time.Now())
 }
-{% endraw %}
 ```
+{% endraw %}
 
 ---
 
@@ -129,8 +128,8 @@ templates/
 ```
 
 **base.html**:
-```html
 {% raw %}
+```html
 {{define "base"}}
 <!DOCTYPE html>
 <html>
@@ -142,18 +141,18 @@ templates/
 </body>
 </html>
 {{end}}
-{% endraw %}
 ```
+{% endraw %}
 
 **home.html**:
-```html
 {% raw %}
+```html
 {{define "title"}}Inicio{{end}}
 {{define "content"}}
     <h1>Bienvenido, {{.User.Name}}</h1>
 {{end}}
-{% endraw %}
 ```
+{% endraw %}
 
 **Código Go**:
 ```go
@@ -169,8 +168,8 @@ func main() {
 ### 3.2 **Protección Automática contra XSS**
 **Característica Clave**: Todas las variables insertadas se escapan automáticamente.  
 **Excepciones Controladas**:
-```go
 {% raw %}
+```go
 // Usar tipo template.HTML para contenido confiable
 tmpl := template.Must(template.New("").Parse(`
     <div>{{.SafeContent}}</div>
@@ -178,8 +177,8 @@ tmpl := template.Must(template.New("").Parse(`
 tmpl.Execute(os.Stdout, map[string]interface{}{
     "SafeContent": template.HTML("<b>Texto seguro</b>"),
 })
-{% endraw %}
 ```
+{% endraw %}
 
 ---
 
@@ -191,8 +190,8 @@ tmpl.Execute(os.Stdout, map[string]interface{}{
 - **CSS/JS**: Requiere tratamiento especial
 
 ### 4.2 **Validación de Datos**
-```go
 {% raw %}
+```go
 func sanitizeInput(input string) string {
     // Eliminar etiquetas HTML
     return html.EscapeString(input)
@@ -200,8 +199,8 @@ func sanitizeInput(input string) string {
 
 // Uso en plantillas:
 tmpl.Parse(`<p>{{. | sanitizeInput}}</p>`)
-{% endraw %}
 ```
+{% endraw %}
 
 ### 4.3 **Manejo de Errores**
 ```go
@@ -240,8 +239,8 @@ type Comment struct {
 ```
 
 **Plantilla** (`comments.html`):
-```html
 {% raw %}
+```html
 {{define "comment"}}
 <div class="comment">
     <h3>{{.Author}}</h3>
@@ -249,8 +248,8 @@ type Comment struct {
     <small>{{.Date | formatDate}}</small>
 </div>
 {{end}}
-{% endraw %}
 ```
+{% endraw %}
 
 **Código**:
 ```go
