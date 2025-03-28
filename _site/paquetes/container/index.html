@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>container | Miguel's Programing Notes</title>
+    <link rel="stylesheet" href="/assets/css/styles.css">
+</head>
+<body>
+    <div class="app">
+        <nav class="navbar">
+    <div class="nav-container">
+        <a href="/" class="nav-brand">
+            Miguel's Programming Notes
+        </a>
+
+        <div class="nav-sections">
+            
+                
+                
+                
+                <a href="/paquetes/"
+                    class="nav-section active"
+                    data-section="paquetes">
+                    📦 Paquetes
+                </a>
+            
+                
+                
+                
+                <a href="/ejemplos/"
+                    class="nav-section "
+                    data-section="ejemplos">
+                    🧩 Ejemplos
+                </a>
+            
+        </div>
+    </div>
+</nav>
+        
+        <div class="container">
+            <button class="menu-toggle" aria-label="Abrir menú">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            
+            <aside class="sidebar" id="dynamic-sidebar">
+    <div class="sidebar-header">
+        <h3 class="sidebar-title">Miguel's Programming Notes</h3>
+    </div>
+    
+    <div class="sidebar-content">
+        
+            
+                <h3 class="sidebar-title">📦 Paquetes</h3>
+                <nav class="sidebar-nav">
+                    
+                        <a href="/paquetes/fmt/"
+                            class="sidebar-item "
+                            data-item="fmt">
+                            fmt
+                        </a>
+                    
+                        <a href="/paquetes/net/"
+                            class="sidebar-item "
+                            data-item="net-http">
+                            net/http
+                        </a>
+                    
+                        <a href="/paquetes/encoding/"
+                            class="sidebar-item "
+                            data-item="encoding">
+                            encoding
+                        </a>
+                    
+                </nav>
+            
+        
+            
+        
+    </div>
+</aside>
+            
+            <main class="content">
+                <h1 id="paquete-container-en-go">Paquete container en Go</h1>
+
+<p>El paquete <code class="language-plaintext highlighter-rouge">container</code> proporciona implementaciones de estructuras de datos básicas como listas, anillos y montículos (heaps). Este documento explora en detalle cada subpaquete con ejemplos prácticos.</p>
+
+<h2 id="1-containerheap">1. container/heap</h2>
+
+<h3 id="11-implementación-de-un-min-heap">1.1 Implementación de un Min-Heap</h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// Ejemplo de implementación de un min-heap de enteros</span>
+<span class="k">type</span> <span class="n">IntHeap</span> <span class="p">[]</span><span class="kt">int</span>
+
+<span class="k">func</span> <span class="p">(</span><span class="n">h</span> <span class="n">IntHeap</span><span class="p">)</span> <span class="n">Len</span><span class="p">()</span> <span class="kt">int</span>           <span class="p">{</span> <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">h</span><span class="p">)</span> <span class="p">}</span>
+<span class="k">func</span> <span class="p">(</span><span class="n">h</span> <span class="n">IntHeap</span><span class="p">)</span> <span class="n">Less</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="kt">int</span><span class="p">)</span> <span class="kt">bool</span> <span class="p">{</span> <span class="k">return</span> <span class="n">h</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">h</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="p">}</span>
+<span class="k">func</span> <span class="p">(</span><span class="n">h</span> <span class="n">IntHeap</span><span class="p">)</span> <span class="n">Swap</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="kt">int</span><span class="p">)</span>      <span class="p">{</span> <span class="n">h</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">h</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">h</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">h</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="p">}</span>
+
+<span class="k">func</span> <span class="p">(</span><span class="n">h</span> <span class="o">*</span><span class="n">IntHeap</span><span class="p">)</span> <span class="n">Push</span><span class="p">(</span><span class="n">x</span> <span class="k">interface</span><span class="p">{})</span> <span class="p">{</span>
+    <span class="o">*</span><span class="n">h</span> <span class="o">=</span> <span class="nb">append</span><span class="p">(</span><span class="o">*</span><span class="n">h</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="p">(</span><span class="kt">int</span><span class="p">))</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="p">(</span><span class="n">h</span> <span class="o">*</span><span class="n">IntHeap</span><span class="p">)</span> <span class="n">Pop</span><span class="p">()</span> <span class="k">interface</span><span class="p">{}</span> <span class="p">{</span>
+    <span class="n">old</span> <span class="o">:=</span> <span class="o">*</span><span class="n">h</span>
+    <span class="n">n</span> <span class="o">:=</span> <span class="nb">len</span><span class="p">(</span><span class="n">old</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">:=</span> <span class="n">old</span><span class="p">[</span><span class="n">n</span><span class="o">-</span><span class="m">1</span><span class="p">]</span>
+    <span class="o">*</span><span class="n">h</span> <span class="o">=</span> <span class="n">old</span><span class="p">[</span><span class="m">0</span> <span class="o">:</span> <span class="n">n</span><span class="o">-</span><span class="m">1</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">x</span>
+<span class="p">}</span>
+
+<span class="c">// Ejemplo de uso</span>
+<span class="k">func</span> <span class="n">ejemploMinHeap</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">h</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="n">IntHeap</span><span class="p">{</span><span class="m">4</span><span class="p">,</span> <span class="m">8</span><span class="p">,</span> <span class="m">3</span><span class="p">,</span> <span class="m">6</span><span class="p">,</span> <span class="m">1</span><span class="p">}</span>
+    <span class="n">heap</span><span class="o">.</span><span class="n">Init</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+    
+    <span class="c">// Insertar elemento</span>
+    <span class="n">heap</span><span class="o">.</span><span class="n">Push</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="m">2</span><span class="p">)</span>
+    
+    <span class="c">// Obtener el mínimo</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Mínimo: %d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="p">(</span><span class="o">*</span><span class="n">h</span><span class="p">)[</span><span class="m">0</span><span class="p">])</span>
+    
+    <span class="c">// Extraer elementos ordenados</span>
+    <span class="k">for</span> <span class="n">h</span><span class="o">.</span><span class="n">Len</span><span class="p">()</span> <span class="o">&gt;</span> <span class="m">0</span> <span class="p">{</span>
+        <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"%d "</span><span class="p">,</span> <span class="n">heap</span><span class="o">.</span><span class="n">Pop</span><span class="p">(</span><span class="n">h</span><span class="p">))</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="12-implementación-de-un-priority-queue">1.2 Implementación de un Priority Queue</h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">type</span> <span class="n">Item</span> <span class="k">struct</span> <span class="p">{</span>
+    <span class="n">valor</span>    <span class="kt">string</span>
+    <span class="n">prioridad</span> <span class="kt">int</span>
+    <span class="n">index</span>    <span class="kt">int</span>
+<span class="p">}</span>
+
+<span class="k">type</span> <span class="n">PriorityQueue</span> <span class="p">[]</span><span class="o">*</span><span class="n">Item</span>
+
+<span class="k">func</span> <span class="p">(</span><span class="n">pq</span> <span class="n">PriorityQueue</span><span class="p">)</span> <span class="n">Len</span><span class="p">()</span> <span class="kt">int</span> <span class="p">{</span> <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">pq</span><span class="p">)</span> <span class="p">}</span>
+
+<span class="k">func</span> <span class="p">(</span><span class="n">pq</span> <span class="n">PriorityQueue</span><span class="p">)</span> <span class="n">Less</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="kt">int</span><span class="p">)</span> <span class="kt">bool</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">pq</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">prioridad</span> <span class="o">&gt;</span> <span class="n">pq</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">prioridad</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="p">(</span><span class="n">pq</span> <span class="n">PriorityQueue</span><span class="p">)</span> <span class="n">Swap</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">pq</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">pq</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">pq</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">pq</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+    <span class="n">pq</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">i</span>
+    <span class="n">pq</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">j</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="p">(</span><span class="n">pq</span> <span class="o">*</span><span class="n">PriorityQueue</span><span class="p">)</span> <span class="n">Push</span><span class="p">(</span><span class="n">x</span> <span class="k">interface</span><span class="p">{})</span> <span class="p">{</span>
+    <span class="n">n</span> <span class="o">:=</span> <span class="nb">len</span><span class="p">(</span><span class="o">*</span><span class="n">pq</span><span class="p">)</span>
+    <span class="n">item</span> <span class="o">:=</span> <span class="n">x</span><span class="o">.</span><span class="p">(</span><span class="o">*</span><span class="n">Item</span><span class="p">)</span>
+    <span class="n">item</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">n</span>
+    <span class="o">*</span><span class="n">pq</span> <span class="o">=</span> <span class="nb">append</span><span class="p">(</span><span class="o">*</span><span class="n">pq</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="p">(</span><span class="n">pq</span> <span class="o">*</span><span class="n">PriorityQueue</span><span class="p">)</span> <span class="n">Pop</span><span class="p">()</span> <span class="k">interface</span><span class="p">{}</span> <span class="p">{</span>
+    <span class="n">old</span> <span class="o">:=</span> <span class="o">*</span><span class="n">pq</span>
+    <span class="n">n</span> <span class="o">:=</span> <span class="nb">len</span><span class="p">(</span><span class="n">old</span><span class="p">)</span>
+    <span class="n">item</span> <span class="o">:=</span> <span class="n">old</span><span class="p">[</span><span class="n">n</span><span class="o">-</span><span class="m">1</span><span class="p">]</span>
+    <span class="n">old</span><span class="p">[</span><span class="n">n</span><span class="o">-</span><span class="m">1</span><span class="p">]</span> <span class="o">=</span> <span class="no">nil</span>
+    <span class="n">item</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="o">-</span><span class="m">1</span>
+    <span class="o">*</span><span class="n">pq</span> <span class="o">=</span> <span class="n">old</span><span class="p">[</span><span class="m">0</span> <span class="o">:</span> <span class="n">n</span><span class="o">-</span><span class="m">1</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">item</span>
+<span class="p">}</span>
+
+<span class="c">// Ejemplo de uso de la cola de prioridad</span>
+<span class="k">func</span> <span class="n">ejemploPriorityQueue</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">pq</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="n">PriorityQueue</span><span class="p">,</span> <span class="m">0</span><span class="p">)</span>
+    <span class="n">heap</span><span class="o">.</span><span class="n">Init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">pq</span><span class="p">)</span>
+
+    <span class="c">// Agregar elementos</span>
+    <span class="n">heap</span><span class="o">.</span><span class="n">Push</span><span class="p">(</span><span class="o">&amp;</span><span class="n">pq</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">Item</span><span class="p">{</span><span class="n">valor</span><span class="o">:</span> <span class="s">"urgente"</span><span class="p">,</span> <span class="n">prioridad</span><span class="o">:</span> <span class="m">3</span><span class="p">})</span>
+    <span class="n">heap</span><span class="o">.</span><span class="n">Push</span><span class="p">(</span><span class="o">&amp;</span><span class="n">pq</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">Item</span><span class="p">{</span><span class="n">valor</span><span class="o">:</span> <span class="s">"normal"</span><span class="p">,</span> <span class="n">prioridad</span><span class="o">:</span> <span class="m">2</span><span class="p">})</span>
+    <span class="n">heap</span><span class="o">.</span><span class="n">Push</span><span class="p">(</span><span class="o">&amp;</span><span class="n">pq</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">Item</span><span class="p">{</span><span class="n">valor</span><span class="o">:</span> <span class="s">"bajo"</span><span class="p">,</span> <span class="n">prioridad</span><span class="o">:</span> <span class="m">1</span><span class="p">})</span>
+
+    <span class="c">// Procesar elementos por prioridad</span>
+    <span class="k">for</span> <span class="n">pq</span><span class="o">.</span><span class="n">Len</span><span class="p">()</span> <span class="o">&gt;</span> <span class="m">0</span> <span class="p">{</span>
+        <span class="n">item</span> <span class="o">:=</span> <span class="n">heap</span><span class="o">.</span><span class="n">Pop</span><span class="p">(</span><span class="o">&amp;</span><span class="n">pq</span><span class="p">)</span><span class="o">.</span><span class="p">(</span><span class="o">*</span><span class="n">Item</span><span class="p">)</span>
+        <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Procesando: %s (prioridad: %d)</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> 
+                  <span class="n">item</span><span class="o">.</span><span class="n">valor</span><span class="p">,</span> <span class="n">item</span><span class="o">.</span><span class="n">prioridad</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="2-containerlist">2. container/list</h2>
+
+<h3 id="21-lista-doblemente-enlazada-como-cache-lru">2.1 Lista Doblemente Enlazada como Cache LRU</h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">type</span> <span class="n">LRUCache</span> <span class="k">struct</span> <span class="p">{</span>
+    <span class="n">capacidad</span> <span class="kt">int</span>
+    <span class="n">items</span>     <span class="k">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="o">*</span><span class="n">list</span><span class="o">.</span><span class="n">Element</span>
+    <span class="n">lista</span>     <span class="o">*</span><span class="n">list</span><span class="o">.</span><span class="n">List</span>
+<span class="p">}</span>
+
+<span class="k">type</span> <span class="n">par</span> <span class="k">struct</span> <span class="p">{</span>
+    <span class="n">clave</span> <span class="kt">string</span>
+    <span class="n">valor</span> <span class="k">interface</span><span class="p">{}</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="n">NuevoLRUCache</span><span class="p">(</span><span class="n">capacidad</span> <span class="kt">int</span><span class="p">)</span> <span class="o">*</span><span class="n">LRUCache</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="o">&amp;</span><span class="n">LRUCache</span><span class="p">{</span>
+        <span class="n">capacidad</span><span class="o">:</span> <span class="n">capacidad</span><span class="p">,</span>
+        <span class="n">items</span><span class="o">:</span>     <span class="nb">make</span><span class="p">(</span><span class="k">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="o">*</span><span class="n">list</span><span class="o">.</span><span class="n">Element</span><span class="p">),</span>
+        <span class="n">lista</span><span class="o">:</span>     <span class="n">list</span><span class="o">.</span><span class="n">New</span><span class="p">(),</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="p">(</span><span class="n">c</span> <span class="o">*</span><span class="n">LRUCache</span><span class="p">)</span> <span class="n">Obtener</span><span class="p">(</span><span class="n">clave</span> <span class="kt">string</span><span class="p">)</span> <span class="p">(</span><span class="k">interface</span><span class="p">{},</span> <span class="kt">bool</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="n">elem</span><span class="p">,</span> <span class="n">existe</span> <span class="o">:=</span> <span class="n">c</span><span class="o">.</span><span class="n">items</span><span class="p">[</span><span class="n">clave</span><span class="p">];</span> <span class="n">existe</span> <span class="p">{</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">lista</span><span class="o">.</span><span class="n">MoveToFront</span><span class="p">(</span><span class="n">elem</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">elem</span><span class="o">.</span><span class="n">Value</span><span class="o">.</span><span class="p">(</span><span class="o">*</span><span class="n">par</span><span class="p">)</span><span class="o">.</span><span class="n">valor</span><span class="p">,</span> <span class="no">true</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="no">nil</span><span class="p">,</span> <span class="no">false</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="p">(</span><span class="n">c</span> <span class="o">*</span><span class="n">LRUCache</span><span class="p">)</span> <span class="n">Poner</span><span class="p">(</span><span class="n">clave</span> <span class="kt">string</span><span class="p">,</span> <span class="n">valor</span> <span class="k">interface</span><span class="p">{})</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="n">elem</span><span class="p">,</span> <span class="n">existe</span> <span class="o">:=</span> <span class="n">c</span><span class="o">.</span><span class="n">items</span><span class="p">[</span><span class="n">clave</span><span class="p">];</span> <span class="n">existe</span> <span class="p">{</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">lista</span><span class="o">.</span><span class="n">MoveToFront</span><span class="p">(</span><span class="n">elem</span><span class="p">)</span>
+        <span class="n">elem</span><span class="o">.</span><span class="n">Value</span><span class="o">.</span><span class="p">(</span><span class="o">*</span><span class="n">par</span><span class="p">)</span><span class="o">.</span><span class="n">valor</span> <span class="o">=</span> <span class="n">valor</span>
+        <span class="k">return</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">lista</span><span class="o">.</span><span class="n">Len</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="n">c</span><span class="o">.</span><span class="n">capacidad</span> <span class="p">{</span>
+        <span class="n">ultimo</span> <span class="o">:=</span> <span class="n">c</span><span class="o">.</span><span class="n">lista</span><span class="o">.</span><span class="n">Back</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">ultimo</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+            <span class="n">c</span><span class="o">.</span><span class="n">lista</span><span class="o">.</span><span class="n">Remove</span><span class="p">(</span><span class="n">ultimo</span><span class="p">)</span>
+            <span class="nb">delete</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">items</span><span class="p">,</span> <span class="n">ultimo</span><span class="o">.</span><span class="n">Value</span><span class="o">.</span><span class="p">(</span><span class="o">*</span><span class="n">par</span><span class="p">)</span><span class="o">.</span><span class="n">clave</span><span class="p">)</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="n">elem</span> <span class="o">:=</span> <span class="n">c</span><span class="o">.</span><span class="n">lista</span><span class="o">.</span><span class="n">PushFront</span><span class="p">(</span><span class="o">&amp;</span><span class="n">par</span><span class="p">{</span><span class="n">clave</span><span class="p">,</span> <span class="n">valor</span><span class="p">})</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">items</span><span class="p">[</span><span class="n">clave</span><span class="p">]</span> <span class="o">=</span> <span class="n">elem</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="22-implementación-de-una-cola-de-tareas">2.2 Implementación de una Cola de Tareas</h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">type</span> <span class="n">Tarea</span> <span class="k">struct</span> <span class="p">{</span>
+    <span class="n">ID</span>        <span class="kt">int</span>
+    <span class="n">Nombre</span>    <span class="kt">string</span>
+    <span class="n">Completada</span> <span class="kt">bool</span>
+<span class="p">}</span>
+
+<span class="k">type</span> <span class="n">ColaTareas</span> <span class="k">struct</span> <span class="p">{</span>
+    <span class="n">tareas</span> <span class="o">*</span><span class="n">list</span><span class="o">.</span><span class="n">List</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="n">NuevaColaTareas</span><span class="p">()</span> <span class="o">*</span><span class="n">ColaTareas</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="o">&amp;</span><span class="n">ColaTareas</span><span class="p">{</span>
+        <span class="n">tareas</span><span class="o">:</span> <span class="n">list</span><span class="o">.</span><span class="n">New</span><span class="p">(),</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="p">(</span><span class="n">c</span> <span class="o">*</span><span class="n">ColaTareas</span><span class="p">)</span> <span class="n">Agregar</span><span class="p">(</span><span class="n">tarea</span> <span class="n">Tarea</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">tareas</span><span class="o">.</span><span class="n">PushBack</span><span class="p">(</span><span class="n">tarea</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="p">(</span><span class="n">c</span> <span class="o">*</span><span class="n">ColaTareas</span><span class="p">)</span> <span class="n">ProcesarSiguiente</span><span class="p">()</span> <span class="p">(</span><span class="n">Tarea</span><span class="p">,</span> <span class="kt">bool</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">tareas</span><span class="o">.</span><span class="n">Len</span><span class="p">()</span> <span class="o">==</span> <span class="m">0</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">Tarea</span><span class="p">{},</span> <span class="no">false</span>
+    <span class="p">}</span>
+    
+    <span class="n">elem</span> <span class="o">:=</span> <span class="n">c</span><span class="o">.</span><span class="n">tareas</span><span class="o">.</span><span class="n">Front</span><span class="p">()</span>
+    <span class="n">tarea</span> <span class="o">:=</span> <span class="n">elem</span><span class="o">.</span><span class="n">Value</span><span class="o">.</span><span class="p">(</span><span class="n">Tarea</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">tareas</span><span class="o">.</span><span class="n">Remove</span><span class="p">(</span><span class="n">elem</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">tarea</span><span class="p">,</span> <span class="no">true</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="3-containerring">3. container/ring</h2>
+
+<h3 id="31-buffer-circular">3.1 Buffer Circular</h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">type</span> <span class="n">BufferCircular</span> <span class="k">struct</span> <span class="p">{</span>
+    <span class="n">datos</span> <span class="o">*</span><span class="n">ring</span><span class="o">.</span><span class="n">Ring</span>
+    <span class="n">capacidad</span> <span class="kt">int</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="n">NuevoBufferCircular</span><span class="p">(</span><span class="n">capacidad</span> <span class="kt">int</span><span class="p">)</span> <span class="o">*</span><span class="n">BufferCircular</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="o">&amp;</span><span class="n">BufferCircular</span><span class="p">{</span>
+        <span class="n">datos</span><span class="o">:</span> <span class="n">ring</span><span class="o">.</span><span class="n">New</span><span class="p">(</span><span class="n">capacidad</span><span class="p">),</span>
+        <span class="n">capacidad</span><span class="o">:</span> <span class="n">capacidad</span><span class="p">,</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="p">(</span><span class="n">b</span> <span class="o">*</span><span class="n">BufferCircular</span><span class="p">)</span> <span class="n">Agregar</span><span class="p">(</span><span class="n">valor</span> <span class="k">interface</span><span class="p">{})</span> <span class="p">{</span>
+    <span class="n">b</span><span class="o">.</span><span class="n">datos</span><span class="o">.</span><span class="n">Value</span> <span class="o">=</span> <span class="n">valor</span>
+    <span class="n">b</span><span class="o">.</span><span class="n">datos</span> <span class="o">=</span> <span class="n">b</span><span class="o">.</span><span class="n">datos</span><span class="o">.</span><span class="n">Next</span><span class="p">()</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="p">(</span><span class="n">b</span> <span class="o">*</span><span class="n">BufferCircular</span><span class="p">)</span> <span class="n">ObtenerTodos</span><span class="p">()</span> <span class="p">[]</span><span class="k">interface</span><span class="p">{}</span> <span class="p">{</span>
+    <span class="n">valores</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([]</span><span class="k">interface</span><span class="p">{},</span> <span class="m">0</span><span class="p">,</span> <span class="n">b</span><span class="o">.</span><span class="n">capacidad</span><span class="p">)</span>
+    <span class="n">b</span><span class="o">.</span><span class="n">datos</span><span class="o">.</span><span class="n">Do</span><span class="p">(</span><span class="k">func</span><span class="p">(</span><span class="n">x</span> <span class="k">interface</span><span class="p">{})</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="n">x</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+            <span class="n">valores</span> <span class="o">=</span> <span class="nb">append</span><span class="p">(</span><span class="n">valores</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+        <span class="p">}</span>
+    <span class="p">})</span>
+    <span class="k">return</span> <span class="n">valores</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="32-planificador-de-tareas-cíclicas">3.2 Planificador de Tareas Cíclicas</h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">type</span> <span class="n">TareaCiclica</span> <span class="k">struct</span> <span class="p">{</span>
+    <span class="n">nombre</span> <span class="kt">string</span>
+    <span class="n">intervalo</span> <span class="n">time</span><span class="o">.</span><span class="n">Duration</span>
+    <span class="n">ejecutar</span> <span class="k">func</span><span class="p">()</span>
+<span class="p">}</span>
+
+<span class="k">type</span> <span class="n">PlanificadorCiclico</span> <span class="k">struct</span> <span class="p">{</span>
+    <span class="n">tareas</span> <span class="o">*</span><span class="n">ring</span><span class="o">.</span><span class="n">Ring</span>
+    <span class="n">activo</span> <span class="kt">bool</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="n">NuevoPlanificador</span><span class="p">(</span><span class="n">tareas</span> <span class="p">[]</span><span class="n">TareaCiclica</span><span class="p">)</span> <span class="o">*</span><span class="n">PlanificadorCiclico</span> <span class="p">{</span>
+    <span class="n">r</span> <span class="o">:=</span> <span class="n">ring</span><span class="o">.</span><span class="n">New</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">tareas</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">t</span> <span class="o">:=</span> <span class="k">range</span> <span class="n">tareas</span> <span class="p">{</span>
+        <span class="n">r</span><span class="o">.</span><span class="n">Value</span> <span class="o">=</span> <span class="n">t</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">Next</span><span class="p">()</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="o">&amp;</span><span class="n">PlanificadorCiclico</span><span class="p">{</span><span class="n">tareas</span><span class="o">:</span> <span class="n">r</span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="p">(</span><span class="n">p</span> <span class="o">*</span><span class="n">PlanificadorCiclico</span><span class="p">)</span> <span class="n">Iniciar</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">p</span><span class="o">.</span><span class="n">activo</span> <span class="o">=</span> <span class="no">true</span>
+    <span class="k">go</span> <span class="k">func</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">for</span> <span class="n">p</span><span class="o">.</span><span class="n">activo</span> <span class="p">{</span>
+            <span class="n">tarea</span> <span class="o">:=</span> <span class="n">p</span><span class="o">.</span><span class="n">tareas</span><span class="o">.</span><span class="n">Value</span><span class="o">.</span><span class="p">(</span><span class="n">TareaCiclica</span><span class="p">)</span>
+            <span class="k">go</span> <span class="n">tarea</span><span class="o">.</span><span class="n">ejecutar</span><span class="p">()</span>
+            <span class="n">time</span><span class="o">.</span><span class="n">Sleep</span><span class="p">(</span><span class="n">tarea</span><span class="o">.</span><span class="n">intervalo</span><span class="p">)</span>
+            <span class="n">p</span><span class="o">.</span><span class="n">tareas</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">tareas</span><span class="o">.</span><span class="n">Next</span><span class="p">()</span>
+        <span class="p">}</span>
+    <span class="p">}()</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="4-ejemplos-de-uso-práctico">4. Ejemplos de Uso Práctico</h2>
+
+<h3 id="41-sistema-de-procesamiento-de-eventos">4.1 Sistema de Procesamiento de Eventos</h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">type</span> <span class="n">Evento</span> <span class="k">struct</span> <span class="p">{</span>
+    <span class="n">ID</span>        <span class="kt">int</span>
+    <span class="n">Tipo</span>      <span class="kt">string</span>
+    <span class="n">Prioridad</span> <span class="kt">int</span>
+    <span class="n">Datos</span>     <span class="k">interface</span><span class="p">{}</span>
+<span class="p">}</span>
+
+<span class="k">type</span> <span class="n">ProcesadorEventos</span> <span class="k">struct</span> <span class="p">{</span>
+    <span class="n">cola</span>    <span class="n">PriorityQueue</span>
+    <span class="n">history</span> <span class="o">*</span><span class="n">list</span><span class="o">.</span><span class="n">List</span>
+    <span class="n">buffer</span>  <span class="o">*</span><span class="n">BufferCircular</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="n">NuevoProcesadorEventos</span><span class="p">()</span> <span class="o">*</span><span class="n">ProcesadorEventos</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="o">&amp;</span><span class="n">ProcesadorEventos</span><span class="p">{</span>
+        <span class="n">cola</span><span class="o">:</span>    <span class="nb">make</span><span class="p">(</span><span class="n">PriorityQueue</span><span class="p">,</span> <span class="m">0</span><span class="p">),</span>
+        <span class="n">history</span><span class="o">:</span> <span class="n">list</span><span class="o">.</span><span class="n">New</span><span class="p">(),</span>
+        <span class="n">buffer</span><span class="o">:</span>  <span class="n">NuevoBufferCircular</span><span class="p">(</span><span class="m">100</span><span class="p">),</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="5-mejores-prácticas">5. Mejores Prácticas</h2>
+
+<ol>
+  <li><strong>Elección de Estructura</strong>
+    <ul>
+      <li>Usa <code class="language-plaintext highlighter-rouge">heap</code> para priorización</li>
+      <li>Usa <code class="language-plaintext highlighter-rouge">list</code> para inserción/eliminación frecuente</li>
+      <li>Usa <code class="language-plaintext highlighter-rouge">ring</code> para datos circulares</li>
+    </ul>
+  </li>
+  <li><strong>Consideraciones de Rendimiento</strong>
+    <ul>
+      <li>Preasigna capacidad cuando sea posible</li>
+      <li>Considera la complejidad de las operaciones</li>
+      <li>Implementa limpieza de recursos</li>
+    </ul>
+  </li>
+  <li><strong>Concurrencia</strong>
+    <ul>
+      <li>Protege estructuras compartidas</li>
+      <li>Usa canales para comunicación</li>
+      <li>Implementa patrones de sincronización</li>
+    </ul>
+  </li>
+</ol>
+
+<h2 id="6-referencias">6. Referencias</h2>
+
+<ul>
+  <li><a href="https://golang.org/pkg/container/">Documentación oficial de container</a></li>
+  <li><a href="https://golang.org/doc/effective_go.html">Effective Go</a></li>
+</ul>
+
+            </main>
+        </div>
+        
+        <!-- Componente flotante de GitHub -->
+<div class="github-floating">
+    <a href="https://github.com/" target="_blank" rel="noopener noreferrer" class="github-link" title="Ver en GitHub">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-github">
+            <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+        </svg>
+    </a>
+    
+    
+    <a href="https://github.com//MiguelP-Dev.github.io/blob/main/_pages/paquetes/container.md" target="_blank" rel="noopener noreferrer" class="edit-link" title="Editar esta página">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-2">
+            <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+        </svg>
+    </a>
+    
+</div>
+
+<style>
+    /* Estilos del componente SVG */
+    .github-corner:hover .octo-arm {
+        animation: octocat-wave 560ms ease-in-out;
+    }
+    
+    @keyframes octocat-wave {
+        0%, 100% { transform: rotate(0); }
+        20%, 60% { transform: rotate(-25deg); }
+        40%, 80% { transform: rotate(10deg); }
+    }
+    
+    @media (max-width: 500px) {
+        .github-corner:hover .octo-arm {
+            animation: none;
+        }
+        .github-corner .octo-arm {
+            animation: octocat-wave 560ms ease-in-out;
+        }
+    }
+</style>
+    </div>
+    
+    <script src="/assets/js/scripts.js"></script>
+</body>
+</html>

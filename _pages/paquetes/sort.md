@@ -149,7 +149,7 @@ func main() {
 **Descripción**: Invierte el orden de una colección ya ordenable.  
 
 **Ejemplo con Structs**:
-
+{% raw %}
 ```go  
 func main() {  
     personas := []Persona{{"Juan", 30}, {"Ana", 25}, {"Pedro", 35}}  
@@ -157,6 +157,7 @@ func main() {
     fmt.Println("Orden inverso por edad:", personas) // [{Pedro 35} {Juan 30} {Ana 25}]  
 }  
 ```  
+{% endraw %}
 
 ---
 

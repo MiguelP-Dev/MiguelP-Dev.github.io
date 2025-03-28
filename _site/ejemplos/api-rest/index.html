@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API REST con Go | Miguel's Programing Notes</title>
+    <link rel="stylesheet" href="/assets/css/styles.css">
+</head>
+<body>
+    <div class="app">
+        <nav class="navbar">
+    <div class="nav-container">
+        <a href="/" class="nav-brand">
+            Miguel's Programming Notes
+        </a>
+
+        <div class="nav-sections">
+            
+                
+                
+                
+                <a href="/paquetes/"
+                    class="nav-section "
+                    data-section="paquetes">
+                    📦 Paquetes
+                </a>
+            
+                
+                
+                
+                <a href="/ejemplos/"
+                    class="nav-section active"
+                    data-section="ejemplos">
+                    🧩 Ejemplos
+                </a>
+            
+        </div>
+    </div>
+</nav>
+        
+        <div class="container">
+            <button class="menu-toggle" aria-label="Abrir menú">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            
+            <aside class="sidebar" id="dynamic-sidebar">
+    <div class="sidebar-header">
+        <h3 class="sidebar-title">Miguel's Programming Notes</h3>
+    </div>
+    
+    <div class="sidebar-content">
+        
+            
+        
+            
+                <h3 class="sidebar-title">🧩 Ejemplos</h3>
+                <nav class="sidebar-nav">
+                    
+                        <a href="/ejemplos/api-rest/"
+                            class="sidebar-item active"
+                            data-item="api-rest">
+                            API REST
+                        </a>
+                    
+                        <a href="/ejemplos/concurrentes/"
+                            class="sidebar-item "
+                            data-item="concurrentes">
+                            Concurrentes
+                        </a>
+                    
+                        <a href="/ejemplos/tests/"
+                            class="sidebar-item "
+                            data-item="test-unitarios">
+                            Test Unitarios
+                        </a>
+                    
+                </nav>
+            
+        
+    </div>
+</aside>
+            
+            <main class="content">
+                <h1 id="apis-rest-con-go">APIs REST con Go</h1>
+
+<p>Esta sección contiene ejemplos de implementaciones de APIs RESTful con Go, desde servidores HTTP básicos hasta APIs completas con middlewares, rutas y manejo de autenticación.</p>
+
+<h2 id="ejemplos-disponibles">Ejemplos disponibles</h2>
+
+<div class="grid-container">
+
+
+    <a href="/ejemplos/api-rest/http-server/" class="card">
+        <div>
+            <div class="card-icon">🔌</div>
+            <h3>Servidor HTTP en Go</h3>
+            <p>Implementación completa de un servidor HTTP en Go con mejores prácticas</p>
+        </div>
+    </a>
+
+</div>
+
+<h2 id="conceptos-clave">Conceptos clave</h2>
+
+<h3 id="http-en-go">HTTP en Go</h3>
+<p>El paquete <code class="language-plaintext highlighter-rouge">net/http</code> de Go proporciona una API potente y flexible para crear servidores HTTP. A diferencia de otros lenguajes, Go no necesita frameworks adicionales para crear un servidor web robusto.</p>
+
+<h3 id="ventajas-de-go-para-apis-rest">Ventajas de Go para APIs REST</h3>
+<ul>
+  <li><strong>Rendimiento</strong>: Go es un lenguaje compilado con excelente rendimiento</li>
+  <li><strong>Concurrencia</strong>: Las goroutines permiten manejar miles de conexiones simultáneas</li>
+  <li><strong>Simplicidad</strong>: API limpia y clara sin dependencias externas</li>
+  <li><strong>Seguridad</strong>: Fuerte tipado y manejo de errores explícito</li>
+</ul>
+
+<h3 id="estructura-básica">Estructura básica</h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="p">(</span>
+    <span class="s">"encoding/json"</span>
+    <span class="s">"log"</span>
+    <span class="s">"net/http"</span>
+<span class="p">)</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">http</span><span class="o">.</span><span class="n">HandleFunc</span><span class="p">(</span><span class="s">"/api/hello"</span><span class="p">,</span> <span class="n">helloHandler</span><span class="p">)</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">Fatal</span><span class="p">(</span><span class="n">http</span><span class="o">.</span><span class="n">ListenAndServe</span><span class="p">(</span><span class="s">":8080"</span><span class="p">,</span> <span class="no">nil</span><span class="p">))</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="n">helloHandler</span><span class="p">(</span><span class="n">w</span> <span class="n">http</span><span class="o">.</span><span class="n">ResponseWriter</span><span class="p">,</span> <span class="n">r</span> <span class="o">*</span><span class="n">http</span><span class="o">.</span><span class="n">Request</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">w</span><span class="o">.</span><span class="n">Header</span><span class="p">()</span><span class="o">.</span><span class="n">Set</span><span class="p">(</span><span class="s">"Content-Type"</span><span class="p">,</span> <span class="s">"application/json"</span><span class="p">)</span>
+    <span class="n">json</span><span class="o">.</span><span class="n">NewEncoder</span><span class="p">(</span><span class="n">w</span><span class="p">)</span><span class="o">.</span><span class="n">Encode</span><span class="p">(</span><span class="k">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">string</span><span class="p">{</span>
+        <span class="s">"message"</span><span class="o">:</span> <span class="s">"¡Hola, mundo!"</span><span class="p">,</span>
+    <span class="p">})</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+            </main>
+        </div>
+        
+        <!-- Componente flotante de GitHub -->
+<div class="github-floating">
+    <a href="https://github.com/" target="_blank" rel="noopener noreferrer" class="github-link" title="Ver en GitHub">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-github">
+            <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+        </svg>
+    </a>
+    
+    
+    <a href="https://github.com//MiguelP-Dev.github.io/blob/main/_pages/ejemplos/api-rest/index.md" target="_blank" rel="noopener noreferrer" class="edit-link" title="Editar esta página">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-2">
+            <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+        </svg>
+    </a>
+    
+</div>
+
+<style>
+    /* Estilos del componente SVG */
+    .github-corner:hover .octo-arm {
+        animation: octocat-wave 560ms ease-in-out;
+    }
+    
+    @keyframes octocat-wave {
+        0%, 100% { transform: rotate(0); }
+        20%, 60% { transform: rotate(-25deg); }
+        40%, 80% { transform: rotate(10deg); }
+    }
+    
+    @media (max-width: 500px) {
+        .github-corner:hover .octo-arm {
+            animation: none;
+        }
+        .github-corner .octo-arm {
+            animation: octocat-wave 560ms ease-in-out;
+        }
+    }
+</style>
+    </div>
+    
+    <script src="/assets/js/scripts.js"></script>
+</body>
+</html>

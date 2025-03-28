@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>path | Miguel's Programing Notes</title>
+    <link rel="stylesheet" href="/assets/css/styles.css">
+</head>
+<body>
+    <div class="app">
+        <nav class="navbar">
+    <div class="nav-container">
+        <a href="/" class="nav-brand">
+            Miguel's Programming Notes
+        </a>
+
+        <div class="nav-sections">
+            
+                
+                
+                
+                <a href="/paquetes/"
+                    class="nav-section active"
+                    data-section="paquetes">
+                    📦 Paquetes
+                </a>
+            
+                
+                
+                
+                <a href="/ejemplos/"
+                    class="nav-section "
+                    data-section="ejemplos">
+                    🧩 Ejemplos
+                </a>
+            
+        </div>
+    </div>
+</nav>
+        
+        <div class="container">
+            <button class="menu-toggle" aria-label="Abrir menú">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            
+            <aside class="sidebar" id="dynamic-sidebar">
+    <div class="sidebar-header">
+        <h3 class="sidebar-title">Miguel's Programming Notes</h3>
+    </div>
+    
+    <div class="sidebar-content">
+        
+            
+                <h3 class="sidebar-title">📦 Paquetes</h3>
+                <nav class="sidebar-nav">
+                    
+                        <a href="/paquetes/fmt/"
+                            class="sidebar-item "
+                            data-item="fmt">
+                            fmt
+                        </a>
+                    
+                        <a href="/paquetes/net/"
+                            class="sidebar-item "
+                            data-item="net-http">
+                            net/http
+                        </a>
+                    
+                        <a href="/paquetes/encoding/"
+                            class="sidebar-item "
+                            data-item="encoding">
+                            encoding
+                        </a>
+                    
+                </nav>
+            
+        
+            
+        
+    </div>
+</aside>
+            
+            <main class="content">
+                <h1 id="paquete-path-en-go-guía-completa-con-ejemplos-avanzados">Paquete <code class="language-plaintext highlighter-rouge">path</code> en Go: Guía Completa con Ejemplos Avanzados</h1>
+
+<p>El paquete <code class="language-plaintext highlighter-rouge">path</code> en Go ofrece utilidades para manipular rutas de archivos y directorios usando la sintaxis de barras (<code class="language-plaintext highlighter-rouge">/</code>). Es ideal para trabajar con URLs y rutas independientes del sistema operativo. A continuación, se presenta una guía detallada con ejemplos prácticos y mejores prácticas.</p>
+
+<hr />
+
+<h2 id="funciones-principales-y-casos-de-uso">Funciones Principales y Casos de Uso</h2>
+
+<h3 id="1-pathbase---obtener-el-último-elemento-de-una-ruta">1. <strong><code class="language-plaintext highlighter-rouge">path.Base</code> - Obtener el Último Elemento de una Ruta</strong></h3>
+<p><strong>Propósito</strong>: Extrae el nombre del archivo o directorio final.<br />
+<strong>Ejemplo</strong>:</p>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">Base</span><span class="p">(</span><span class="s">"/usr/local/bin/go"</span><span class="p">))</span>  <span class="c">// "go"</span>
+<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">Base</span><span class="p">(</span><span class="s">"docs/README.md"</span><span class="p">))</span>     <span class="c">// "README.md"</span>
+<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">Base</span><span class="p">(</span><span class="s">"/var/log/"</span><span class="p">))</span>          <span class="c">// "log" (ignora la barra final)</span>
+</code></pre></div></div>
+<p><strong>Caso Especial</strong>:</p>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">Base</span><span class="p">(</span><span class="s">""</span><span class="p">))</span> <span class="c">// "." (ruta vacía devuelve directorio actual)</span>
+</code></pre></div></div>
+
+<hr />
+
+<h3 id="2-pathdir---obtener-el-directorio-padre">2. <strong><code class="language-plaintext highlighter-rouge">path.Dir</code> - Obtener el Directorio Padre</strong></h3>
+<p><strong>Propósito</strong>: Extrae la ruta sin el último elemento.<br />
+<strong>Ejemplo</strong>:</p>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">Dir</span><span class="p">(</span><span class="s">"/a/b/c.txt"</span><span class="p">))</span>   <span class="c">// "/a/b"</span>
+<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">Dir</span><span class="p">(</span><span class="s">"config.yaml"</span><span class="p">))</span>  <span class="c">// "." (ruta relativa)</span>
+<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">Dir</span><span class="p">(</span><span class="s">"/static/css/"</span><span class="p">))</span> <span class="c">// "/static"</span>
+</code></pre></div></div>
+
+<hr />
+
+<h3 id="3-pathext---obtener-la-extensión-del-archivo">3. <strong><code class="language-plaintext highlighter-rouge">path.Ext</code> - Obtener la Extensión del Archivo</strong></h3>
+<p><strong>Propósito</strong>: Identifica la extensión del archivo (incluyendo el punto).<br />
+<strong>Ejemplo</strong>:</p>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">Ext</span><span class="p">(</span><span class="s">"image.jpg"</span><span class="p">))</span>          <span class="c">// ".jpg"</span>
+<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">Ext</span><span class="p">(</span><span class="s">"/tmp/.hidden/file"</span><span class="p">))</span>  <span class="c">// "" (sin extensión)</span>
+<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">Ext</span><span class="p">(</span><span class="s">"archive.tar.gz"</span><span class="p">))</span>     <span class="c">// ".gz" (solo la última extensión)</span>
+</code></pre></div></div>
+
+<hr />
+
+<h3 id="4-pathclean---simplificar-rutas">4. <strong><code class="language-plaintext highlighter-rouge">path.Clean</code> - Simplificar Rutas</strong></h3>
+<p><strong>Propósito</strong>: Elimina elementos redundantes como <code class="language-plaintext highlighter-rouge">.</code>, <code class="language-plaintext highlighter-rouge">..</code> y barras duplicadas.<br />
+<strong>Ejemplo</strong>:</p>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">Clean</span><span class="p">(</span><span class="s">"/a/./b/../c"</span><span class="p">))</span>     <span class="c">// "/a/c"</span>
+<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">Clean</span><span class="p">(</span><span class="s">"//duplicate///"</span><span class="p">))</span>  <span class="c">// "/duplicate"</span>
+<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">Clean</span><span class="p">(</span><span class="s">"../../parent"</span><span class="p">))</span>    <span class="c">// "../../parent"</span>
+</code></pre></div></div>
+
+<hr />
+
+<h3 id="5-pathjoin---construir-rutas-seguras">5. <strong><code class="language-plaintext highlighter-rouge">path.Join</code> - Construir Rutas Seguras</strong></h3>
+<p><strong>Propósito</strong>: Combina múltiples segmentos de ruta, manejando automáticamente las barras.<br />
+<strong>Ejemplo</strong>:</p>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">Join</span><span class="p">(</span><span class="s">"dir"</span><span class="p">,</span> <span class="s">"sub"</span><span class="p">,</span> <span class="s">"file.txt"</span><span class="p">))</span>  <span class="c">// "dir/sub/file.txt"</span>
+<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">Join</span><span class="p">(</span><span class="s">"/abs/path"</span><span class="p">,</span> <span class="s">"../file"</span><span class="p">))</span>    <span class="c">// "/abs/file"</span>
+<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">Join</span><span class="p">(</span><span class="s">""</span><span class="p">,</span> <span class="s">"file.txt"</span><span class="p">))</span>            <span class="c">// "file.txt"</span>
+</code></pre></div></div>
+<p><strong>Mejor Práctica</strong>:<br />
+Siempre usar <code class="language-plaintext highlighter-rouge">Join</code> en lugar de concatenar strings con <code class="language-plaintext highlighter-rouge">/</code> para evitar errores.</p>
+
+<hr />
+
+<h3 id="6-pathsplit---dividir-ruta-en-directorio-y-archivo">6. <strong><code class="language-plaintext highlighter-rouge">path.Split</code> - Dividir Ruta en Directorio y Archivo</strong></h3>
+<p><strong>Propósito</strong>: Separa la ruta en directorio y nombre de archivo.<br />
+<strong>Ejemplo</strong>:</p>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">dir</span><span class="p">,</span> <span class="n">file</span> <span class="o">:=</span> <span class="n">path</span><span class="o">.</span><span class="n">Split</span><span class="p">(</span><span class="s">"/var/log/app.log"</span><span class="p">)</span>
+<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">dir</span><span class="p">)</span>   <span class="c">// "/var/log/"</span>
+<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>  <span class="c">// "app.log"</span>
+
+<span class="n">dir</span><span class="p">,</span> <span class="n">file</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">Split</span><span class="p">(</span><span class="s">"config.yaml"</span><span class="p">)</span>
+<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">dir</span><span class="p">)</span>   <span class="c">// ""</span>
+<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>  <span class="c">// "config.yaml"</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="comparación-path-vs-filepath">Comparación: <code class="language-plaintext highlighter-rouge">path</code> vs <code class="language-plaintext highlighter-rouge">filepath</code></h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Característica</th>
+      <th><code class="language-plaintext highlighter-rouge">path</code> (rutas genéricas)</th>
+      <th><code class="language-plaintext highlighter-rouge">filepath</code> (rutas del SO)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Separador</td>
+      <td><code class="language-plaintext highlighter-rouge">/</code> siempre</td>
+      <td><code class="language-plaintext highlighter-rouge">\</code> en Windows, <code class="language-plaintext highlighter-rouge">/</code> en Unix</td>
+    </tr>
+    <tr>
+      <td>Manejo de <code class="language-plaintext highlighter-rouge">..</code> y <code class="language-plaintext highlighter-rouge">.</code></td>
+      <td>Sí</td>
+      <td>Sí</td>
+    </tr>
+    <tr>
+      <td>Compatibilidad multiplataforma</td>
+      <td>No (solo rutas estilo POSIX)</td>
+      <td>Sí (usa separadores del SO)</td>
+    </tr>
+    <tr>
+      <td>Uso típico</td>
+      <td>URLs, rutas en configuraciones</td>
+      <td>Manipulación de archivos locales</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Regla General</strong>:</p>
+<ul>
+  <li>Usa <code class="language-plaintext highlighter-rouge">path</code> para rutas lógicas (ej: endpoints HTTP, rutas en configuraciones).</li>
+  <li>Usa <code class="language-plaintext highlighter-rouge">filepath</code> para interactuar con el sistema de archivos del SO.</li>
+</ul>
+
+<hr />
+
+<h2 id="casos-de-uso-avanzados">Casos de Uso Avanzados</h2>
+
+<h3 id="1-construcción-de-urls-dinámicas">1. <strong>Construcción de URLs Dinámicas</strong></h3>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">buildAPIEndpoint</span><span class="p">(</span><span class="n">baseURL</span> <span class="kt">string</span><span class="p">,</span> <span class="n">resource</span> <span class="kt">string</span><span class="p">,</span> <span class="n">id</span> <span class="kt">string</span><span class="p">)</span> <span class="kt">string</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">path</span><span class="o">.</span><span class="n">Join</span><span class="p">(</span><span class="n">baseURL</span><span class="p">,</span> <span class="s">"/api/v1"</span><span class="p">,</span> <span class="n">resource</span><span class="p">,</span> <span class="n">id</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">buildAPIEndpoint</span><span class="p">(</span><span class="s">"https://example.com"</span><span class="p">,</span> <span class="s">"users"</span><span class="p">,</span> <span class="s">"123"</span><span class="p">))</span> 
+<span class="c">// "https://example.com/api/v1/users/123"</span>
+</code></pre></div></div>
+
+<h3 id="2-validación-de-extensiones-de-archivo">2. <strong>Validación de Extensiones de Archivo</strong></h3>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">isImageFile</span><span class="p">(</span><span class="n">filename</span> <span class="kt">string</span><span class="p">)</span> <span class="kt">bool</span> <span class="p">{</span>
+    <span class="n">ext</span> <span class="o">:=</span> <span class="n">path</span><span class="o">.</span><span class="n">Ext</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+    <span class="k">switch</span> <span class="n">ext</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="s">".jpg"</span><span class="p">,</span> <span class="s">".png"</span><span class="p">,</span> <span class="s">".webp"</span><span class="o">:</span>
+        <span class="k">return</span> <span class="no">true</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="no">false</span>
+<span class="p">}</span>
+
+<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">isImageFile</span><span class="p">(</span><span class="s">"photo.jpg"</span><span class="p">))</span> <span class="c">// true</span>
+</code></pre></div></div>
+
+<h3 id="3-normalización-de-rutas-en-configuraciones">3. <strong>Normalización de Rutas en Configuraciones</strong></h3>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">cfg</span> <span class="o">:=</span> <span class="k">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">string</span><span class="p">{</span>
+    <span class="s">"log_dir"</span><span class="o">:</span> <span class="s">"/var//logs/../app_logs/"</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="n">normalized</span> <span class="o">:=</span> <span class="n">path</span><span class="o">.</span><span class="n">Clean</span><span class="p">(</span><span class="n">cfg</span><span class="p">[</span><span class="s">"log_dir"</span><span class="p">])</span>
+<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">normalized</span><span class="p">)</span> <span class="c">// "/var/app_logs"</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="mejores-prácticas-y-advertencias">Mejores Prácticas y Advertencias</h2>
+
+<ol>
+  <li>
+    <p><strong>No usar <code class="language-plaintext highlighter-rouge">path</code> para rutas del sistema de archivos</strong>:<br />
+En Windows, <code class="language-plaintext highlighter-rouge">path.Join("dir", "file.txt")</code> crea <code class="language-plaintext highlighter-rouge">dir/file.txt</code>, que no es válido. Usa <code class="language-plaintext highlighter-rouge">filepath</code> en su lugar.</p>
+  </li>
+  <li><strong>Manejo de rutas vacías</strong>:
+    <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">path</span><span class="o">.</span><span class="n">Join</span><span class="p">(</span><span class="s">""</span><span class="p">,</span> <span class="s">"file.txt"</span><span class="p">)</span>  <span class="c">// "file.txt" (correcto)</span>
+<span class="n">path</span><span class="o">.</span><span class="n">Base</span><span class="p">(</span><span class="s">""</span><span class="p">)</span>              <span class="c">// "." (puede ser inesperado)</span>
+</code></pre></div>    </div>
+  </li>
+  <li><strong>Rutas absolutas vs relativas</strong>:
+    <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">path</span><span class="o">.</span><span class="n">IsAbs</span><span class="p">(</span><span class="s">"/tmp/file"</span><span class="p">)</span>  <span class="c">// No existe en `path`, usar `filepath.IsAbs`</span>
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<hr />
+
+<h2 id="ejemplo-integrado-router-http-simple">Ejemplo Integrado: Router HTTP Simple</h2>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="p">(</span>
+    <span class="s">"fmt"</span>
+    <span class="s">"net/http"</span>
+    <span class="s">"path"</span>
+<span class="p">)</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">http</span><span class="o">.</span><span class="n">HandleFunc</span><span class="p">(</span><span class="s">"/"</span><span class="p">,</span> <span class="k">func</span><span class="p">(</span><span class="n">w</span> <span class="n">http</span><span class="o">.</span><span class="n">ResponseWriter</span><span class="p">,</span> <span class="n">r</span> <span class="o">*</span><span class="n">http</span><span class="o">.</span><span class="n">Request</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">cleanPath</span> <span class="o">:=</span> <span class="n">path</span><span class="o">.</span><span class="n">Clean</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">URL</span><span class="o">.</span><span class="n">Path</span><span class="p">)</span>
+        
+        <span class="k">switch</span> <span class="n">cleanPath</span> <span class="p">{</span>
+        <span class="k">case</span> <span class="s">"/"</span><span class="o">:</span>
+            <span class="n">fmt</span><span class="o">.</span><span class="n">Fprint</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="s">"Página de inicio"</span><span class="p">)</span>
+        <span class="k">case</span> <span class="s">"/about"</span><span class="o">:</span>
+            <span class="n">fmt</span><span class="o">.</span><span class="n">Fprint</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="s">"Acerca de nosotros"</span><span class="p">)</span>
+        <span class="k">default</span><span class="o">:</span>
+            <span class="n">w</span><span class="o">.</span><span class="n">WriteHeader</span><span class="p">(</span><span class="n">http</span><span class="o">.</span><span class="n">StatusNotFound</span><span class="p">)</span>
+            <span class="n">fmt</span><span class="o">.</span><span class="n">Fprint</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="s">"404 Página no encontrada"</span><span class="p">)</span>
+        <span class="p">}</span>
+    <span class="p">})</span>
+    
+    <span class="n">http</span><span class="o">.</span><span class="n">ListenAndServe</span><span class="p">(</span><span class="s">":8080"</span><span class="p">,</span> <span class="no">nil</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="conclusión">Conclusión</h2>
+
+<p>El paquete <code class="language-plaintext highlighter-rouge">path</code> es esencial para:</p>
+<ul>
+  <li>Manipular rutas lógicas independientes del SO.</li>
+  <li>Construir URLs y rutas de configuración.</li>
+  <li>Evitar errores comunes en la concatenación manual de rutas.</li>
+</ul>
+
+<p><strong>Recuerda</strong>:</p>
+<ul>
+  <li>Utiliza <code class="language-plaintext highlighter-rouge">filepath</code> para operaciones con archivos locales.</li>
+  <li>Aprovecha <code class="language-plaintext highlighter-rouge">Clean</code> y <code class="language-plaintext highlighter-rouge">Join</code> para mantener rutas consistentes.</li>
+  <li>Combínalo con <code class="language-plaintext highlighter-rouge">filepath</code> cuando necesites compatibilidad multiplataforma.</li>
+</ul>
+
+<p>Esta guía proporciona las herramientas necesarias para trabajar eficientemente con rutas en Go, asegurando código limpio y mantenible en diversos escenarios.</p>
+
+            </main>
+        </div>
+        
+        <!-- Componente flotante de GitHub -->
+<div class="github-floating">
+    <a href="https://github.com/" target="_blank" rel="noopener noreferrer" class="github-link" title="Ver en GitHub">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-github">
+            <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+        </svg>
+    </a>
+    
+    
+    <a href="https://github.com//MiguelP-Dev.github.io/blob/main/_pages/paquetes/path.md" target="_blank" rel="noopener noreferrer" class="edit-link" title="Editar esta página">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-2">
+            <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+        </svg>
+    </a>
+    
+</div>
+
+<style>
+    /* Estilos del componente SVG */
+    .github-corner:hover .octo-arm {
+        animation: octocat-wave 560ms ease-in-out;
+    }
+    
+    @keyframes octocat-wave {
+        0%, 100% { transform: rotate(0); }
+        20%, 60% { transform: rotate(-25deg); }
+        40%, 80% { transform: rotate(10deg); }
+    }
+    
+    @media (max-width: 500px) {
+        .github-corner:hover .octo-arm {
+            animation: none;
+        }
+        .github-corner .octo-arm {
+            animation: octocat-wave 560ms ease-in-out;
+        }
+    }
+</style>
+    </div>
+    
+    <script src="/assets/js/scripts.js"></script>
+</body>
+</html>

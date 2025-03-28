@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>go | Miguel's Programing Notes</title>
+    <link rel="stylesheet" href="/assets/css/styles.css">
+</head>
+<body>
+    <div class="app">
+        <nav class="navbar">
+    <div class="nav-container">
+        <a href="/" class="nav-brand">
+            Miguel's Programming Notes
+        </a>
+
+        <div class="nav-sections">
+            
+                
+                
+                
+                <a href="/paquetes/"
+                    class="nav-section active"
+                    data-section="paquetes">
+                    📦 Paquetes
+                </a>
+            
+                
+                
+                
+                <a href="/ejemplos/"
+                    class="nav-section "
+                    data-section="ejemplos">
+                    🧩 Ejemplos
+                </a>
+            
+        </div>
+    </div>
+</nav>
+        
+        <div class="container">
+            <button class="menu-toggle" aria-label="Abrir menú">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            
+            <aside class="sidebar" id="dynamic-sidebar">
+    <div class="sidebar-header">
+        <h3 class="sidebar-title">Miguel's Programming Notes</h3>
+    </div>
+    
+    <div class="sidebar-content">
+        
+            
+                <h3 class="sidebar-title">📦 Paquetes</h3>
+                <nav class="sidebar-nav">
+                    
+                        <a href="/paquetes/fmt/"
+                            class="sidebar-item "
+                            data-item="fmt">
+                            fmt
+                        </a>
+                    
+                        <a href="/paquetes/net/"
+                            class="sidebar-item "
+                            data-item="net-http">
+                            net/http
+                        </a>
+                    
+                        <a href="/paquetes/encoding/"
+                            class="sidebar-item "
+                            data-item="encoding">
+                            encoding
+                        </a>
+                    
+                </nav>
+            
+        
+            
+        
+    </div>
+</aside>
+            
+            <main class="content">
+                <h1 id="guía-completa-de-los-comandos-go-en-golang">Guía Completa de los Comandos <code class="language-plaintext highlighter-rouge">go</code> en Golang</h1>
+
+<p>El ecosistema de Go incluye una amplia variedad de comandos para gestionar el ciclo de vida completo de un proyecto. A continuación, se presenta una guía detallada con ejemplos avanzados y casos de uso realistas.</p>
+
+<hr />
+
+<h2 id="comandos-esenciales">Comandos Esenciales</h2>
+
+<h3 id="1-go-run">1. <strong><code class="language-plaintext highlighter-rouge">go run</code></strong></h3>
+<p><strong>Descripción</strong>: Compila y ejecuta código temporalmente sin generar binarios.<br />
+<strong>Casos de Uso Avanzados</strong>:</p>
+<ul>
+  <li>Ejecutar múltiples archivos:
+    <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>go run main.go utils.go config.go
+</code></pre></div>    </div>
+  </li>
+  <li>Pasar argumentos al programa:
+    <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>go run main.go <span class="nt">-port</span><span class="o">=</span>8080 <span class="nt">-env</span><span class="o">=</span>prod
+</code></pre></div>    </div>
+  </li>
+  <li>Usar tags de compilación:
+    <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>go run <span class="nt">-tags</span><span class="o">=</span>jsoniter main.go  <span class="c"># Usa una implementación alternativa de JSON</span>
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<p><strong>Mejor Práctica</strong>: Ideal para prototipado rápido, evita acumulación de binarios temporales.</p>
+
+<hr />
+
+<h3 id="2-go-build">2. <strong><code class="language-plaintext highlighter-rouge">go build</code></strong></h3>
+<p><strong>Descripción</strong>: Genera binarios optimizados.<br />
+<strong>Opciones Clave</strong>:</p>
+<ul>
+  <li>Compilación cruzada:
+    <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">GOOS</span><span class="o">=</span>linux <span class="nv">GOARCH</span><span class="o">=</span>amd64 go build <span class="nt">-o</span> app-linux main.go
+<span class="nv">GOOS</span><span class="o">=</span>windows <span class="nv">GOARCH</span><span class="o">=</span>amd64 go build <span class="nt">-o</span> app.exe main.go
+</code></pre></div>    </div>
+  </li>
+  <li>Incluir metadatos:
+    <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>go build <span class="nt">-ldflags</span> <span class="s2">"-X main.Version=1.2.3 -X main.BuildTime=</span><span class="si">$(</span><span class="nb">date</span> +%s<span class="si">)</span><span class="s2">"</span>
+</code></pre></div>    </div>
+  </li>
+  <li>Reducir tamaño con <code class="language-plaintext highlighter-rouge">-trimpath</code>:
+    <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>go build <span class="nt">-trimpath</span> <span class="nt">-o</span> minimal-app
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<p><strong>Ejemplo Completo</strong>:</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">CGO_ENABLED</span><span class="o">=</span>0 <span class="nv">GOOS</span><span class="o">=</span>darwin <span class="nv">GOARCH</span><span class="o">=</span>arm64 go build <span class="nt">-ldflags</span> <span class="s2">"-s -w"</span> <span class="nt">-tags</span><span class="o">=</span>prod <span class="nt">-o</span> release/app ./cmd/server
+</code></pre></div></div>
+
+<hr />
+
+<h3 id="3-go-install">3. <strong><code class="language-plaintext highlighter-rouge">go install</code></strong></h3>
+<p><strong>Descripción</strong>: Instala herramientas en <code class="language-plaintext highlighter-rouge">$GOPATH/bin</code>.<br />
+<strong>Flujo de Trabajo</strong>:</p>
+<ol>
+  <li>Crear herramienta CLI:
+    <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// tools/version/main.go</span>
+<span class="k">package</span> <span class="n">main</span>
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Versión 1.4.2"</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div>    </div>
+  </li>
+  <li>Instalar globalmente:
+    <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>go <span class="nb">install</span> ./tools/version
+</code></pre></div>    </div>
+  </li>
+  <li>Ejecutar desde cualquier lugar:
+    <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>version  <span class="c"># Output: Versión 1.4.2</span>
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<p><strong>Nota</strong>: Asegurar que <code class="language-plaintext highlighter-rouge">$GOPATH/bin</code> esté en el <code class="language-plaintext highlighter-rouge">PATH</code> del sistema.</p>
+
+<hr />
+
+<h2 id="gestión-de-dependencias">Gestión de Dependencias</h2>
+
+<h3 id="4-go-get">4. <strong><code class="language-plaintext highlighter-rouge">go get</code></strong></h3>
+<p><strong>Funcionalidades Avanzadas</strong>:</p>
+<ul>
+  <li>Instalar versión específica:
+    <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>go get github.com/gorilla/mux@v1.8.0
+</code></pre></div>    </div>
+  </li>
+  <li>Actualizar a última versión:
+    <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>go get <span class="nt">-u</span> github.com/gin-gonic/gin
+</code></pre></div>    </div>
+  </li>
+  <li>Reemplazar dependencias (para forks):
+    <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// go.mod</span>
+<span class="n">replace</span> <span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">original</span><span class="o">/</span><span class="n">repo</span> <span class="o">=&gt;</span> <span class="o">../</span><span class="n">local</span><span class="o">/</span><span class="n">fork</span>
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<p><strong>Ejemplo de Workflow</strong>:</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>go get github.com/spf13/cobra@latest  <span class="c"># Última versión</span>
+go mod tidy                          <span class="c"># Limpiar dependencias no usadas</span>
+</code></pre></div></div>
+
+<hr />
+
+<h3 id="5-go-mod">5. <strong><code class="language-plaintext highlighter-rouge">go mod</code></strong></h3>
+<p><strong>Comandos Clave</strong>:
+| Comando           | Descripción                          |
+|——————-|————————————–|
+| <code class="language-plaintext highlighter-rouge">go mod init</code>     | Inicializa nuevo módulo              |
+| <code class="language-plaintext highlighter-rouge">go mod graph</code>    | Muestra gráfico de dependencias      |
+| <code class="language-plaintext highlighter-rouge">go mod vendor</code>   | Crea directorio vendor               |
+| <code class="language-plaintext highlighter-rouge">go mod verify</code>   | Verifica integridad de dependencias  |</p>
+
+<p><strong>Ejemplo de Módulo Privado</strong>:</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">GOPRIVATE</span><span class="o">=</span>github.com/mi-empresa go mod download  <span class="c"># Ignora proxy para repos privados</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="calidad-de-código">Calidad de Código</h2>
+
+<h3 id="6-go-test">6. <strong><code class="language-plaintext highlighter-rouge">go test</code></strong></h3>
+<p><strong>Técnicas Avanzadas</strong>:</p>
+<ul>
+  <li>Pruebas paralelas:
+    <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">TestFetch</span><span class="p">(</span><span class="n">t</span> <span class="o">*</span><span class="n">testing</span><span class="o">.</span><span class="n">T</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">t</span><span class="o">.</span><span class="n">Parallel</span><span class="p">()</span>
+    <span class="c">// ... código ...</span>
+<span class="p">}</span>
+</code></pre></div>    </div>
+  </li>
+  <li>Generar cobertura:
+    <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>go <span class="nb">test</span> <span class="nt">-coverprofile</span><span class="o">=</span>coverage.out <span class="o">&amp;&amp;</span> go tool cover <span class="nt">-html</span><span class="o">=</span>coverage.out
+</code></pre></div>    </div>
+  </li>
+  <li>Detección de race conditions:
+    <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>go <span class="nb">test</span> <span class="nt">-race</span> ./...
+</code></pre></div>    </div>
+  </li>
+  <li>Pruebas de integración:
+    <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>go <span class="nb">test</span> <span class="nt">-tags</span><span class="o">=</span>integration
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<p><strong>Ejemplo de Subtests</strong>:</p>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">TestMath</span><span class="p">(</span><span class="n">t</span> <span class="o">*</span><span class="n">testing</span><span class="o">.</span><span class="n">T</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">t</span><span class="o">.</span><span class="n">Run</span><span class="p">(</span><span class="s">"Suma"</span><span class="p">,</span> <span class="k">func</span><span class="p">(</span><span class="n">t</span> <span class="o">*</span><span class="n">testing</span><span class="o">.</span><span class="n">T</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="n">sum</span><span class="p">(</span><span class="m">2</span><span class="p">,</span><span class="m">3</span><span class="p">)</span> <span class="o">!=</span> <span class="m">5</span> <span class="p">{</span>
+            <span class="n">t</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span><span class="s">"Falló suma"</span><span class="p">)</span>
+        <span class="p">}</span>
+    <span class="p">})</span>
+    <span class="n">t</span><span class="o">.</span><span class="n">Run</span><span class="p">(</span><span class="s">"Resta"</span><span class="p">,</span> <span class="k">func</span><span class="p">(</span><span class="n">t</span> <span class="o">*</span><span class="n">testing</span><span class="o">.</span><span class="n">T</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c">// ... pruebas ...</span>
+    <span class="p">})</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<hr />
+
+<h3 id="7-go-vet-y-go-fmt">7. <strong><code class="language-plaintext highlighter-rouge">go vet</code> y <code class="language-plaintext highlighter-rouge">go fmt</code></strong></h3>
+<p><strong>Integración con CI/CD</strong>:</p>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Ejemplo de GitHub Actions</span>
+<span class="na">jobs</span><span class="pi">:</span>
+  <span class="na">lint</span><span class="pi">:</span>
+    <span class="na">steps</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Formatear código</span>
+        <span class="na">run</span><span class="pi">:</span> <span class="s">go fmt ./...</span>
+      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Análisis estático</span>
+        <span class="na">run</span><span class="pi">:</span> <span class="s">go vet ./...</span>
+</code></pre></div></div>
+
+<p><strong>Configuración Personalizada</strong>:</p>
+<ul>
+  <li>Crear <code class="language-plaintext highlighter-rouge">.gofmt</code> para reglas personalizadas</li>
+  <li>Usar <a href="https://staticcheck.io/">staticcheck</a> para análisis más profundo</li>
+</ul>
+
+<hr />
+
+<h2 id="herramientas-de-desarrollo">Herramientas de Desarrollo</h2>
+
+<h3 id="8-go-doc">8. <strong><code class="language-plaintext highlighter-rouge">go doc</code></strong></h3>
+<p><strong>Usos Avanzados</strong>:</p>
+<ul>
+  <li>Servir documentación web:
+    <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>godoc <span class="nt">-http</span><span class="o">=</span>:6060
+</code></pre></div>    </div>
+  </li>
+  <li>Documentar paquetes:
+    <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// Package math provee operaciones matemáticas avanzadas.</span>
+<span class="k">package</span> <span class="n">math</span>
+
+<span class="c">// Suma dos enteros.</span>
+<span class="k">func</span> <span class="n">Add</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="kt">int</span><span class="p">)</span> <span class="kt">int</span> <span class="p">{</span> <span class="o">...</span> <span class="p">}</span>
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<p><strong>Consulta Rápida</strong>:</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>go doc <span class="nt">-all</span> bytes.Buffer  <span class="c"># Ver todos los métodos</span>
+</code></pre></div></div>
+
+<hr />
+
+<h3 id="9-go-generate">9. <strong><code class="language-plaintext highlighter-rouge">go generate</code></strong></h3>
+<p><strong>Automatización de Código</strong>:</p>
+<ol>
+  <li>Crear directiva:
+    <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">//go:generate stringer -type=Estado</span>
+<span class="k">type</span> <span class="n">Estado</span> <span class="kt">int</span>
+
+<span class="k">const</span> <span class="p">(</span>
+    <span class="n">Activo</span> <span class="n">Estado</span> <span class="o">=</span> <span class="no">iota</span>
+    <span class="n">Inactivo</span>
+<span class="p">)</span>
+</code></pre></div>    </div>
+  </li>
+  <li>Ejecutar generación:
+    <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>go generate ./...
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<p><strong>Caso de Uso</strong>: Generar código para protocolos gRPC, serializadores, etc.</p>
+
+<hr />
+
+<h2 id="comandos-de-mantenimiento">Comandos de Mantenimiento</h2>
+
+<h3 id="10-go-clean">10. <strong><code class="language-plaintext highlighter-rouge">go clean</code></strong></h3>
+<p><strong>Escenarios Comunes</strong>:</p>
+<ul>
+  <li>Limpiar cache completo:
+    <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>go clean <span class="nt">-cache</span> <span class="nt">-testcache</span> <span class="nt">-modcache</span>
+</code></pre></div>    </div>
+  </li>
+  <li>Eliminar binarios específicos:
+    <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>go clean <span class="nt">-i</span> ./pkg/...  <span class="c"># Elimina instalaciones anteriores</span>
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<hr />
+
+<h2 id="comandos-de-depuración">Comandos de Depuración</h2>
+
+<h3 id="11-go-env">11. <strong><code class="language-plaintext highlighter-rouge">go env</code></strong></h3>
+<p><strong>Configuración del Entorno</strong>:</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>go <span class="nb">env</span> <span class="nt">-w</span> <span class="nv">GOPRIVATE</span><span class="o">=</span>github.com/mi-empresa/<span class="k">*</span>  <span class="c"># Configuración persistente</span>
+go <span class="nb">env </span>GOMODCACHE  <span class="c"># Ver ubicación de cache</span>
+</code></pre></div></div>
+
+<p><strong>Listado Completo</strong>:</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>go <span class="nb">env</span> | <span class="nb">grep</span> <span class="nt">-E</span> <span class="s1">'GOOS|GOARCH|GOPATH'</span>  <span class="c"># Filtra variables clave</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="mejores-prácticas">Mejores Prácticas</h2>
+
+<ol>
+  <li><strong>Estructura de Proyectos</strong>:
+    <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mi-proyecto/
+├── cmd/
+│   └── server/
+│       └── main.go
+├── internal/
+│   └── pkg/
+├── pkg/
+│   └── utils/
+└── go.mod
+</code></pre></div>    </div>
+  </li>
+  <li><strong>Versionado Semántico</strong>:
+    <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git tag v1.2.3
+git push origin v1.2.3
+</code></pre></div>    </div>
+  </li>
+  <li><strong>Optimización de Binarios</strong>:
+    <ul>
+      <li>Usar <code class="language-plaintext highlighter-rouge">-ldflags "-s -w"</code> para reducir tamaño</li>
+      <li>Compilar con <code class="language-plaintext highlighter-rouge">CGO_ENABLED=0</code> para binarios estáticos</li>
+    </ul>
+  </li>
+  <li><strong>Manejo de Errores</strong>:
+    <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="n">_</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">os</span><span class="o">.</span><span class="n">Open</span><span class="p">(</span><span class="s">"file.txt"</span><span class="p">);</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">fmt</span><span class="o">.</span><span class="n">Errorf</span><span class="p">(</span><span class="s">"error abriendo archivo: %w"</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<hr />
+
+<h2 id="flujo-de-trabajo-completo">Flujo de Trabajo Completo</h2>
+
+<ol>
+  <li>Inicializar proyecto:
+    <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>go mod init github.com/usuario/proyecto
+</code></pre></div>    </div>
+  </li>
+  <li>Desarrollar con hot-reload:
+    <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>air <span class="nt">-c</span> .air.toml  <span class="c"># Usar herramienta externa</span>
+</code></pre></div>    </div>
+  </li>
+  <li>Lanzar pruebas:
+    <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>go <span class="nb">test</span> <span class="nt">-cover</span> <span class="nt">-race</span> ./...
+</code></pre></div>    </div>
+  </li>
+  <li>Construir release:
+    <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">GOOS</span><span class="o">=</span>linux <span class="nv">GOARCH</span><span class="o">=</span>amd64 go build <span class="nt">-ldflags</span> <span class="s2">"-s -w"</span> <span class="nt">-o</span> dist/app-linux
+</code></pre></div>    </div>
+  </li>
+  <li>Desplegar:
+    <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>scp dist/app-linux usuario@servidor:/app
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<hr />
+
+<p>Este contenido ampliado cubre escenarios avanzados, integración con herramientas modernas y prácticas profesionales para el desarrollo eficiente en Go. Cada comando incluye ejemplos aplicables a entornos de producción y recomendaciones basadas en la experiencia de la comunidad Go.</p>
+
+            </main>
+        </div>
+        
+        <!-- Componente flotante de GitHub -->
+<div class="github-floating">
+    <a href="https://github.com/" target="_blank" rel="noopener noreferrer" class="github-link" title="Ver en GitHub">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-github">
+            <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+        </svg>
+    </a>
+    
+    
+    <a href="https://github.com//MiguelP-Dev.github.io/blob/main/_pages/paquetes/go.md" target="_blank" rel="noopener noreferrer" class="edit-link" title="Editar esta página">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-2">
+            <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+        </svg>
+    </a>
+    
+</div>
+
+<style>
+    /* Estilos del componente SVG */
+    .github-corner:hover .octo-arm {
+        animation: octocat-wave 560ms ease-in-out;
+    }
+    
+    @keyframes octocat-wave {
+        0%, 100% { transform: rotate(0); }
+        20%, 60% { transform: rotate(-25deg); }
+        40%, 80% { transform: rotate(10deg); }
+    }
+    
+    @media (max-width: 500px) {
+        .github-corner:hover .octo-arm {
+            animation: none;
+        }
+        .github-corner .octo-arm {
+            animation: octocat-wave 560ms ease-in-out;
+        }
+    }
+</style>
+    </div>
+    
+    <script src="/assets/js/scripts.js"></script>
+</body>
+</html>

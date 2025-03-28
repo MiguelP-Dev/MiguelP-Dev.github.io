@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>archive | Miguel's Programing Notes</title>
+    <link rel="stylesheet" href="/assets/css/styles.css">
+</head>
+<body>
+    <div class="app">
+        <nav class="navbar">
+    <div class="nav-container">
+        <a href="/" class="nav-brand">
+            Miguel's Programming Notes
+        </a>
+
+        <div class="nav-sections">
+            
+                
+                
+                
+                <a href="/paquetes/"
+                    class="nav-section active"
+                    data-section="paquetes">
+                    📦 Paquetes
+                </a>
+            
+                
+                
+                
+                <a href="/ejemplos/"
+                    class="nav-section "
+                    data-section="ejemplos">
+                    🧩 Ejemplos
+                </a>
+            
+        </div>
+    </div>
+</nav>
+        
+        <div class="container">
+            <button class="menu-toggle" aria-label="Abrir menú">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            
+            <aside class="sidebar" id="dynamic-sidebar">
+    <div class="sidebar-header">
+        <h3 class="sidebar-title">Miguel's Programming Notes</h3>
+    </div>
+    
+    <div class="sidebar-content">
+        
+            
+                <h3 class="sidebar-title">📦 Paquetes</h3>
+                <nav class="sidebar-nav">
+                    
+                        <a href="/paquetes/fmt/"
+                            class="sidebar-item "
+                            data-item="fmt">
+                            fmt
+                        </a>
+                    
+                        <a href="/paquetes/net/"
+                            class="sidebar-item "
+                            data-item="net-http">
+                            net/http
+                        </a>
+                    
+                        <a href="/paquetes/encoding/"
+                            class="sidebar-item "
+                            data-item="encoding">
+                            encoding
+                        </a>
+                    
+                </nav>
+            
+        
+            
+        
+    </div>
+</aside>
+            
+            <main class="content">
+                <h1 id="paquete-archive-en-go-guía-completa-para-manejo-de-archivos-comprimidos">Paquete <code class="language-plaintext highlighter-rouge">archive</code> en Go: Guía Completa para Manejo de Archivos Comprimidos</h1>
+
+<p>El paquete <code class="language-plaintext highlighter-rouge">archive</code> en Go proporciona funciones para trabajar con archivos comprimidos. Este documento explora en detalle los subpaquetes <code class="language-plaintext highlighter-rouge">archive/tar</code> y <code class="language-plaintext highlighter-rouge">archive/zip</code>, incluyendo ejemplos prácticos de uso y mejores prácticas.</p>
+
+<hr />
+
+<h2 id="1-subpaquete-archivetar">1. Subpaquete <code class="language-plaintext highlighter-rouge">archive/tar</code></h2>
+
+<h3 id="11-conceptos-básicos">1.1 <strong>Conceptos Básicos</strong></h3>
+
+<p>El formato TAR (Tape Archive) es ampliamente utilizado en sistemas Unix para almacenar múltiples archivos en un solo archivo.</p>
+
+<h3 id="12-funciones-principales">1.2 <strong>Funciones Principales</strong></h3>
+
+<h4 id="newreader"><code class="language-plaintext highlighter-rouge">NewReader</code></h4>
+
+<p><strong>Propósito</strong>: Crear un lector para archivos TAR.</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">reader</span> <span class="o">:=</span> <span class="n">tar</span><span class="o">.</span><span class="n">NewReader</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p><strong>Ejemplo Completo de Lectura</strong>:</p>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">readTarFile</span><span class="p">(</span><span class="n">filename</span> <span class="kt">string</span><span class="p">)</span> <span class="kt">error</span> <span class="p">{</span>
+    <span class="n">file</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">os</span><span class="o">.</span><span class="n">Open</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">err</span>
+    <span class="p">}</span>
+    <span class="k">defer</span> <span class="n">file</span><span class="o">.</span><span class="n">Close</span><span class="p">()</span>
+
+    <span class="n">tr</span> <span class="o">:=</span> <span class="n">tar</span><span class="o">.</span><span class="n">NewReader</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+    <span class="k">for</span> <span class="p">{</span>
+        <span class="n">header</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">tr</span><span class="o">.</span><span class="n">Next</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">err</span> <span class="o">==</span> <span class="n">io</span><span class="o">.</span><span class="n">EOF</span> <span class="p">{</span>
+            <span class="k">break</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="n">err</span>
+        <span class="p">}</span>
+        
+        <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Contenido del archivo: %s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">header</span><span class="o">.</span><span class="n">Name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">_</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">io</span><span class="o">.</span><span class="n">Copy</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">Stdout</span><span class="p">,</span> <span class="n">tr</span><span class="p">);</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="n">err</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="no">nil</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h4 id="newwriter"><code class="language-plaintext highlighter-rouge">NewWriter</code></h4>
+
+<p><strong>Propósito</strong>: Crear un escritor para archivos TAR.</p>
+
+<p><strong>Ejemplo Completo de Creación</strong>:</p>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">createTarArchive</span><span class="p">(</span><span class="n">files</span> <span class="p">[]</span><span class="kt">string</span><span class="p">,</span> <span class="n">output</span> <span class="kt">string</span><span class="p">)</span> <span class="kt">error</span> <span class="p">{</span>
+    <span class="n">outFile</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">os</span><span class="o">.</span><span class="n">Create</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">err</span>
+    <span class="p">}</span>
+    <span class="k">defer</span> <span class="n">outFile</span><span class="o">.</span><span class="n">Close</span><span class="p">()</span>
+
+    <span class="n">tw</span> <span class="o">:=</span> <span class="n">tar</span><span class="o">.</span><span class="n">NewWriter</span><span class="p">(</span><span class="n">outFile</span><span class="p">)</span>
+    <span class="k">defer</span> <span class="n">tw</span><span class="o">.</span><span class="n">Close</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">file</span> <span class="o">:=</span> <span class="k">range</span> <span class="n">files</span> <span class="p">{</span>
+        <span class="n">err</span> <span class="o">:=</span> <span class="n">addToTar</span><span class="p">(</span><span class="n">tw</span><span class="p">,</span> <span class="n">file</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="n">err</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="no">nil</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="n">addToTar</span><span class="p">(</span><span class="n">tw</span> <span class="o">*</span><span class="n">tar</span><span class="o">.</span><span class="n">Writer</span><span class="p">,</span> <span class="n">filename</span> <span class="kt">string</span><span class="p">)</span> <span class="kt">error</span> <span class="p">{</span>
+    <span class="n">file</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">os</span><span class="o">.</span><span class="n">Open</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">err</span>
+    <span class="p">}</span>
+    <span class="k">defer</span> <span class="n">file</span><span class="o">.</span><span class="n">Close</span><span class="p">()</span>
+
+    <span class="n">info</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">file</span><span class="o">.</span><span class="n">Stat</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">err</span>
+    <span class="p">}</span>
+
+    <span class="n">header</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">tar</span><span class="o">.</span><span class="n">FileInfoHeader</span><span class="p">(</span><span class="n">info</span><span class="p">,</span> <span class="n">info</span><span class="o">.</span><span class="n">Name</span><span class="p">())</span>
+    <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">err</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">tw</span><span class="o">.</span><span class="n">WriteHeader</span><span class="p">(</span><span class="n">header</span><span class="p">);</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">err</span>
+    <span class="p">}</span>
+
+    <span class="n">_</span><span class="p">,</span> <span class="n">err</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">Copy</span><span class="p">(</span><span class="n">tw</span><span class="p">,</span> <span class="n">file</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">err</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="2-subpaquete-archivezip">2. Subpaquete <code class="language-plaintext highlighter-rouge">archive/zip</code></h2>
+
+<h3 id="21-conceptos-básicos">2.1 <strong>Conceptos Básicos</strong></h3>
+
+<p>El formato ZIP es uno de los formatos de compresión más populares, especialmente en entornos Windows.</p>
+
+<h3 id="22-ejemplos-detallados">2.2 <strong>Ejemplos Detallados</strong></h3>
+
+<h4 id="crear-un-archivo-zip">Crear un Archivo ZIP</h4>
+
+<p><strong>Propósito</strong>: Crear un nuevo archivo ZIP con múltiples archivos.</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">createZip</span><span class="p">(</span><span class="n">files</span> <span class="p">[]</span><span class="kt">string</span><span class="p">,</span> <span class="n">zipName</span> <span class="kt">string</span><span class="p">)</span> <span class="kt">error</span> <span class="p">{</span>
+    <span class="n">zipfile</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">os</span><span class="o">.</span><span class="n">Create</span><span class="p">(</span><span class="n">zipName</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">err</span>
+    <span class="p">}</span>
+    <span class="k">defer</span> <span class="n">zipfile</span><span class="o">.</span><span class="n">Close</span><span class="p">()</span>
+
+    <span class="n">archive</span> <span class="o">:=</span> <span class="n">zip</span><span class="o">.</span><span class="n">NewWriter</span><span class="p">(</span><span class="n">zipfile</span><span class="p">)</span>
+    <span class="k">defer</span> <span class="n">archive</span><span class="o">.</span><span class="n">Close</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">file</span> <span class="o">:=</span> <span class="k">range</span> <span class="n">files</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">addFileToZip</span><span class="p">(</span><span class="n">archive</span><span class="p">,</span> <span class="n">file</span><span class="p">);</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="n">err</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="no">nil</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="n">addFileToZip</span><span class="p">(</span><span class="n">archive</span> <span class="o">*</span><span class="n">zip</span><span class="o">.</span><span class="n">Writer</span><span class="p">,</span> <span class="n">filename</span> <span class="kt">string</span><span class="p">)</span> <span class="kt">error</span> <span class="p">{</span>
+    <span class="n">file</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">os</span><span class="o">.</span><span class="n">Open</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">err</span>
+    <span class="p">}</span>
+    <span class="k">defer</span> <span class="n">file</span><span class="o">.</span><span class="n">Close</span><span class="p">()</span>
+
+    <span class="n">info</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">file</span><span class="o">.</span><span class="n">Stat</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">err</span>
+    <span class="p">}</span>
+
+    <span class="n">header</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">zip</span><span class="o">.</span><span class="n">FileInfoHeader</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">err</span>
+    <span class="p">}</span>
+    <span class="n">header</span><span class="o">.</span><span class="n">Method</span> <span class="o">=</span> <span class="n">zip</span><span class="o">.</span><span class="n">Deflate</span>
+
+    <span class="n">writer</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">archive</span><span class="o">.</span><span class="n">CreateHeader</span><span class="p">(</span><span class="n">header</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">err</span>
+    <span class="p">}</span>
+
+    <span class="n">_</span><span class="p">,</span> <span class="n">err</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">Copy</span><span class="p">(</span><span class="n">writer</span><span class="p">,</span> <span class="n">file</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">err</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h4 id="leer-un-archivo-zip">Leer un Archivo ZIP</h4>
+
+<p><strong>Propósito</strong>: Extraer y leer el contenido de un archivo ZIP.</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">readZip</span><span class="p">(</span><span class="n">filename</span> <span class="kt">string</span><span class="p">)</span> <span class="kt">error</span> <span class="p">{</span>
+    <span class="n">reader</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">zip</span><span class="o">.</span><span class="n">OpenReader</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">err</span>
+    <span class="p">}</span>
+    <span class="k">defer</span> <span class="n">reader</span><span class="o">.</span><span class="n">Close</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">file</span> <span class="o">:=</span> <span class="k">range</span> <span class="n">reader</span><span class="o">.</span><span class="n">File</span> <span class="p">{</span>
+        <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Archivo: %s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">file</span><span class="o">.</span><span class="n">Name</span><span class="p">)</span>
+        
+        <span class="n">rc</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">file</span><span class="o">.</span><span class="n">Open</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="n">err</span>
+        <span class="p">}</span>
+        <span class="k">defer</span> <span class="n">rc</span><span class="o">.</span><span class="n">Close</span><span class="p">()</span>
+
+        <span class="n">content</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">io</span><span class="o">.</span><span class="n">ReadAll</span><span class="p">(</span><span class="n">rc</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="n">err</span>
+        <span class="p">}</span>
+        <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Contenido: %s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">content</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="no">nil</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="23-características-avanzadas">2.3 <strong>Características Avanzadas</strong></h3>
+
+<h4 id="compresión-con-contraseña">Compresión con Contraseña</h4>
+
+<p><strong>Propósito</strong>: Crear archivos ZIP protegidos con contraseña.</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">createPasswordProtectedZip</span><span class="p">(</span><span class="n">files</span> <span class="p">[]</span><span class="kt">string</span><span class="p">,</span> <span class="n">zipName</span><span class="p">,</span> <span class="n">password</span> <span class="kt">string</span><span class="p">)</span> <span class="kt">error</span> <span class="p">{</span>
+    <span class="n">zipfile</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">os</span><span class="o">.</span><span class="n">Create</span><span class="p">(</span><span class="n">zipName</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">err</span>
+    <span class="p">}</span>
+    <span class="k">defer</span> <span class="n">zipfile</span><span class="o">.</span><span class="n">Close</span><span class="p">()</span>
+
+    <span class="n">archive</span> <span class="o">:=</span> <span class="n">zip</span><span class="o">.</span><span class="n">NewWriter</span><span class="p">(</span><span class="n">zipfile</span><span class="p">)</span>
+    <span class="k">defer</span> <span class="n">archive</span><span class="o">.</span><span class="n">Close</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">file</span> <span class="o">:=</span> <span class="k">range</span> <span class="n">files</span> <span class="p">{</span>
+        <span class="n">header</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="n">zip</span><span class="o">.</span><span class="n">FileHeader</span><span class="p">{</span>
+            <span class="n">Name</span><span class="o">:</span>   <span class="n">file</span><span class="p">,</span>
+            <span class="n">Method</span><span class="o">:</span> <span class="n">zip</span><span class="o">.</span><span class="n">Deflate</span><span class="p">,</span>
+        <span class="p">}</span>
+        
+        <span class="c">// Establecer el bit de encriptación</span>
+        <span class="n">header</span><span class="o">.</span><span class="n">SetPassword</span><span class="p">(</span><span class="n">password</span><span class="p">)</span>
+        
+        <span class="n">writer</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">archive</span><span class="o">.</span><span class="n">CreateHeader</span><span class="p">(</span><span class="n">header</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="n">err</span>
+        <span class="p">}</span>
+
+        <span class="n">content</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">os</span><span class="o">.</span><span class="n">ReadFile</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="n">err</span>
+        <span class="p">}</span>
+
+        <span class="n">_</span><span class="p">,</span> <span class="n">err</span> <span class="o">=</span> <span class="n">writer</span><span class="o">.</span><span class="n">Write</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="n">err</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="no">nil</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="3-mejores-prácticas">3. Mejores Prácticas</h2>
+
+<h3 id="31-manejo-de-errores">3.1 <strong>Manejo de Errores</strong></h3>
+<ul>
+  <li>Verificar siempre los errores retornados</li>
+  <li>Usar <code class="language-plaintext highlighter-rouge">defer</code> para cerrar recursos</li>
+  <li>Implementar recuperación de errores</li>
+</ul>
+
+<h3 id="32-cierre-de-recursos">3.2 <strong>Cierre de Recursos</strong></h3>
+<ul>
+  <li>Usar <code class="language-plaintext highlighter-rouge">defer</code> para cerrar archivos y writers</li>
+  <li>Manejar correctamente los recursos en caso de error</li>
+</ul>
+
+<h3 id="33-compresión-eficiente">3.3 <strong>Compresión Eficiente</strong></h3>
+<ul>
+  <li>Elegir el método de compresión adecuado</li>
+  <li>Considerar el tamaño de los archivos</li>
+  <li>Implementar compresión progresiva para archivos grandes</li>
+</ul>
+
+<h3 id="34-consideraciones-de-memoria">3.4 <strong>Consideraciones de Memoria</strong></h3>
+<ul>
+  <li>Usar <code class="language-plaintext highlighter-rouge">io.Copy</code> para archivos grandes</li>
+  <li>Implementar buffers para control de memoria</li>
+  <li>Considerar el uso de goroutines para procesamiento paralelo</li>
+</ul>
+
+<hr />
+
+<h2 id="4-tips-y-trucos">4. Tips y Trucos</h2>
+
+<ol>
+  <li><strong>Procesamiento de Archivos Grandes</strong>:
+    <ul>
+      <li>Usar <code class="language-plaintext highlighter-rouge">io.Copy</code> en lugar de <code class="language-plaintext highlighter-rouge">io.ReadAll</code></li>
+      <li>Implementar barras de progreso</li>
+      <li>Considerar procesamiento en chunks</li>
+    </ul>
+  </li>
+  <li><strong>Optimización de Rendimiento</strong>:
+    <ul>
+      <li>Usar goroutines para procesamiento paralelo</li>
+      <li>Implementar buffers de tamaño adecuado</li>
+      <li>Evitar operaciones innecesarias en memoria</li>
+    </ul>
+  </li>
+  <li><strong>Verificación de Integridad</strong>:
+    <ul>
+      <li>Verificar checksums después de la compresión</li>
+      <li>Implementar validación de archivos</li>
+      <li>Manejar casos de corrupción</li>
+    </ul>
+  </li>
+</ol>
+
+<hr />
+
+<h2 id="5-ejemplo-integrado-sistema-de-backup">5. Ejemplo Integrado: Sistema de Backup</h2>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">type</span> <span class="n">BackupSystem</span> <span class="k">struct</span> <span class="p">{</span>
+    <span class="n">sourceDir</span>  <span class="kt">string</span>
+    <span class="n">backupDir</span>  <span class="kt">string</span>
+    <span class="n">compression</span> <span class="kt">string</span> <span class="c">// "zip" o "tar"</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="p">(</span><span class="n">bs</span> <span class="o">*</span><span class="n">BackupSystem</span><span class="p">)</span> <span class="n">CreateBackup</span><span class="p">()</span> <span class="kt">error</span> <span class="p">{</span>
+    <span class="n">timestamp</span> <span class="o">:=</span> <span class="n">time</span><span class="o">.</span><span class="n">Now</span><span class="p">()</span><span class="o">.</span><span class="n">Format</span><span class="p">(</span><span class="s">"20060102_150405"</span><span class="p">)</span>
+    <span class="n">filename</span> <span class="o">:=</span> <span class="n">fmt</span><span class="o">.</span><span class="n">Sprintf</span><span class="p">(</span><span class="s">"backup_%s.%s"</span><span class="p">,</span> <span class="n">timestamp</span><span class="p">,</span> <span class="n">bs</span><span class="o">.</span><span class="n">compression</span><span class="p">)</span>
+    <span class="n">outputPath</span> <span class="o">:=</span> <span class="n">filepath</span><span class="o">.</span><span class="n">Join</span><span class="p">(</span><span class="n">bs</span><span class="o">.</span><span class="n">backupDir</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+
+    <span class="k">switch</span> <span class="n">bs</span><span class="o">.</span><span class="n">compression</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="s">"zip"</span><span class="o">:</span>
+        <span class="k">return</span> <span class="n">bs</span><span class="o">.</span><span class="n">createZipBackup</span><span class="p">(</span><span class="n">outputPath</span><span class="p">)</span>
+    <span class="k">case</span> <span class="s">"tar"</span><span class="o">:</span>
+        <span class="k">return</span> <span class="n">bs</span><span class="o">.</span><span class="n">createTarBackup</span><span class="p">(</span><span class="n">outputPath</span><span class="p">)</span>
+    <span class="k">default</span><span class="o">:</span>
+        <span class="k">return</span> <span class="n">fmt</span><span class="o">.</span><span class="n">Errorf</span><span class="p">(</span><span class="s">"formato de compresión no soportado: %s"</span><span class="p">,</span> <span class="n">bs</span><span class="o">.</span><span class="n">compression</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Este documento proporciona una visión completa del paquete <code class="language-plaintext highlighter-rouge">archive</code> en Go. Para casos específicos o necesidades particulares, consulta la documentación oficial o pregunta para más detalles.</p>
+
+            </main>
+        </div>
+        
+        <!-- Componente flotante de GitHub -->
+<div class="github-floating">
+    <a href="https://github.com/" target="_blank" rel="noopener noreferrer" class="github-link" title="Ver en GitHub">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-github">
+            <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+        </svg>
+    </a>
+    
+    
+    <a href="https://github.com//MiguelP-Dev.github.io/blob/main/_pages/paquetes/archive.md" target="_blank" rel="noopener noreferrer" class="edit-link" title="Editar esta página">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-2">
+            <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+        </svg>
+    </a>
+    
+</div>
+
+<style>
+    /* Estilos del componente SVG */
+    .github-corner:hover .octo-arm {
+        animation: octocat-wave 560ms ease-in-out;
+    }
+    
+    @keyframes octocat-wave {
+        0%, 100% { transform: rotate(0); }
+        20%, 60% { transform: rotate(-25deg); }
+        40%, 80% { transform: rotate(10deg); }
+    }
+    
+    @media (max-width: 500px) {
+        .github-corner:hover .octo-arm {
+            animation: none;
+        }
+        .github-corner .octo-arm {
+            animation: octocat-wave 560ms ease-in-out;
+        }
+    }
+</style>
+    </div>
+    
+    <script src="/assets/js/scripts.js"></script>
+</body>
+</html>

@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>time | Miguel's Programing Notes</title>
+    <link rel="stylesheet" href="/assets/css/styles.css">
+</head>
+<body>
+    <div class="app">
+        <nav class="navbar">
+    <div class="nav-container">
+        <a href="/" class="nav-brand">
+            Miguel's Programming Notes
+        </a>
+
+        <div class="nav-sections">
+            
+                
+                
+                
+                <a href="/paquetes/"
+                    class="nav-section active"
+                    data-section="paquetes">
+                    📦 Paquetes
+                </a>
+            
+                
+                
+                
+                <a href="/ejemplos/"
+                    class="nav-section "
+                    data-section="ejemplos">
+                    🧩 Ejemplos
+                </a>
+            
+        </div>
+    </div>
+</nav>
+        
+        <div class="container">
+            <button class="menu-toggle" aria-label="Abrir menú">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            
+            <aside class="sidebar" id="dynamic-sidebar">
+    <div class="sidebar-header">
+        <h3 class="sidebar-title">Miguel's Programming Notes</h3>
+    </div>
+    
+    <div class="sidebar-content">
+        
+            
+                <h3 class="sidebar-title">📦 Paquetes</h3>
+                <nav class="sidebar-nav">
+                    
+                        <a href="/paquetes/fmt/"
+                            class="sidebar-item "
+                            data-item="fmt">
+                            fmt
+                        </a>
+                    
+                        <a href="/paquetes/net/"
+                            class="sidebar-item "
+                            data-item="net-http">
+                            net/http
+                        </a>
+                    
+                        <a href="/paquetes/encoding/"
+                            class="sidebar-item "
+                            data-item="encoding">
+                            encoding
+                        </a>
+                    
+                </nav>
+            
+        
+            
+        
+    </div>
+</aside>
+            
+            <main class="content">
+                <h1 id="guía-completa-del-paquete-time-en-go">Guía Completa del Paquete <code class="language-plaintext highlighter-rouge">time</code> en Go</h1>
+
+<h2 id="introducción">Introducción</h2>
+
+<p>El paquete <code class="language-plaintext highlighter-rouge">time</code> es uno de los paquetes fundamentales en el lenguaje de programación Go. Este paquete proporciona funcionalidades para medir, manipular y representar el tiempo de diversas formas. Desde obtener la hora actual hasta realizar operaciones complejas con fechas, el paquete <code class="language-plaintext highlighter-rouge">time</code> ofrece un conjunto robusto de herramientas para trabajar con información temporal.</p>
+
+<p>En esta guía, examinaremos en profundidad las funciones más importantes del paquete <code class="language-plaintext highlighter-rouge">time</code>, exploraremos casos de uso prácticos y proporcionaremos ejemplos detallados que te ayudarán a comprender cómo implementar estas funcionalidades en tus aplicaciones Go.</p>
+
+<h2 id="fundamentos-del-tiempo-en-go">Fundamentos del Tiempo en Go</h2>
+
+<p>Antes de adentrarnos en las funciones específicas, es importante entender algunos conceptos fundamentales sobre cómo Go representa el tiempo:</p>
+
+<ul>
+  <li><strong>Tipo <code class="language-plaintext highlighter-rouge">Time</code></strong>: Es el tipo principal del paquete, representa un instante en el tiempo con precisión de nanosegundos.</li>
+  <li><strong>Tipo <code class="language-plaintext highlighter-rouge">Duration</code></strong>: Representa un intervalo de tiempo, también con precisión de nanosegundos.</li>
+  <li><strong>Zonas horarias</strong>: Go maneja zonas horarias a través del tipo <code class="language-plaintext highlighter-rouge">Location</code>.</li>
+  <li><strong>Formato de referencia</strong>: Go utiliza un enfoque único basado en la fecha “2006-01-02 15:04:05”, donde cada número representa una parte específica de la fecha y hora.</li>
+</ul>
+
+<h2 id="funciones-principales-del-paquete-time">Funciones Principales del Paquete <code class="language-plaintext highlighter-rouge">time</code></h2>
+
+<h3 id="1-timenow---obteniendo-el-tiempo-actual">1. <code class="language-plaintext highlighter-rouge">time.Now()</code> - Obteniendo el Tiempo Actual</h3>
+
+<p>La función <code class="language-plaintext highlighter-rouge">Now()</code> es posiblemente la más utilizada del paquete <code class="language-plaintext highlighter-rouge">time</code>. Devuelve un valor de tipo <code class="language-plaintext highlighter-rouge">Time</code> que representa el instante actual.</p>
+
+<h4 id="ejemplo-detallado-de-timenow">Ejemplo Detallado de time.Now</h4>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="p">(</span>
+    <span class="s">"fmt"</span>
+    <span class="s">"time"</span>
+<span class="p">)</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c">// Obtener el tiempo actual</span>
+    <span class="n">ahora</span> <span class="o">:=</span> <span class="n">time</span><span class="o">.</span><span class="n">Now</span><span class="p">()</span>
+    
+    <span class="c">// Mostrar la hora completa</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Hora actual completa:"</span><span class="p">,</span> <span class="n">ahora</span><span class="p">)</span>
+    
+    <span class="c">// Extraer componentes individuales</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Año: %d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">ahora</span><span class="o">.</span><span class="n">Year</span><span class="p">())</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Mes: %s (%d)</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">ahora</span><span class="o">.</span><span class="n">Month</span><span class="p">(),</span> <span class="kt">int</span><span class="p">(</span><span class="n">ahora</span><span class="o">.</span><span class="n">Month</span><span class="p">()))</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Día: %d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">ahora</span><span class="o">.</span><span class="n">Day</span><span class="p">())</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Hora: %d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">ahora</span><span class="o">.</span><span class="n">Hour</span><span class="p">())</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Minuto: %d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">ahora</span><span class="o">.</span><span class="n">Minute</span><span class="p">())</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Segundo: %d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">ahora</span><span class="o">.</span><span class="n">Second</span><span class="p">())</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Nanosegundo: %d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">ahora</span><span class="o">.</span><span class="n">Nanosecond</span><span class="p">())</span>
+    
+    <span class="c">// Obtener el día de la semana</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Día de la semana: %s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">ahora</span><span class="o">.</span><span class="n">Weekday</span><span class="p">())</span>
+    
+    <span class="c">// Obtener información de la zona horaria</span>
+    <span class="n">zona</span><span class="p">,</span> <span class="n">offset</span> <span class="o">:=</span> <span class="n">ahora</span><span class="o">.</span><span class="n">Zone</span><span class="p">()</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Zona horaria: %s (offset: %d segundos)</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">zona</span><span class="p">,</span> <span class="n">offset</span><span class="p">)</span>
+    
+    <span class="c">// Verificar si estamos en horario de verano</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"¿Horario de verano? %t</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">ahora</span><span class="o">.</span><span class="n">IsDST</span><span class="p">())</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Este ejemplo no solo muestra la hora actual, sino que también ilustra cómo puedes acceder a los componentes individuales del tiempo y obtener información adicional como la zona horaria y si estamos en horario de verano.</p>
+
+<h3 id="2-timeparse---analizando-cadenas-de-tiempo">2. <code class="language-plaintext highlighter-rouge">time.Parse()</code> - Analizando Cadenas de Tiempo</h3>
+
+<p>La función <code class="language-plaintext highlighter-rouge">Parse()</code> te permite convertir una cadena de texto que representa una fecha y hora en un valor de tipo <code class="language-plaintext highlighter-rouge">Time</code>. Esta función es especialmente útil cuando necesitas trabajar con fechas que provienen de entradas de usuario, APIs o archivos.</p>
+
+<h4 id="formato-de-referencia-en-go">Formato de Referencia en Go</h4>
+
+<p>Go utiliza un enfoque único para el formato de tiempo. En lugar de códigos como <code class="language-plaintext highlighter-rouge">%Y</code> o <code class="language-plaintext highlighter-rouge">yyyy</code>, Go usa una fecha específica como referencia: <strong>2006-01-02 15:04:05 -0700 MST</strong>.</p>
+
+<p>Aquí está el significado de cada componente:</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">2006</code>: Año (4 dígitos)</li>
+  <li><code class="language-plaintext highlighter-rouge">01</code>: Mes (2 dígitos)</li>
+  <li><code class="language-plaintext highlighter-rouge">02</code>: Día (2 dígitos)</li>
+  <li><code class="language-plaintext highlighter-rouge">15</code>: Hora en formato 24h (2 dígitos)</li>
+  <li><code class="language-plaintext highlighter-rouge">04</code>: Minuto (2 dígitos)</li>
+  <li><code class="language-plaintext highlighter-rouge">05</code>: Segundo (2 dígitos)</li>
+  <li><code class="language-plaintext highlighter-rouge">-0700</code>: Offset de zona horaria</li>
+  <li><code class="language-plaintext highlighter-rouge">MST</code>: Abreviatura de zona horaria</li>
+</ul>
+
+<h4 id="ejemplo-extendido-de-parse">Ejemplo Extendido de parse</h4>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="p">(</span>
+    <span class="s">"fmt"</span>
+    <span class="s">"time"</span>
+<span class="p">)</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c">// Varios formatos comunes</span>
+    <span class="n">formatos</span> <span class="o">:=</span> <span class="k">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">string</span><span class="p">{</span>
+        <span class="s">"Fecha simple"</span><span class="o">:</span> <span class="s">"2006-01-02"</span><span class="p">,</span>
+        <span class="s">"Fecha y hora"</span><span class="o">:</span> <span class="s">"2006-01-02 15:04:05"</span><span class="p">,</span>
+        <span class="s">"ISO 8601"</span><span class="o">:</span> <span class="s">"2006-01-02T15:04:05Z07:00"</span><span class="p">,</span>
+        <span class="s">"RFC 3339"</span><span class="o">:</span> <span class="n">time</span><span class="o">.</span><span class="n">RFC3339</span><span class="p">,</span>
+        <span class="s">"RFC 822"</span><span class="o">:</span> <span class="n">time</span><span class="o">.</span><span class="n">RFC822</span><span class="p">,</span>
+        <span class="s">"Formato personalizado"</span><span class="o">:</span> <span class="s">"02/01/2006 a las 15:04 horas"</span><span class="p">,</span>
+    <span class="p">}</span>
+    
+    <span class="c">// Cadena de tiempo para analizar</span>
+    <span class="n">timeStr</span> <span class="o">:=</span> <span class="s">"2024-12-30 02:46:00"</span>
+    
+    <span class="c">// Formato principal para este ejemplo</span>
+    <span class="n">layoutPrincipal</span> <span class="o">:=</span> <span class="s">"2006-01-02 15:04:05"</span>
+    
+    <span class="c">// Analizar la cadena de tiempo</span>
+    <span class="n">t</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">time</span><span class="o">.</span><span class="n">Parse</span><span class="p">(</span><span class="n">layoutPrincipal</span><span class="p">,</span> <span class="n">timeStr</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Error al analizar el tiempo:"</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span>
+        <span class="k">return</span>
+    <span class="p">}</span>
+    
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Hora analizada:"</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">Formatos diferentes para la misma hora:"</span><span class="p">)</span>
+    
+    <span class="c">// Mostrar la misma hora en diferentes formatos</span>
+    <span class="k">for</span> <span class="n">nombre</span><span class="p">,</span> <span class="n">formato</span> <span class="o">:=</span> <span class="k">range</span> <span class="n">formatos</span> <span class="p">{</span>
+        <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"%s: %s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">nombre</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">Format</span><span class="p">(</span><span class="n">formato</span><span class="p">))</span>
+    <span class="p">}</span>
+    
+    <span class="c">// Análisis con zona horaria</span>
+    <span class="n">timeStrTZ</span> <span class="o">:=</span> <span class="s">"2024-12-30T02:46:00+01:00"</span>
+    <span class="n">tTZ</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">time</span><span class="o">.</span><span class="n">Parse</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">RFC3339</span><span class="p">,</span> <span class="n">timeStrTZ</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Error al analizar con zona horaria:"</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">Hora con zona horaria:"</span><span class="p">,</span> <span class="n">tTZ</span><span class="p">)</span>
+        <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"UTC:"</span><span class="p">,</span> <span class="n">tTZ</span><span class="o">.</span><span class="n">UTC</span><span class="p">())</span>
+    <span class="p">}</span>
+    
+    <span class="c">// Manejo de formatos diversos</span>
+    <span class="n">ejemplosDiversos</span> <span class="o">:=</span> <span class="p">[]</span><span class="k">struct</span> <span class="p">{</span>
+        <span class="n">formato</span> <span class="kt">string</span>
+        <span class="n">valor</span>   <span class="kt">string</span>
+    <span class="p">}{</span>
+        <span class="p">{</span><span class="s">"January 2, 2006"</span><span class="p">,</span> <span class="s">"December 30, 2024"</span><span class="p">},</span>
+        <span class="p">{</span><span class="s">"Jan 2, 2006 3:04 PM"</span><span class="p">,</span> <span class="s">"Dec 30, 2024 2:46 AM"</span><span class="p">},</span>
+        <span class="p">{</span><span class="s">"2006年01月02日"</span><span class="p">,</span> <span class="s">"2024年12月30日"</span><span class="p">},</span>
+        <span class="p">{</span><span class="s">"Monday, January 2, 2006"</span><span class="p">,</span> <span class="s">"Monday, December 30, 2024"</span><span class="p">},</span>
+    <span class="p">}</span>
+    
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">Análisis de formatos diversos:"</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">ejemplo</span> <span class="o">:=</span> <span class="k">range</span> <span class="n">ejemplosDiversos</span> <span class="p">{</span>
+        <span class="n">t</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">time</span><span class="o">.</span><span class="n">Parse</span><span class="p">(</span><span class="n">ejemplo</span><span class="o">.</span><span class="n">formato</span><span class="p">,</span> <span class="n">ejemplo</span><span class="o">.</span><span class="n">valor</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+            <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Error analizando '%s': %v</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">ejemplo</span><span class="o">.</span><span class="n">valor</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"'%s' =&gt; %v</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">ejemplo</span><span class="o">.</span><span class="n">valor</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Este ejemplo muestra cómo analizar fechas en diferentes formatos, incluyendo formatos personalizados y estándares como RFC 3339. También ilustra cómo manejar zonas horarias durante el análisis.</p>
+
+<h3 id="3-timeformat---formateando-el-tiempo">3. <code class="language-plaintext highlighter-rouge">time.Format()</code> - Formateando el Tiempo</h3>
+
+<p>El método <code class="language-plaintext highlighter-rouge">Format()</code> permite convertir un valor de tipo <code class="language-plaintext highlighter-rouge">Time</code> en una cadena de texto formateada según tus necesidades. Utiliza el mismo sistema de formato de referencia que la función <code class="language-plaintext highlighter-rouge">Parse()</code>.</p>
+
+<h4 id="ejemplo-extendido-de-format">Ejemplo Extendido de format</h4>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="p">(</span>
+    <span class="s">"fmt"</span>
+    <span class="s">"time"</span>
+<span class="p">)</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c">// Crear un tiempo específico para este ejemplo</span>
+    <span class="n">t</span> <span class="o">:=</span> <span class="n">time</span><span class="o">.</span><span class="n">Date</span><span class="p">(</span><span class="m">2024</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">December</span><span class="p">,</span> <span class="m">30</span><span class="p">,</span> <span class="m">14</span><span class="p">,</span> <span class="m">35</span><span class="p">,</span> <span class="m">22</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">Local</span><span class="p">)</span>
+    
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Tiempo original:"</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
+    
+    <span class="c">// Formatos básicos</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">Formatos básicos:"</span><span class="p">)</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Solo fecha:"</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">Format</span><span class="p">(</span><span class="s">"2006-01-02"</span><span class="p">))</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Solo hora:"</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">Format</span><span class="p">(</span><span class="s">"15:04:05"</span><span class="p">))</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Fecha y hora:"</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">Format</span><span class="p">(</span><span class="s">"2006-01-02 15:04:05"</span><span class="p">))</span>
+    
+    <span class="c">// Formatos con nombres</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">Formatos con nombres:"</span><span class="p">)</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Mes completo:"</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">Format</span><span class="p">(</span><span class="s">"2 de January de 2006"</span><span class="p">))</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Mes abreviado:"</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">Format</span><span class="p">(</span><span class="s">"2 de Jan de 2006"</span><span class="p">))</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Día de la semana:"</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">Format</span><span class="p">(</span><span class="s">"Monday, 2 de January de 2006"</span><span class="p">))</span>
+    
+    <span class="c">// Formatos con AM/PM</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">Formatos con AM/PM:"</span><span class="p">)</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Hora 12h:"</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">Format</span><span class="p">(</span><span class="s">"3:04:05 PM"</span><span class="p">))</span>
+    
+    <span class="c">// Formatos con zona horaria</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">Formatos con zona horaria:"</span><span class="p">)</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Con zona:"</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">Format</span><span class="p">(</span><span class="s">"2006-01-02 15:04:05 -0700"</span><span class="p">))</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Con zona abreviada:"</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">Format</span><span class="p">(</span><span class="s">"2006-01-02 15:04:05 MST"</span><span class="p">))</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"RFC3339:"</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">Format</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">RFC3339</span><span class="p">))</span>
+    
+    <span class="c">// Formatos localizados (ejemplos)</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">Formatos localizados:"</span><span class="p">)</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Español:"</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">Format</span><span class="p">(</span><span class="s">"02/01/2006 a las 15:04 horas"</span><span class="p">))</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"US:"</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">Format</span><span class="p">(</span><span class="s">"January 2, 2006 at 3:04 PM"</span><span class="p">))</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"ISO:"</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">Format</span><span class="p">(</span><span class="s">"2006-01-02T15:04:05Z07:00"</span><span class="p">))</span>
+    
+    <span class="c">// Formatos especiales</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">Formatos especiales:"</span><span class="p">)</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Año de 2 dígitos:"</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">Format</span><span class="p">(</span><span class="s">"06-01-02"</span><span class="p">))</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Día del año:"</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">Format</span><span class="p">(</span><span class="s">"2006-01-02 (día 002)"</span><span class="p">))</span>
+    
+    <span class="c">// Constantes de formato predefinidas</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">Constantes de formato predefinidas:"</span><span class="p">)</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"ANSIC:"</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">Format</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">ANSIC</span><span class="p">))</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"UnixDate:"</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">Format</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">UnixDate</span><span class="p">))</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"RFC822:"</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">Format</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">RFC822</span><span class="p">))</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"RFC850:"</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">Format</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">RFC850</span><span class="p">))</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"RFC1123:"</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">Format</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">RFC1123</span><span class="p">))</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"RFC3339Nano:"</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">Format</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">RFC3339Nano</span><span class="p">))</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Kitchen:"</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">Format</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">Kitchen</span><span class="p">))</span>
+    
+    <span class="c">// Uso práctico: generar nombre de archivo con timestamp</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">Uso práctico:"</span><span class="p">)</span>
+    <span class="n">nombreArchivo</span> <span class="o">:=</span> <span class="n">fmt</span><span class="o">.</span><span class="n">Sprintf</span><span class="p">(</span><span class="s">"backup_%s.zip"</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">Format</span><span class="p">(</span><span class="s">"20060102_150405"</span><span class="p">))</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Nombre de archivo con timestamp:"</span><span class="p">,</span> <span class="n">nombreArchivo</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Este ejemplo muestra la versatilidad de <code class="language-plaintext highlighter-rouge">Format()</code> para crear representaciones de tiempo en una amplia variedad de formatos, desde los más básicos hasta formatos específicos para diferentes regiones o casos de uso.</p>
+
+<h3 id="4-timesleep---pausando-la-ejecución">4. <code class="language-plaintext highlighter-rouge">time.Sleep()</code> - Pausando la Ejecución</h3>
+
+<p>La función <code class="language-plaintext highlighter-rouge">Sleep()</code> pausa la ejecución de la goroutine actual durante la duración especificada. Es útil para implementar esperas, retrasos o simular operaciones que toman tiempo.</p>
+
+<h4 id="ejemplo-extendido-de-sleep">Ejemplo Extendido de sleep</h4>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="p">(</span>
+    <span class="s">"fmt"</span>
+    <span class="s">"time"</span>
+    <span class="s">"sync"</span>
+<span class="p">)</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Ejemplos de time.Sleep()"</span><span class="p">)</span>
+    
+    <span class="c">// Ejemplo básico</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">1. Ejemplo básico:"</span><span class="p">)</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Inicio"</span><span class="p">)</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Esperando 2 segundos..."</span><span class="p">)</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">Sleep</span><span class="p">(</span><span class="m">2</span> <span class="o">*</span> <span class="n">time</span><span class="o">.</span><span class="n">Second</span><span class="p">)</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Continuando después de 2 segundos"</span><span class="p">)</span>
+    
+    <span class="c">// Diferentes unidades de tiempo</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">2. Diferentes unidades de tiempo:"</span><span class="p">)</span>
+    
+    <span class="n">unidades</span> <span class="o">:=</span> <span class="p">[]</span><span class="k">struct</span> <span class="p">{</span>
+        <span class="n">nombre</span> <span class="kt">string</span>
+        <span class="n">duracion</span> <span class="n">time</span><span class="o">.</span><span class="n">Duration</span>
+    <span class="p">}{</span>
+        <span class="p">{</span><span class="s">"Nanosegundo"</span><span class="p">,</span> <span class="m">1</span> <span class="o">*</span> <span class="n">time</span><span class="o">.</span><span class="n">Nanosecond</span><span class="p">},</span>
+        <span class="p">{</span><span class="s">"Microsegundo"</span><span class="p">,</span> <span class="m">1</span> <span class="o">*</span> <span class="n">time</span><span class="o">.</span><span class="n">Microsecond</span><span class="p">},</span>
+        <span class="p">{</span><span class="s">"Milisegundo"</span><span class="p">,</span> <span class="m">1</span> <span class="o">*</span> <span class="n">time</span><span class="o">.</span><span class="n">Millisecond</span><span class="p">},</span>
+        <span class="p">{</span><span class="s">"Segundo"</span><span class="p">,</span> <span class="m">1</span> <span class="o">*</span> <span class="n">time</span><span class="o">.</span><span class="n">Second</span><span class="p">},</span>
+        <span class="p">{</span><span class="s">"Minuto"</span><span class="p">,</span> <span class="m">1</span> <span class="o">*</span> <span class="n">time</span><span class="o">.</span><span class="n">Minute</span><span class="p">},</span> <span class="c">// Solo simulado</span>
+        <span class="p">{</span><span class="s">"Hora"</span><span class="p">,</span> <span class="m">1</span> <span class="o">*</span> <span class="n">time</span><span class="o">.</span><span class="n">Hour</span><span class="p">},</span>     <span class="c">// Solo simulado</span>
+    <span class="p">}</span>
+    
+    <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">u</span> <span class="o">:=</span> <span class="k">range</span> <span class="n">unidades</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="n">u</span><span class="o">.</span><span class="n">duracion</span> <span class="o">&gt;=</span> <span class="n">time</span><span class="o">.</span><span class="n">Second</span> <span class="p">{</span>
+            <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"No vamos a esperar realmente %s, solo simulando</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">u</span><span class="o">.</span><span class="n">nombre</span><span class="p">)</span>
+            <span class="k">continue</span>
+        <span class="p">}</span>
+        
+        <span class="n">inicio</span> <span class="o">:=</span> <span class="n">time</span><span class="o">.</span><span class="n">Now</span><span class="p">()</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">Sleep</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">duracion</span><span class="p">)</span>
+        <span class="n">duracionReal</span> <span class="o">:=</span> <span class="n">time</span><span class="o">.</span><span class="n">Since</span><span class="p">(</span><span class="n">inicio</span><span class="p">)</span>
+        <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Sleep de 1 %s tomó: %v</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">u</span><span class="o">.</span><span class="n">nombre</span><span class="p">,</span> <span class="n">duracionReal</span><span class="p">)</span>
+    <span class="p">}</span>
+    
+    <span class="c">// Uso con goroutines</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">3. Sleep con goroutines:"</span><span class="p">)</span>
+    
+    <span class="k">var</span> <span class="n">wg</span> <span class="n">sync</span><span class="o">.</span><span class="n">WaitGroup</span>
+    
+    <span class="k">for</span> <span class="n">i</span> <span class="o">:=</span> <span class="m">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="m">3</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span> <span class="p">{</span>
+        <span class="n">wg</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="m">1</span><span class="p">)</span>
+        <span class="k">go</span> <span class="k">func</span><span class="p">(</span><span class="n">id</span> <span class="kt">int</span><span class="p">,</span> <span class="n">delay</span> <span class="n">time</span><span class="o">.</span><span class="n">Duration</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">defer</span> <span class="n">wg</span><span class="o">.</span><span class="n">Done</span><span class="p">()</span>
+            <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Goroutine %d: iniciando</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">id</span><span class="p">)</span>
+            <span class="n">time</span><span class="o">.</span><span class="n">Sleep</span><span class="p">(</span><span class="n">delay</span><span class="p">)</span>
+            <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Goroutine %d: finalizada después de %v</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">id</span><span class="p">,</span> <span class="n">delay</span><span class="p">)</span>
+        <span class="p">}(</span><span class="n">i</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">Duration</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">*</span> <span class="n">time</span><span class="o">.</span><span class="n">Second</span><span class="p">)</span>
+    <span class="p">}</span>
+    
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Esperando a que todas las goroutines terminen..."</span><span class="p">)</span>
+    <span class="n">wg</span><span class="o">.</span><span class="n">Wait</span><span class="p">()</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Todas las goroutines han finalizado"</span><span class="p">)</span>
+    
+    <span class="c">// Implementando un temporizador simple</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">4. Implementando un temporizador simple:"</span><span class="p">)</span>
+    
+    <span class="n">duracion</span> <span class="o">:=</span> <span class="m">3</span> <span class="o">*</span> <span class="n">time</span><span class="o">.</span><span class="n">Second</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Temporizador de %v iniciado</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">duracion</span><span class="p">)</span>
+    
+    <span class="n">inicio</span> <span class="o">:=</span> <span class="n">time</span><span class="o">.</span><span class="n">Now</span><span class="p">()</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">Sleep</span><span class="p">(</span><span class="n">duracion</span><span class="p">)</span>
+    <span class="n">tiempoTranscurrido</span> <span class="o">:=</span> <span class="n">time</span><span class="o">.</span><span class="n">Since</span><span class="p">(</span><span class="n">inicio</span><span class="p">)</span>
+    
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Temporizador finalizado después de %v</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">tiempoTranscurrido</span><span class="p">)</span>
+    
+    <span class="c">// Limitaciones y consideraciones</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">5. Limitaciones y consideraciones:"</span><span class="p">)</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"- Sleep no garantiza una precisión exacta"</span><span class="p">)</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"- Para intervalos más precisos, considera time.Ticker"</span><span class="p">)</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"- Sleep bloquea solo la goroutine actual, no toda la aplicación"</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Este ejemplo explora varios aspectos de <code class="language-plaintext highlighter-rouge">time.Sleep()</code>, incluyendo su uso con diferentes unidades de tiempo, su interacción con goroutines, y consideraciones importantes sobre su precisión y comportamiento.</p>
+
+<h3 id="5-timeafter---canal-de-tiempo">5. <code class="language-plaintext highlighter-rouge">time.After()</code> - Canal de Tiempo</h3>
+
+<p>La función <code class="language-plaintext highlighter-rouge">After()</code> es especialmente útil en patrones de concurrencia. Devuelve un canal que recibirá un valor después de la duración especificada, lo que permite implementar timeouts y otras operaciones basadas en tiempo en programas concurrentes.</p>
+
+<h4 id="ejemplo-extendido-de-after">Ejemplo Extendido de After</h4>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="p">(</span>
+    <span class="s">"fmt"</span>
+    <span class="s">"time"</span>
+<span class="p">)</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Ejemplos de time.After()"</span><span class="p">)</span>
+    
+    <span class="c">// Ejemplo básico</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">1. Uso básico:"</span><span class="p">)</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Esperando 2 segundos usando time.After()..."</span><span class="p">)</span>
+    <span class="o">&lt;-</span><span class="n">time</span><span class="o">.</span><span class="n">After</span><span class="p">(</span><span class="m">2</span> <span class="o">*</span> <span class="n">time</span><span class="o">.</span><span class="n">Second</span><span class="p">)</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Continuando después de 2 segundos"</span><span class="p">)</span>
+    
+    <span class="c">// Ejemplo con select</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">2. Uso con select para implementar un timeout:"</span><span class="p">)</span>
+    
+    <span class="c">// Simulamos un canal que podría recibir datos</span>
+    <span class="n">ch</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="k">chan</span> <span class="kt">string</span><span class="p">)</span>
+    
+    <span class="c">// Goroutine que envía un mensaje después de 3 segundos</span>
+    <span class="k">go</span> <span class="k">func</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">Sleep</span><span class="p">(</span><span class="m">3</span> <span class="o">*</span> <span class="n">time</span><span class="o">.</span><span class="n">Second</span><span class="p">)</span>
+        <span class="n">ch</span> <span class="o">&lt;-</span> <span class="s">"¡Datos recibidos!"</span>
+    <span class="p">}()</span>
+    
+    <span class="c">// Establecemos un timeout de 2 segundos</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Esperando datos con un timeout de 2 segundos..."</span><span class="p">)</span>
+    <span class="k">select</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="n">msg</span> <span class="o">:=</span> <span class="o">&lt;-</span><span class="n">ch</span><span class="o">:</span>
+        <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Recibido:"</span><span class="p">,</span> <span class="n">msg</span><span class="p">)</span>
+    <span class="k">case</span> <span class="o">&lt;-</span><span class="n">time</span><span class="o">.</span><span class="n">After</span><span class="p">(</span><span class="m">2</span> <span class="o">*</span> <span class="n">time</span><span class="o">.</span><span class="n">Second</span><span class="p">)</span><span class="o">:</span>
+        <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Timeout! No se recibieron datos en 2 segundos"</span><span class="p">)</span>
+    <span class="p">}</span>
+    
+    <span class="c">// Limpiar el canal (para evitar fugas de memoria)</span>
+    <span class="k">go</span> <span class="k">func</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">for</span> <span class="k">range</span> <span class="n">ch</span> <span class="p">{</span>
+            <span class="c">// Consumimos cualquier mensaje que llegue</span>
+        <span class="p">}</span>
+    <span class="p">}()</span>
+    
+    <span class="c">// Ejemplo con múltiples timeouts</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">3. Múltiples operaciones con diferentes timeouts:"</span><span class="p">)</span>
+    
+    <span class="n">op1</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="k">chan</span> <span class="kt">string</span><span class="p">)</span>
+    <span class="n">op2</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="k">chan</span> <span class="kt">string</span><span class="p">)</span>
+    
+    <span class="c">// Simulamos dos operaciones que toman diferentes tiempos</span>
+    <span class="k">go</span> <span class="k">func</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">Sleep</span><span class="p">(</span><span class="m">1</span> <span class="o">*</span> <span class="n">time</span><span class="o">.</span><span class="n">Second</span><span class="p">)</span>
+        <span class="n">op1</span> <span class="o">&lt;-</span> <span class="s">"Operación 1 completada"</span>
+    <span class="p">}()</span>
+    
+    <span class="k">go</span> <span class="k">func</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">Sleep</span><span class="p">(</span><span class="m">3</span> <span class="o">*</span> <span class="n">time</span><span class="o">.</span><span class="n">Second</span><span class="p">)</span>
+        <span class="n">op2</span> <span class="o">&lt;-</span> <span class="s">"Operación 2 completada"</span>
+    <span class="p">}()</span>
+    
+    <span class="c">// Esperamos resultados con diferentes timeouts</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="o">:=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="m">2</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span> <span class="p">{</span>
+        <span class="k">select</span> <span class="p">{</span>
+        <span class="k">case</span> <span class="n">resultado</span> <span class="o">:=</span> <span class="o">&lt;-</span><span class="n">op1</span><span class="o">:</span>
+            <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">resultado</span><span class="p">)</span>
+            <span class="n">op1</span> <span class="o">=</span> <span class="no">nil</span> <span class="c">// Evitamos recibir más de una vez</span>
+        <span class="k">case</span> <span class="n">resultado</span> <span class="o">:=</span> <span class="o">&lt;-</span><span class="n">op2</span><span class="o">:</span>
+            <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">resultado</span><span class="p">)</span>
+            <span class="n">op2</span> <span class="o">=</span> <span class="no">nil</span> <span class="c">// Evitamos recibir más de una vez</span>
+        <span class="k">case</span> <span class="o">&lt;-</span><span class="n">time</span><span class="o">.</span><span class="n">After</span><span class="p">(</span><span class="m">2</span> <span class="o">*</span> <span class="n">time</span><span class="o">.</span><span class="n">Second</span><span class="p">)</span><span class="o">:</span>
+            <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Timeout para alguna operación"</span><span class="p">)</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    
+    <span class="c">// Consideraciones importantes</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">4. Consideraciones importantes:"</span><span class="p">)</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"- Cada llamada a time.After() crea un nuevo timer"</span><span class="p">)</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"- Para múltiples usos, time.NewTimer() es más eficiente"</span><span class="p">)</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"- Los timers no utilizados eventualmente serán recogidos por el GC"</span><span class="p">)</span>
+    
+    <span class="c">// Comparación con time.Sleep()</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">5. Comparación con time.Sleep():"</span><span class="p">)</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"- Sleep() bloquea la goroutine actual"</span><span class="p">)</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"- After() permite continuar con otras operaciones"</span><span class="p">)</span>
+    
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">Ejemplo de operación no bloqueante:"</span><span class="p">)</span>
+    <span class="n">inicio</span> <span class="o">:=</span> <span class="n">time</span><span class="o">.</span><span class="n">Now</span><span class="p">()</span>
+    
+    <span class="k">select</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="o">&lt;-</span><span class="n">time</span><span class="o">.</span><span class="n">After</span><span class="p">(</span><span class="m">1</span> <span class="o">*</span> <span class="n">time</span><span class="o">.</span><span class="n">Second</span><span class="p">)</span><span class="o">:</span>
+        <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Timer completado"</span><span class="p">)</span>
+    <span class="k">default</span><span class="o">:</span>
+        <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Continuando inmediatamente sin esperar"</span><span class="p">)</span>
+    <span class="p">}</span>
+    
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Tiempo transcurrido: %v</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">Since</span><span class="p">(</span><span class="n">inicio</span><span class="p">))</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Este ejemplo muestra cómo <code class="language-plaintext highlighter-rouge">time.After()</code> se usa en situaciones concurrentes, especialmente con la instrucción <code class="language-plaintext highlighter-rouge">select</code> para implementar timeouts y operaciones asíncronas con límites de tiempo.</p>
+
+<h3 id="6-timenewticker---eventos-periódicos">6. <code class="language-plaintext highlighter-rouge">time.NewTicker()</code> - Eventos Periódicos</h3>
+
+<p>La función <code class="language-plaintext highlighter-rouge">NewTicker()</code> crea un ticker que envía la hora actual en un canal a intervalos regulares. Es útil para operaciones periódicas como actualizaciones, comprobaciones de estado, o cualquier tarea que deba ejecutarse a intervalos fijos.</p>
+
+<h4 id="ejemplo-extendido-de-newticker">Ejemplo Extendido de NewTicker</h4>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="p">(</span>
+    <span class="s">"fmt"</span>
+    <span class="s">"time"</span>
+    <span class="s">"sync"</span>
+    <span class="s">"context"</span>
+<span class="p">)</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Ejemplos de time.NewTicker()"</span><span class="p">)</span>
+    
+    <span class="c">// Ejemplo básico</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">1. Uso básico:"</span><span class="p">)</span>
+    <span class="n">ticker</span> <span class="o">:=</span> <span class="n">time</span><span class="o">.</span><span class="n">NewTicker</span><span class="p">(</span><span class="m">500</span> <span class="o">*</span> <span class="n">time</span><span class="o">.</span><span class="n">Millisecond</span><span class="p">)</span>
+    <span class="n">done</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="k">chan</span> <span class="kt">bool</span><span class="p">)</span>
+    
+    <span class="k">go</span> <span class="k">func</span><span class="p">()</span> <span class="p">{</span>
+        <span class="c">// Recibimos 5 ticks y luego terminamos</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="o">:=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="m">5</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span> <span class="p">{</span>
+            <span class="n">t</span> <span class="o">:=</span> <span class="o">&lt;-</span><span class="n">ticker</span><span class="o">.</span><span class="n">C</span>
+            <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Tick %d a las %v</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">i</span><span class="o">+</span><span class="m">1</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">Format</span><span class="p">(</span><span class="s">"15:04:05.000"</span><span class="p">))</span>
+        <span class="p">}</span>
+        <span class="n">done</span> <span class="o">&lt;-</span> <span class="no">true</span>
+    <span class="p">}()</span>
+    
+    <span class="o">&lt;-</span><span class="n">done</span>
+    <span class="n">ticker</span><span class="o">.</span><span class="n">Stop</span><span class="p">()</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Ticker detenido"</span><span class="p">)</span>
+    
+    <span class="c">// Uso con select</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">2. Uso con select:"</span><span class="p">)</span>
+    <span class="n">ticker2</span> <span class="o">:=</span> <span class="n">time</span><span class="o">.</span><span class="n">NewTicker</span><span class="p">(</span><span class="m">1</span> <span class="o">*</span> <span class="n">time</span><span class="o">.</span><span class="n">Second</span><span class="p">)</span>
+    <span class="n">stopCh</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="k">chan</span> <span class="k">struct</span><span class="p">{})</span>
+    
+    <span class="k">go</span> <span class="k">func</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">Sleep</span><span class="p">(</span><span class="m">5500</span> <span class="o">*</span> <span class="n">time</span><span class="o">.</span><span class="n">Millisecond</span><span class="p">)</span>
+        <span class="nb">close</span><span class="p">(</span><span class="n">stopCh</span><span class="p">)</span>
+    <span class="p">}()</span>
+    
+    <span class="k">go</span> <span class="k">func</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">for</span> <span class="p">{</span>
+            <span class="k">select</span> <span class="p">{</span>
+            <span class="k">case</span> <span class="n">t</span> <span class="o">:=</span> <span class="o">&lt;-</span><span class="n">ticker2</span><span class="o">.</span><span class="n">C</span><span class="o">:</span>
+                <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Tick a las %v</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">Format</span><span class="p">(</span><span class="s">"15:04:05.000"</span><span class="p">))</span>
+            <span class="k">case</span> <span class="o">&lt;-</span><span class="n">stopCh</span><span class="o">:</span>
+                <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Deteniendo el ticker..."</span><span class="p">)</span>
+                <span class="n">ticker2</span><span class="o">.</span><span class="n">Stop</span><span class="p">()</span>
+                <span class="k">return</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}()</span>
+    
+    <span class="c">// Esperamos a que termine</span>
+    <span class="o">&lt;-</span><span class="n">stopCh</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">Sleep</span><span class="p">(</span><span class="m">1</span> <span class="o">*</span> <span class="n">time</span><span class="o">.</span><span class="n">Second</span><span class="p">)</span> <span class="c">// Damos tiempo para que la goroutine imprima el mensaje final</span>
+    
+    <span class="c">// Simulando un heartbeat</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">3. Simulando un heartbeat para monitoreo:"</span><span class="p">)</span>
+    
+    <span class="n">wg</span> <span class="o">:=</span> <span class="n">sync</span><span class="o">.</span><span class="n">WaitGroup</span><span class="p">{}</span>
+    <span class="n">wg</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="m">1</span><span class="p">)</span>
+    
+    <span class="n">ctx</span><span class="p">,</span> <span class="n">cancel</span> <span class="o">:=</span> <span class="n">context</span><span class="o">.</span><span class="n">WithTimeout</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">Background</span><span class="p">(),</span> <span class="m">6</span><span class="o">*</span><span class="n">time</span><span class="o">.</span><span class="n">Second</span><span class="p">)</span>
+    <span class="k">defer</span> <span class="n">cancel</span><span class="p">()</span>
+    
+    <span class="k">go</span> <span class="k">func</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">defer</span> <span class="n">wg</span><span class="o">.</span><span class="n">Done</span><span class="p">()</span>
+        
+        <span class="n">heartbeat</span> <span class="o">:=</span> <span class="n">time</span><span class="o">.</span><span class="n">NewTicker</span><span class="p">(</span><span class="m">1</span> <span class="o">*</span> <span class="n">time</span><span class="o">.</span><span class="n">Second</span><span class="p">)</span>
+        <span class="k">defer</span> <span class="n">heartbeat</span><span class="o">.</span><span class="n">Stop</span><span class="p">()</span>
+        
+        <span class="n">estado</span> <span class="o">:=</span> <span class="s">"En funcionamiento"</span>
+        <span class="n">fallaSimulada</span> <span class="o">:=</span> <span class="n">time</span><span class="o">.</span><span class="n">After</span><span class="p">(</span><span class="m">3500</span> <span class="o">*</span> <span class="n">time</span><span class="o">.</span><span class="n">Millisecond</span><span class="p">)</span>
+        
+        <span class="k">for</span> <span class="p">{</span>
+            <span class="k">select</span> <span class="p">{</span>
+            <span class="k">case</span> <span class="o">&lt;-</span><span class="n">fallaSimulada</span><span class="o">:</span>
+                <span class="n">estado</span> <span class="o">=</span> <span class="s">"¡Alerta! Sistema degradado"</span>
+            <span class="k">case</span> <span class="n">t</span> <span class="o">:=</span> <span class="o">&lt;-</span><span class="n">heartbeat</span><span class="o">.</span><span class="n">C</span><span class="o">:</span>
+                <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"[%s] Estado del sistema: %s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> 
+                    <span class="n">t</span><span class="o">.</span><span class="n">Format</span><span class="p">(</span><span class="s">"15:04:05"</span><span class="p">),</span> <span class="n">estado</span><span class="p">)</span>
+            <span class="k">case</span> <span class="o">&lt;-</span><span class="n">ctx</span><span class="o">.</span><span class="n">Done</span><span class="p">()</span><span class="o">:</span>
+                <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Monitoreo finalizado."</span><span class="p">)</span>
+                <span class="k">return</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}()</span>
+    
+    <span class="n">wg</span><span class="o">.</span><span class="n">Wait</span><span class="p">()</span>
+    
+    <span class="c">// Creando un ticker personalizado con frecuencia variable</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">4. Ticker con frecuencia variable:"</span><span class="p">)</span>
+    
+    <span class="c">// Simulamos un ticker que aumenta su frecuencia gradualmente</span>
+    <span class="k">const</span> <span class="n">inicialDelay</span> <span class="o">=</span> <span class="m">1000</span>
+    <span class="k">const</span> <span class="n">finalDelay</span> <span class="o">=</span> <span class="m">200</span>
+    <span class="k">const</span> <span class="n">pasos</span> <span class="o">=</span> <span class="m">5</span>
+    
+    <span class="n">wg</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="m">1</span><span class="p">)</span>
+    <span class="k">go</span> <span class="k">func</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">defer</span> <span class="n">wg</span><span class="o">.</span><span class="n">Done</span><span class="p">()</span>
+        
+        <span class="n">delay</span> <span class="o">:=</span> <span class="n">inicialDelay</span>
+        <span class="n">decremento</span> <span class="o">:=</span> <span class="p">(</span><span class="n">inicialDelay</span> <span class="o">-</span> <span class="n">finalDelay</span><span class="p">)</span> <span class="o">/</span> <span class="n">pasos</span>
+        
+        <span class="k">for</span> <span class="n">i</span> <span class="o">:=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">pasos</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span> <span class="p">{</span>
+            <span class="n">ticker</span> <span class="o">:=</span> <span class="n">time</span><span class="o">.</span><span class="n">NewTicker</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">Duration</span><span class="p">(</span><span class="n">delay</span><span class="p">)</span> <span class="o">*</span> <span class="n">time</span><span class="o">.</span><span class="n">Millisecond</span><span class="p">)</span>
+            <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Ticker configurado a %d ms</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">delay</span><span class="p">)</span>
+            
+            <span class="c">// Usamos el ticker por un tiempo</span>
+            <span class="n">timeout</span> <span class="o">:=</span> <span class="n">time</span><span class="o">.</span><span class="n">After</span><span class="p">(</span><span class="m">3</span> <span class="o">*</span> <span class="n">time</span><span class="o">.</span><span class="n">Duration</span><span class="p">(</span><span class="n">delay</span><span class="p">)</span> <span class="o">*</span> <span class="n">time</span><span class="o">.</span><span class="n">Millisecond</span><span class="p">)</span>
+            <span class="n">tickCount</span> <span class="o">:=</span> <span class="m">0</span>
+            
+        <span class="n">tickLoop</span><span class="o">:</span>
+            <span class="k">for</span> <span class="p">{</span>
+                <span class="k">select</span> <span class="p">{</span>
+                <span class="k">case</span> <span class="n">t</span> <span class="o">:=</span> <span class="o">&lt;-</span><span class="n">ticker</span><span class="o">.</span><span class="n">C</span><span class="o">:</span>
+                    <span class="n">tickCount</span><span class="o">++</span>
+                    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"  Tick #%d a %dms: %s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> 
+                        <span class="n">tickCount</span><span class="p">,</span> <span class="n">delay</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">Format</span><span class="p">(</span><span class="s">"15:04:05.000"</span><span class="p">))</span>
+                <span class="k">case</span> <span class="o">&lt;-</span><span class="n">timeout</span><span class="o">:</span>
+                    <span class="k">break</span> <span class="n">tickLoop</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            
+            <span class="n">ticker</span><span class="o">.</span><span class="n">Stop</span><span class="p">()</span>
+            <span class="n">delay</span> <span class="o">-=</span> <span class="n">decremento</span>
+        <span class="p">}</span>
+    <span class="p">}()</span>
+    
+    <span class="n">wg</span><span class="o">.</span><span class="n">Wait</span><span class="p">()</span>
+    
+    <span class="c">// Consideraciones importantes</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">5. Consideraciones importantes:"</span><span class="p">)</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"- Siempre detén un ticker cuando ya no lo necesites (ticker.Stop())"</span><span class="p">)</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"- El canal de un ticker puede acumular ticks si no los consumes"</span><span class="p">)</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"- Para una sola notificación, usa time.After() o time.NewTimer()"</span><span class="p">)</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"- El ticker no es exactamente preciso en nanosegundos"</span><span class="p">)</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"- Para intervalos variables, detén y crea nuevos tickers"</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Este ejemplo explora diversos usos de <code class="language-plaintext highlighter-rouge">time.NewTicker()</code>, desde un uso básico hasta aplicaciones más avanzadas como la simulación de un sistema de monitoreo con heartbeats y la implementación de tickers con frecuencia variable.</p>
+
+<h3 id="7-timenewtimer---eventos-programados">7. <code class="language-plaintext highlighter-rouge">time.NewTimer()</code> - Eventos Programados</h3>
+
+<p>La función <code class="language-plaintext highlighter-rouge">NewTimer()</code> crea un temporizador que enviará la hora actual en su canal después de la duración especificada. A diferencia de <code class="language-plaintext highlighter-rouge">After()</code>, <code class="language-plaintext highlighter-rouge">NewTimer()</code> devuelve un objeto que puede ser detenido o reiniciado.</p>
+
+<h4 id="ejemplo-extendido-de-newtimer">Ejemplo Extendido de NewTimer</h4>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="p">(</span>
+    <span class="s">"fmt"</span>
+    <span class="s">"time"</span>
+    <span class="s">"sync"</span>
+<span class="p">)</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Ejemplos de time.NewTimer()"</span><span class="p">)</span>
+    
+    <span class="c">// Ejemplo básico</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">1. Uso básico:"</span><span class="p">)</span>
+    <span class="n">timer</span> <span class="o">:=</span> <span class="n">time</span><span class="o">.</span><span class="n">NewTimer</span><span class="p">(</span><span class="m">2</span> <span class="o">*</span> <span class="n">time</span><span class="o">.</span><span class="n">Second</span><span class="p">)</span>
+    
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Timer iniciado a las"</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">Now</span><span class="p">()</span><span class="o">.</span><span class="n">Format</span><span class="p">(</span><span class="s">"15:04:05"</span><span class="p">))</span>
+    <span class="n">t</span> <span class="o">:=</span> <span class="o">&lt;-</span><span class="n">timer</span><span class="o">.</span><span class="n">C</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Timer completado a las"</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">Format</span><span class="p">(</span><span class="s">"15:04:05"</span><span class="p">))</span>
+    
+    <span class="c">// Cancelación de un timer</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">2. Cancelando un timer:"</span><span class="p">)</span>
+    <span class="n">timer2</span> <span class="o">:=</span> <span class="n">time</span><span class="o">.</span><span class="n">NewTimer</span><span class="p">(</span><span class="m">5</span> <span class="o">*</span> <span class="n">time</span><span class="o">.</span><span class="n">Second</span><span class="p">)</span>
+    
+    <span class="k">go</span> <span class="k">func</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Goroutine: Esperando al timer..."</span><span class="p">)</span>
+        <span class="o">&lt;-</span><span class="n">timer2</span><span class="o">.</span><span class="n">C</span>
+        <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Goroutine: ¡Timer completado!"</span><span class="p">)</span>
+    <span class="p">}()</span>
+    
+    <span class="n">time</span><span class="o">.</span><span class="n">Sleep</span><span class="p">(</span><span class="m">2</span> <span class="o">*</span> <span class="n">time</span><span class="o">.</span><span class="n">Second</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">timer2</span><span class="o">.</span><span class="n">Stop</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Timer cancelado con éxito"</span><span class="p">)</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Timer ya estaba completado o cancelado"</span><span class="p">)</span>
+        <span class="c">// Vaciamos el canal si ya había disparado</span>
+        <span class="k">select</span> <span class="p">{</span>
+        <span class="k">case</span> <span class="o">&lt;-</span><span class="n">timer2</span><span class="o">.</span><span class="n">C</span><span class="o">:</span>
+        <span class="k">default</span><span class="o">:</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    
+    <span class="c">// Reinicio de un timer</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">3. Reiniciando un timer:"</span><span class="p">)</span>
+    
+    <span class="n">timer3</span> <span class="o">:=</span> <span class="n">time</span><span class="o">.</span><span class="n">NewTimer</span><span class="p">(</span><span class="m">1</span> <span class="o">*</span> <span class="n">time</span><span class="o">.</span><span class="n">Second</span><span class="p">)</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Timer inicial: 1 segundo a las"</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">Now</span><span class="p">()</span><span class="o">.</span><span class="n">Format</span><span class="p">(</span><span class="s">"15:04:05"</span><span class="p">))</span>
+    
+    <span class="c">// Esperar a que el timer dispare</span>
+    <span class="o">&lt;-</span><span class="n">timer3</span><span class="o">.</span><span class="n">C</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Timer disparado a las"</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">Now</span><span class="p">()</span><span class="o">.</span><span class="n">Format</span><span class="p">(</span><span class="s">"15:04:05"</span><span class="p">))</span>
+    
+    <span class="c">// Reiniciar con nueva duración</span>
+    <span class="k">if</span> <span class="o">!</span><span class="n">timer3</span><span class="o">.</span><span class="n">Reset</span><span class="p">(</span><span class="m">2</span> <span class="o">*</span> <span class="n">time</span><span class="o">.</span><span class="n">Second</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Timer se reinició mientras estaba activo (raro)"</span><span class="p">)</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Timer reiniciado con 2 segundos a las"</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">Now</span><span class="p">()</span><span class="o">.</span><span class="n">Format</span><span class="p">(</span><span class="s">"15:04:05"</span><span class="p">))</span>
+    <span class="p">}</span>
+    
+    <span class="c">// Esperar al timer reiniciado</span>
+    <span class="o">&lt;-</span><span class="n">timer3</span><span class="o">.</span><span class="n">C</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Timer reiniciado disparado a las"</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">Now</span><span class="p">()</span><span class="o">.</span><span class="n">Format</span><span class="p">(</span><span class="s">"15:04:05"</span><span class="p">))</span>
+    
+    <span class="c">// Comparación con time.After</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">4. Comparación con time.After():"</span><span class="p">)</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"- NewTimer permite cancelar el timer"</span><span class="p">)</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"- NewTimer puede ser reutilizado con Reset()"</span><span class="p">)</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"- After() es más conveniente para un solo uso"</span><span class="p">)</span>
+    
+    <span class="c">// Ejemplo práctico: timeout para una operación</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">5. Implementando un timeout para operación:"</span><span class="p">)</span>
+    
+    <span class="n">operacionCh</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="k">chan</span> <span class="kt">string</span><span class="p">)</span>
+    <span class="n">timer4</span> <span class="o">:=</span> <span class="n">time</span><span class="o">.</span><span class="n">NewTimer</span><span class="p">(</span><span class="m">2</span> <span class="o">*</span> <span class="n">time</span><span class="o">.</span><span class="n">Second</span><span class="p">)</span>
+    
+    <span class="c">// Simulamos una operación lenta</span>
+    <span class="k">go</span> <span class="k">func</span><span class="p">()</span> <span class="p">{</span>
+        <span class="c">// Esta operación toma 3 segundos</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">Sleep</span><span class="p">(</span><span class="m">3</span> <span class="o">*</span> <span class="n">time</span><span class="o">.</span><span class="n">Second</span><span class="p">)</span>
+        <span class="n">operacionCh</span> <span class="o">&lt;-</span> <span class="s">"Resultado de la operación"</span>
+    <span class="p">}()</span>
+    
+    <span class="k">select</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="n">resultado</span> <span class="o">:=</span> <span class="o">&lt;-</span><span class="n">operacionCh</span><span class="o">:</span>
+        <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Operación completada:"</span><span class="p">,</span> <span class="n">resultado</span><span class="p">)</span>
+    <span class="k">case</span> <span class="o">&lt;-</span><span class="n">timer4</span><span class="o">.</span><span class="n">C</span><span class="o">:</span>
+        <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Timeout: La operación tardó demasiado"</span><span class="p">)</span>
+    <span class="p">}</span>
+    
+    <span class="c">// Ejemplo avanzado: múltiples timers</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">6. Gestionando múltiples timers:"</span><span class="p">)</span>
+    
+    <span class="k">var</span> <span class="n">wg</span> <span class="n">sync</span><span class="o">.</span><span class="n">WaitGroup</span>
+    <span class="n">wg</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="m">3</span><span class="p">)</span>
+    
+    <span class="c">// Crear varios timers</span>
+    <span class="n">timers</span> <span class="o">:=</span> <span class="p">[]</span><span class="o">*</span><span class="n">time</span><span class="o">.</span><span class="n">Timer</span><span class="p">{</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">NewTimer</span><span class="p">(</span><span class="m">1</span> <span class="o">*</span> <span class="n">time</span><span class="o">.</span><span class="n">Second</span><span class="p">),</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">NewTimer</span><span class="p">(</span><span class="m">2</span> <span class="o">*</span> <span class="n">time</span><span class="o">.</span><span class="n">Second</span><span class="p">),</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">NewTimer</span><span class="p">(</span><span class="m">3</span> <span class="o">*</span> <span class="n">time</span><span class="o">.</span><span class="n">Second</span><span class="p">),</span>
+    <span class="p">}</span>
+    
+    <span class="c">// Procesar cada timer en una goroutine</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">timer</span> <span class="o">:=</span> <span class="k">range</span> <span class="n">timers</span> <span class="p">{</span>
+        <span class="k">go</span> <span class="k">func</span><span class="p">(</span><span class="n">id</span> <span class="kt">int</span><span class="p">,</span> <span class="n">t</span> <span class="o">*</span><span class="n">time</span><span class="o">.</span><span class="n">Timer</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">defer</span> <span class="n">wg</span><span class="o">.</span><span class="n">Done</span><span class="p">()</span>
+            <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Timer %d: esperando...</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">id</span><span class="p">)</span>
+            <span class="o">&lt;-</span><span class="n">t</span><span class="o">.</span><span class="n">C</span>
+            <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Timer %d: completado a las %s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> 
+                <span class="n">id</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">Now</span><span class="p">()</span><span class="o">.</span><span class="n">Format</span><span class="p">(</span><span class="s">"15:04:05.000"</span><span class="p">))</span>
+        <span class="p">}(</span><span class="n">i</span><span class="p">,</span> <span class="n">timer</span><span class="p">)</span>
+    <span class="p">}</span>
+    
+    <span class="c">// Cancelar el timer del medio</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">Sleep</span><span class="p">(</span><span class="m">500</span> <span class="o">*</span> <span class="n">time</span><span class="o">.</span><span class="n">Millisecond</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">timers</span><span class="p">[</span><span class="m">1</span><span class="p">]</span><span class="o">.</span><span class="n">Stop</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Timer 1 cancelado"</span><span class="p">)</span>
+        <span class="c">// Importante: señalizar a la goroutine que el timer fue cancelado</span>
+        <span class="c">// para que no quede bloqueada eternamente</span>
+        <span class="n">wg</span><span class="o">.</span><span class="n">Done</span><span class="p">()</span> <span class="c">// Reducimos el contador porque una goroutine no recibirá señal</span>
+    <span class="p">}</span>
+    
+    <span class="n">wg</span><span class="o">.</span><span class="n">Wait</span><span class="p">()</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Todos los timers procesados"</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Este ejemplo muestra cómo trabajar con <code class="language-plaintext highlighter-rouge">time.NewTimer()</code>, incluyendo operaciones avanzadas como cancelar y reiniciar timers, y la gestión de múltiples temporizadores. También explica las ventajas que ofrece sobre <code class="language-plaintext highlighter-rouge">time.After()</code>.</p>
+
+<h3 id="8-timesince---midiendo-el-tiempo-transcurrido">8. <code class="language-plaintext highlighter-rouge">time.Since()</code> - Midiendo el Tiempo Transcurrido</h3>
+
+<p>La función <code class="language-plaintext highlighter-rouge">Since()</code> es útil para medir el tiempo transcurrido desde un momento específico. Es especialmente valiosa para medir el rendimiento de funciones, operaciones o algoritmos.</p>
+
+<h4 id="ejemplo-extendido-de-since">Ejemplo Extendido de Since</h4>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="p">(</span>
+    <span class="s">"fmt"</span>
+    <span class="s">"math/rand"</span>
+    <span class="s">"sort"</span>
+    <span class="s">"time"</span>
+<span class="p">)</span>
+
+<span class="c">// Simulamos diferentes algoritmos de ordenamiento</span>
+<span class="k">func</span> <span class="n">bubbleSort</span><span class="p">(</span><span class="n">items</span> <span class="p">[]</span><span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">n</span> <span class="o">:=</span> <span class="nb">len</span><span class="p">(</span><span class="n">items</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="o">:=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span> <span class="p">{</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="o">:=</span> <span class="m">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">n</span><span class="o">-</span><span class="n">i</span><span class="o">-</span><span class="m">1</span><span class="p">;</span> <span class="n">j</span><span class="o">++</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="n">items</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">items</span><span class="p">[</span><span class="n">j</span><span class="o">+</span><span class="m">1</span><span class="p">]</span> <span class="p">{</span>
+                <span class="n">items</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">items</span><span class="p">[</span><span class="n">j</span><span class="o">+</span><span class="m">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">items</span><span class="p">[</span><span class="n">j</span><span class="o">+</span><span class="m">1</span><span class="p">],</span> <span class="n">items</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="n">insertionSort</span><span class="p">(</span><span class="n">items</span> <span class="p">[]</span><span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">n</span> <span class="o">:=</span> <span class="nb">len</span><span class="p">(</span><span class="n">items</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="o">:=</span> <span class="m">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span> <span class="p">{</span>
+        <span class="n">key</span> <span class="o">:=</span> <span class="n">items</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="n">j</span> <span class="o">:=</span> <span class="n">i</span> <span class="o">-</span> <span class="m">1</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="o">&gt;=</span> <span class="m">0</span> <span class="o">&amp;&amp;</span> <span class="n">items</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">key</span> <span class="p">{</span>
+            <span class="n">items</span><span class="p">[</span><span class="n">j</span><span class="o">+</span><span class="m">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">items</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+            <span class="n">j</span><span class="o">--</span> 
+        <span class="p">}</span>
+        <span class="n">items</span><span class="p">[</span><span class="n">j</span><span class="o">+</span><span class="m">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">key</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="n">quickSort</span><span class="p">(</span><span class="n">items</span> <span class="p">[]</span><span class="kt">int</span><span class="p">,</span> <span class="n">low</span><span class="p">,</span> <span class="n">high</span> <span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="n">low</span> <span class="o">&lt;</span> <span class="n">high</span> <span class="p">{</span>
+        <span class="n">pi</span> <span class="o">:=</span> <span class="n">partition</span><span class="p">(</span><span class="n">items</span><span class="p">,</span> <span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">)</span>
+        <span class="n">quickSort</span><span class="p">(</span><span class="n">items</span><span class="p">,</span> <span class="n">low</span><span class="p">,</span> <span class="n">pi</span><span class="o">-</span><span class="m">1</span><span class="p">)</span>
+        <span class="n">quickSort</span><span class="p">(</span><span class="n">items</span><span class="p">,</span> <span class="n">pi</span><span class="o">+</span><span class="m">1</span><span class="p">,</span> <span class="n">high</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="n">partition</span><span class="p">(</span><span class="n">items</span> <span class="p">[]</span><span class="kt">int</span><span class="p">,</span> <span class="n">low</span><span class="p">,</span> <span class="n">high</span> <span class="kt">int</span><span class="p">)</span> <span class="kt">int</span> <span class="p">{</span>
+    <span class="n">pivot</span> <span class="o">:=</span> <span class="n">items</span><span class="p">[</span><span class="n">high</span><span class="p">]</span>
+    <span class="n">i</span> <span class="o">:=</span> <span class="n">low</span> <span class="o">-</span> <span class="m">1</span>
+
+    <span class="k">for</span> <span class="n">j</span> <span class="o">:=</span> <span class="n">low</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">high</span><span class="p">;</span> <span class="n">j</span><span class="o">++</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="n">items</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">pivot</span> <span class="p">{</span>
+            <span class="n">i</span><span class="o">++</span>
+            <span class="n">items</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">items</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">items</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">items</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="n">items</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="m">1</span><span class="p">],</span> <span class="n">items</span><span class="p">[</span><span class="n">high</span><span class="p">]</span> <span class="o">=</span> <span class="n">items</span><span class="p">[</span><span class="n">high</span><span class="p">],</span> <span class="n">items</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="m">1</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">i</span> <span class="o">+</span> <span class="m">1</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="n">benchmarkSort</span><span class="p">(</span><span class="n">name</span> <span class="kt">string</span><span class="p">,</span> <span class="n">f</span> <span class="k">func</span><span class="p">([]</span><span class="kt">int</span><span class="p">),</span> <span class="n">size</span> <span class="kt">int</span><span class="p">)</span> <span class="n">time</span><span class="o">.</span><span class="n">Duration</span> <span class="p">{</span>
+    <span class="n">arr</span> <span class="o">:=</span> <span class="n">generateRandomArray</span><span class="p">(</span><span class="n">size</span><span class="p">)</span>
+    <span class="n">start</span> <span class="o">:=</span> <span class="n">time</span><span class="o">.</span><span class="n">Now</span><span class="p">()</span>
+    <span class="n">f</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span>
+    <span class="n">elapsed</span> <span class="o">:=</span> <span class="n">time</span><span class="o">.</span><span class="n">Since</span><span class="p">(</span><span class="n">start</span><span class="p">)</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"%s took %s for array of size %d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">elapsed</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">elapsed</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="n">generateRandomArray</span><span class="p">(</span><span class="n">size</span> <span class="kt">int</span><span class="p">)</span> <span class="p">[]</span><span class="kt">int</span> <span class="p">{</span>
+    <span class="n">arr</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">int</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="o">:=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">size</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span> <span class="p">{</span>
+        <span class="n">arr</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">rand</span><span class="o">.</span><span class="n">Intn</span><span class="p">(</span><span class="n">size</span> <span class="o">*</span> <span class="m">10</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">arr</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">rand</span><span class="o">.</span><span class="n">Seed</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">Now</span><span class="p">()</span><span class="o">.</span><span class="n">UnixNano</span><span class="p">())</span>
+    <span class="n">sizes</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{</span><span class="m">1000</span><span class="p">,</span> <span class="m">5000</span><span class="p">,</span> <span class="m">10000</span><span class="p">}</span>
+
+    <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">size</span> <span class="o">:=</span> <span class="k">range</span> <span class="n">sizes</span> <span class="p">{</span>
+        <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">Benchmarking sorting algorithms with array size %d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span>
+        <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"-----------------------------------------------"</span><span class="p">)</span>
+
+        <span class="c">// Bubble Sort</span>
+        <span class="n">benchmarkSort</span><span class="p">(</span><span class="s">"Bubble Sort"</span><span class="p">,</span> <span class="k">func</span><span class="p">(</span><span class="n">arr</span> <span class="p">[]</span><span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">tempArr</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">int</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">arr</span><span class="p">))</span>
+            <span class="nb">copy</span><span class="p">(</span><span class="n">tempArr</span><span class="p">,</span> <span class="n">arr</span><span class="p">)</span>
+            <span class="n">bubbleSort</span><span class="p">(</span><span class="n">tempArr</span><span class="p">)</span>
+        <span class="p">},</span> <span class="n">size</span><span class="p">)</span>
+
+        <span class="c">// Insertion Sort</span>
+        <span class="n">benchmarkSort</span><span class="p">(</span><span class="s">"Insertion Sort"</span><span class="p">,</span> <span class="k">func</span><span class="p">(</span><span class="n">arr</span> <span class="p">[]</span><span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">tempArr</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">int</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">arr</span><span class="p">))</span>
+            <span class="nb">copy</span><span class="p">(</span><span class="n">tempArr</span><span class="p">,</span> <span class="n">arr</span><span class="p">)</span>
+            <span class="n">insertionSort</span><span class="p">(</span><span class="n">tempArr</span><span class="p">)</span>
+        <span class="p">},</span> <span class="n">size</span><span class="p">)</span>
+
+        <span class="c">// Quick Sort</span>
+        <span class="n">benchmarkSort</span><span class="p">(</span><span class="s">"Quick Sort"</span><span class="p">,</span> <span class="k">func</span><span class="p">(</span><span class="n">arr</span> <span class="p">[]</span><span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">tempArr</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">int</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">arr</span><span class="p">))</span>
+            <span class="nb">copy</span><span class="p">(</span><span class="n">tempArr</span><span class="p">,</span> <span class="n">arr</span><span class="p">)</span>
+            <span class="n">quickSort</span><span class="p">(</span><span class="n">tempArr</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">tempArr</span><span class="p">)</span><span class="o">-</span><span class="m">1</span><span class="p">)</span>
+        <span class="p">},</span> <span class="n">size</span><span class="p">)</span>
+
+        <span class="c">// Go's built-in Sort</span>
+        <span class="n">benchmarkSort</span><span class="p">(</span><span class="s">"Go's sort.Ints"</span><span class="p">,</span> <span class="k">func</span><span class="p">(</span><span class="n">arr</span> <span class="p">[]</span><span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">tempArr</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">int</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">arr</span><span class="p">))</span>
+            <span class="nb">copy</span><span class="p">(</span><span class="n">tempArr</span><span class="p">,</span> <span class="n">arr</span><span class="p">)</span>
+            <span class="n">sort</span><span class="o">.</span><span class="n">Ints</span><span class="p">(</span><span class="n">tempArr</span><span class="p">)</span>
+        <span class="p">},</span> <span class="n">size</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+            </main>
+        </div>
+        
+        <!-- Componente flotante de GitHub -->
+<div class="github-floating">
+    <a href="https://github.com/" target="_blank" rel="noopener noreferrer" class="github-link" title="Ver en GitHub">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-github">
+            <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+        </svg>
+    </a>
+    
+    
+    <a href="https://github.com//MiguelP-Dev.github.io/blob/main/_pages/paquetes/time.md" target="_blank" rel="noopener noreferrer" class="edit-link" title="Editar esta página">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-2">
+            <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+        </svg>
+    </a>
+    
+</div>
+
+<style>
+    /* Estilos del componente SVG */
+    .github-corner:hover .octo-arm {
+        animation: octocat-wave 560ms ease-in-out;
+    }
+    
+    @keyframes octocat-wave {
+        0%, 100% { transform: rotate(0); }
+        20%, 60% { transform: rotate(-25deg); }
+        40%, 80% { transform: rotate(10deg); }
+    }
+    
+    @media (max-width: 500px) {
+        .github-corner:hover .octo-arm {
+            animation: none;
+        }
+        .github-corner .octo-arm {
+            animation: octocat-wave 560ms ease-in-out;
+        }
+    }
+</style>
+    </div>
+    
+    <script src="/assets/js/scripts.js"></script>
+</body>
+</html>

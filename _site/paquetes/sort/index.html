@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>sort | Miguel's Programing Notes</title>
+    <link rel="stylesheet" href="/assets/css/styles.css">
+</head>
+<body>
+    <div class="app">
+        <nav class="navbar">
+    <div class="nav-container">
+        <a href="/" class="nav-brand">
+            Miguel's Programming Notes
+        </a>
+
+        <div class="nav-sections">
+            
+                
+                
+                
+                <a href="/paquetes/"
+                    class="nav-section active"
+                    data-section="paquetes">
+                    📦 Paquetes
+                </a>
+            
+                
+                
+                
+                <a href="/ejemplos/"
+                    class="nav-section "
+                    data-section="ejemplos">
+                    🧩 Ejemplos
+                </a>
+            
+        </div>
+    </div>
+</nav>
+        
+        <div class="container">
+            <button class="menu-toggle" aria-label="Abrir menú">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            
+            <aside class="sidebar" id="dynamic-sidebar">
+    <div class="sidebar-header">
+        <h3 class="sidebar-title">Miguel's Programming Notes</h3>
+    </div>
+    
+    <div class="sidebar-content">
+        
+            
+                <h3 class="sidebar-title">📦 Paquetes</h3>
+                <nav class="sidebar-nav">
+                    
+                        <a href="/paquetes/fmt/"
+                            class="sidebar-item "
+                            data-item="fmt">
+                            fmt
+                        </a>
+                    
+                        <a href="/paquetes/net/"
+                            class="sidebar-item "
+                            data-item="net-http">
+                            net/http
+                        </a>
+                    
+                        <a href="/paquetes/encoding/"
+                            class="sidebar-item "
+                            data-item="encoding">
+                            encoding
+                        </a>
+                    
+                </nav>
+            
+        
+            
+        
+    </div>
+</aside>
+            
+            <main class="content">
+                <h1 id="paquete-sort-en-go">Paquete <code class="language-plaintext highlighter-rouge">sort</code> en Go</h1>
+
+<p>El paquete <code class="language-plaintext highlighter-rouge">sort</code> de Go ofrece herramientas robustas para ordenar y buscar en colecciones. A continuación, se amplían las descripciones, ejemplos y mejores prácticas para aprovechar al máximo sus funcionalidades.</p>
+
+<hr />
+
+<h2 id="funciones-de-ordenación">Funciones de Ordenación</h2>
+
+<h3 id="1-sortints">1. <strong><code class="language-plaintext highlighter-rouge">sort.Ints</code></strong></h3>
+
+<p><strong>Descripción</strong>: Ordena slices de enteros en orden ascendente de manera eficiente (complejidad O(n log n)).</p>
+
+<p><strong>Ejemplo con Duplicados y Capacidad</strong>:</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>  
+
+<span class="k">import</span> <span class="p">(</span>  
+    <span class="s">"fmt"</span>  
+    <span class="s">"sort"</span>  
+<span class="p">)</span>  
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>  
+    <span class="n">nums</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{</span><span class="m">4</span><span class="p">,</span> <span class="m">2</span><span class="p">,</span> <span class="m">4</span><span class="p">,</span> <span class="m">3</span><span class="p">,</span> <span class="m">1</span><span class="p">,</span> <span class="m">0</span><span class="p">}</span>  
+    <span class="n">sort</span><span class="o">.</span><span class="n">Ints</span><span class="p">(</span><span class="n">nums</span><span class="p">)</span>  
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Ordenado:"</span><span class="p">,</span> <span class="n">nums</span><span class="p">)</span> <span class="c">// [0 1 2 3 4 4]  </span>
+
+    <span class="c">// Slice con capacidad predefinida  </span>
+    <span class="n">s</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">int</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">10</span><span class="p">)</span>  
+    <span class="n">s</span> <span class="o">=</span> <span class="nb">append</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="m">9</span><span class="p">,</span> <span class="m">8</span><span class="p">,</span> <span class="m">7</span><span class="p">)</span>  
+    <span class="n">sort</span><span class="o">.</span><span class="n">Ints</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>  
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Slice optimizado:"</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span> <span class="c">// [7 8 9]  </span>
+<span class="p">}</span>  
+</code></pre></div></div>
+
+<p><strong>Nota</strong>: La función modifica el slice original. Para evitar efectos secundarios, clona el slice antes de ordenar si es necesario.</p>
+
+<hr />
+
+<h3 id="2-sortfloat64s">2. <strong><code class="language-plaintext highlighter-rouge">sort.Float64s</code></strong></h3>
+
+<p><strong>Descripción</strong>: Ordena slices de <code class="language-plaintext highlighter-rouge">float64</code>, manejando valores especiales como <code class="language-plaintext highlighter-rouge">NaN</code> (se colocan al final).</p>
+
+<p><strong>Ejemplo con NaN</strong>:</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>  
+
+<span class="k">import</span> <span class="p">(</span>  
+    <span class="s">"fmt"</span>  
+    <span class="s">"math"</span>  
+    <span class="s">"sort"</span>  
+<span class="p">)</span>  
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>  
+    <span class="n">nums</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">float64</span><span class="p">{</span><span class="m">4.2</span><span class="p">,</span> <span class="n">math</span><span class="o">.</span><span class="n">NaN</span><span class="p">(),</span> <span class="m">2.1</span><span class="p">,</span> <span class="n">math</span><span class="o">.</span><span class="n">NaN</span><span class="p">(),</span> <span class="m">3.3</span><span class="p">}</span>  
+    <span class="n">sort</span><span class="o">.</span><span class="n">Float64s</span><span class="p">(</span><span class="n">nums</span><span class="p">)</span>  
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Ordenado con NaN:"</span><span class="p">,</span> <span class="n">nums</span><span class="p">)</span> <span class="c">// [2.1 3.3 4.2 NaN NaN]  </span>
+<span class="p">}</span>  
+</code></pre></div></div>
+
+<p><strong>Advertencia</strong>: Los valores <code class="language-plaintext highlighter-rouge">NaN</code> pueden causar comportamientos inesperados en comparaciones.</p>
+
+<hr />
+
+<h3 id="3-sortstrings">3. <strong><code class="language-plaintext highlighter-rouge">sort.Strings</code></strong></h3>
+
+<p><strong>Descripción</strong>: Ordena lexicográficamente slices de strings, sensible a mayúsculas y minúsculas según Unicode.</p>
+
+<p><strong>Ejemplo con Unicode y Case-Insensitive</strong>:</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>  
+
+<span class="k">import</span> <span class="p">(</span>  
+    <span class="s">"fmt"</span>  
+    <span class="s">"sort"</span>  
+    <span class="s">"strings"</span>  
+<span class="p">)</span>  
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>  
+    <span class="n">palabras</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">string</span><span class="p">{</span><span class="s">"ñu"</span><span class="p">,</span> <span class="s">"Águila"</span><span class="p">,</span> <span class="s">"zapato"</span><span class="p">,</span> <span class="s">"árbol"</span><span class="p">}</span>  
+    <span class="n">sort</span><span class="o">.</span><span class="n">Strings</span><span class="p">(</span><span class="n">palabras</span><span class="p">)</span>  
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Orden lexicográfico:"</span><span class="p">,</span> <span class="n">palabras</span><span class="p">)</span> <span class="c">// [Águila árbol zapato ñu]  </span>
+
+    <span class="c">// Orden case-insensitive  </span>
+    <span class="n">sort</span><span class="o">.</span><span class="n">Slice</span><span class="p">(</span><span class="n">palabras</span><span class="p">,</span> <span class="k">func</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="kt">int</span><span class="p">)</span> <span class="kt">bool</span> <span class="p">{</span>  
+        <span class="k">return</span> <span class="n">strings</span><span class="o">.</span><span class="n">ToLower</span><span class="p">(</span><span class="n">palabras</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">&lt;</span> <span class="n">strings</span><span class="o">.</span><span class="n">ToLower</span><span class="p">(</span><span class="n">palabras</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>  
+    <span class="p">})</span>  
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Orden insensible a mayúsculas:"</span><span class="p">,</span> <span class="n">palabras</span><span class="p">)</span> <span class="c">// [Águila árbol ñu zapato]  </span>
+<span class="p">}</span>  
+</code></pre></div></div>
+
+<p><strong>Nota</strong>: Usa <code class="language-plaintext highlighter-rouge">sort.Slice</code> para personalizar criterios de ordenación.</p>
+
+<hr />
+
+<h3 id="4-sortsort-e-interfaces-personalizadas">4. <strong><code class="language-plaintext highlighter-rouge">sort.Sort</code> e Interfaces Personalizadas</strong></h3>
+
+<p><strong>Descripción</strong>: Permite ordenar estructuras complejas implementando <code class="language-plaintext highlighter-rouge">sort.Interface</code>.</p>
+
+<p><strong>Ejemplo Multi-Criterio</strong>:</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">type</span> <span class="n">Producto</span> <span class="k">struct</span> <span class="p">{</span>  
+    <span class="n">Nombre</span>  <span class="kt">string</span>  
+    <span class="n">Precio</span>  <span class="kt">float64</span>  
+    <span class="n">Stock</span>   <span class="kt">int</span>  
+<span class="p">}</span>  
+
+<span class="c">// Ordenar por Precio (ascendente) y luego por Stock (descendente)  </span>
+<span class="k">type</span> <span class="n">PorPrecioYStock</span> <span class="p">[]</span><span class="n">Producto</span>  
+
+<span class="k">func</span> <span class="p">(</span><span class="n">p</span> <span class="n">PorPrecioYStock</span><span class="p">)</span> <span class="n">Len</span><span class="p">()</span> <span class="kt">int</span> <span class="p">{</span> <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="p">}</span>  
+<span class="k">func</span> <span class="p">(</span><span class="n">p</span> <span class="n">PorPrecioYStock</span><span class="p">)</span> <span class="n">Swap</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="kt">int</span><span class="p">)</span> <span class="p">{</span> <span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">p</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">p</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="p">}</span>  
+<span class="k">func</span> <span class="p">(</span><span class="n">p</span> <span class="n">PorPrecioYStock</span><span class="p">)</span> <span class="n">Less</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="kt">int</span><span class="p">)</span> <span class="kt">bool</span> <span class="p">{</span>  
+    <span class="k">if</span> <span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">Precio</span> <span class="o">==</span> <span class="n">p</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">Precio</span> <span class="p">{</span>  
+        <span class="k">return</span> <span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">Stock</span> <span class="o">&gt;</span> <span class="n">p</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">Stock</span> <span class="c">// Stock descendente si Precio es igual  </span>
+    <span class="p">}</span>  
+    <span class="k">return</span> <span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">Precio</span> <span class="o">&lt;</span> <span class="n">p</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">Precio</span>  
+<span class="p">}</span>  
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>  
+    <span class="n">productos</span> <span class="o">:=</span> <span class="p">[]</span><span class="n">Producto</span><span class="p">{</span>  
+        <span class="p">{</span><span class="s">"Laptop"</span><span class="p">,</span> <span class="m">999.99</span><span class="p">,</span> <span class="m">5</span><span class="p">},</span>  
+        <span class="p">{</span><span class="s">"Mouse"</span><span class="p">,</span> <span class="m">19.99</span><span class="p">,</span> <span class="m">20</span><span class="p">},</span>  
+        <span class="p">{</span><span class="s">"Laptop"</span><span class="p">,</span> <span class="m">999.99</span><span class="p">,</span> <span class="m">10</span><span class="p">},</span>  
+    <span class="p">}</span>  
+    <span class="n">sort</span><span class="o">.</span><span class="n">Sort</span><span class="p">(</span><span class="n">PorPrecioYStock</span><span class="p">(</span><span class="n">productos</span><span class="p">))</span>  
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">productos</span><span class="p">)</span> <span class="c">// [{Laptop 999.99 10} {Laptop 999.99 5} {Mouse 19.99 20}]  </span>
+<span class="p">}</span>  
+</code></pre></div></div>
+
+<p><strong>Error común</strong>: Olvidar implementar los tres métodos de <code class="language-plaintext highlighter-rouge">sort.Interface</code> genera errores de compilación.</p>
+
+<hr />
+
+<h3 id="5-sortreverse">5. <strong><code class="language-plaintext highlighter-rouge">sort.Reverse</code></strong></h3>
+
+<p><strong>Descripción</strong>: Invierte el orden de una colección ya ordenable.</p>
+
+<p><strong>Ejemplo con Structs</strong>:</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>  
+    <span class="n">personas</span> <span class="o">:=</span> <span class="p">[]</span><span class="n">Persona</span><span class="p">{{</span><span class="s">"Juan"</span><span class="p">,</span> <span class="m">30</span><span class="p">},</span> <span class="p">{</span><span class="s">"Ana"</span><span class="p">,</span> <span class="m">25</span><span class="p">},</span> <span class="p">{</span><span class="s">"Pedro"</span><span class="p">,</span> <span class="m">35</span><span class="p">}}</span>  
+    <span class="n">sort</span><span class="o">.</span><span class="n">Sort</span><span class="p">(</span><span class="n">sort</span><span class="o">.</span><span class="n">Reverse</span><span class="p">(</span><span class="n">PorEdad</span><span class="p">(</span><span class="n">personas</span><span class="p">)))</span>  
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Orden inverso por edad:"</span><span class="p">,</span> <span class="n">personas</span><span class="p">)</span> <span class="c">// [{Pedro 35} {Juan 30} {Ana 25}]  </span>
+<span class="p">}</span>  
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="funciones-de-búsqueda">Funciones de Búsqueda</h2>
+
+<h3 id="6-sortsearch">6. <strong><code class="language-plaintext highlighter-rouge">sort.Search</code></strong></h3>
+
+<p><strong>Descripción</strong>: Búsqueda binaria en colecciones ordenadas. Retorna el índice de inserción si el valor no existe.</p>
+
+<p><strong>Ejemplo con Validación</strong>:</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>  
+    <span class="n">nums</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{</span><span class="m">10</span><span class="p">,</span> <span class="m">20</span><span class="p">,</span> <span class="m">30</span><span class="p">,</span> <span class="m">40</span><span class="p">,</span> <span class="m">50</span><span class="p">}</span>  
+    <span class="n">target</span> <span class="o">:=</span> <span class="m">35</span>  
+
+    <span class="n">idx</span> <span class="o">:=</span> <span class="n">sort</span><span class="o">.</span><span class="n">Search</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">nums</span><span class="p">),</span> <span class="k">func</span><span class="p">(</span><span class="n">i</span> <span class="kt">int</span><span class="p">)</span> <span class="kt">bool</span> <span class="p">{</span> <span class="k">return</span> <span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">target</span> <span class="p">})</span>  
+
+    <span class="k">if</span> <span class="n">idx</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">nums</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">nums</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">==</span> <span class="n">target</span> <span class="p">{</span>  
+        <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Encontrado en posición:"</span><span class="p">,</span> <span class="n">idx</span><span class="p">)</span>  
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>  
+        <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"No encontrado. Se insertaría en:"</span><span class="p">,</span> <span class="n">idx</span><span class="p">)</span> <span class="c">// Output: 3  </span>
+    <span class="p">}</span>  
+<span class="p">}</span>  
+</code></pre></div></div>
+
+<hr />
+
+<h3 id="7-sortsearchints">7. <strong><code class="language-plaintext highlighter-rouge">sort.SearchInts</code></strong></h3>
+
+<p><strong>Descripción</strong>: Versión optimizada de <code class="language-plaintext highlighter-rouge">Search</code> para slices de enteros.</p>
+
+<p><strong>Ejemplo con Slice Vacío</strong>:</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>  
+    <span class="k">var</span> <span class="n">nums</span> <span class="p">[]</span><span class="kt">int</span> <span class="c">// Slice vacío  </span>
+    <span class="n">target</span> <span class="o">:=</span> <span class="m">5</span>  
+    <span class="n">idx</span> <span class="o">:=</span> <span class="n">sort</span><span class="o">.</span><span class="n">SearchInts</span><span class="p">(</span><span class="n">nums</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span>  
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Índice para slice vacío:"</span><span class="p">,</span> <span class="n">idx</span><span class="p">)</span> <span class="c">// 0 (siempre devuelve 0)  </span>
+<span class="p">}</span>  
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="mejores-prácticas-y-consideraciones">Mejores Prácticas y Consideraciones</h2>
+
+<ol>
+  <li><strong>Pre-Ordenar para Búsquedas</strong>:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">sort.Search</code> y <code class="language-plaintext highlighter-rouge">sort.SearchInts</code> requieren slices ordenados. Usar <code class="language-plaintext highlighter-rouge">sort.Ints</code> o similar antes de buscar.</li>
+    </ul>
+  </li>
+  <li><strong>Manejo de Estructuras Complejas</strong>:
+    <ul>
+      <li>Para ordenar por múltiples campos, define comparaciones jerárquicas en <code class="language-plaintext highlighter-rouge">Less</code> (ver ejemplo en <code class="language-plaintext highlighter-rouge">sort.Sort</code>).</li>
+    </ul>
+  </li>
+  <li><strong>Eficiencia con Slices Grandes</strong>:
+    <ul>
+      <li>Pre-asigna capacidad con <code class="language-plaintext highlighter-rouge">make</code> si el tamaño es conocido para minimizar reasignaciones.</li>
+    </ul>
+  </li>
+  <li><strong>Valores Especiales en Floats</strong>:
+    <ul>
+      <li>Los <code class="language-plaintext highlighter-rouge">NaN</code> pueden distorsionar resultados. Considera filtrarlos antes de ordenar.</li>
+    </ul>
+  </li>
+  <li><strong>Ordenamiento Inestable</strong>:
+    <ul>
+      <li>El paquete <code class="language-plaintext highlighter-rouge">sort</code> no garantiza estabilidad. Si es necesaria, implementa un algoritmo estable personalizado.</li>
+    </ul>
+  </li>
+</ol>
+
+<hr />
+
+<h2 id="casos-comunes-de-error">Casos Comunes de Error</h2>
+
+<ul>
+  <li><strong>Índices Fuera de Rango</strong>: Al usar <code class="language-plaintext highlighter-rouge">sort.Slice</code>, asegúrate de que <code class="language-plaintext highlighter-rouge">i</code> y <code class="language-plaintext highlighter-rouge">j</code> en <code class="language-plaintext highlighter-rouge">Less</code> estén dentro del rango del slice.</li>
+  <li><strong>Implementación Incorrecta de <code class="language-plaintext highlighter-rouge">sort.Interface</code></strong>: Omisión de métodos (<code class="language-plaintext highlighter-rouge">Len</code>, <code class="language-plaintext highlighter-rouge">Swap</code>, <code class="language-plaintext highlighter-rouge">Less</code>) causa errores en tiempo de compilación.</li>
+  <li><strong>Búsqueda en Slices No Ordenados</strong>: <code class="language-plaintext highlighter-rouge">sort.Search</code> puede dar resultados incorrectos si el slice no está ordenado.</li>
+</ul>
+
+<hr />
+
+<h2 id="conclusión">Conclusión</h2>
+
+<p>El paquete <code class="language-plaintext highlighter-rouge">sort</code> es una herramienta versátil para manejar operaciones de ordenación y búsqueda en Go. Al dominar sus funciones y comprender sus peculiaridades, puedes optimizar el rendimiento y claridad de tu código. Combínalo con prácticas como pre-ordenamiento y validación de índices para construir aplicaciones robustas.</p>
+
+            </main>
+        </div>
+        
+        <!-- Componente flotante de GitHub -->
+<div class="github-floating">
+    <a href="https://github.com/" target="_blank" rel="noopener noreferrer" class="github-link" title="Ver en GitHub">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-github">
+            <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+        </svg>
+    </a>
+    
+    
+    <a href="https://github.com//MiguelP-Dev.github.io/blob/main/_pages/paquetes/sort.md" target="_blank" rel="noopener noreferrer" class="edit-link" title="Editar esta página">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-2">
+            <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+        </svg>
+    </a>
+    
+</div>
+
+<style>
+    /* Estilos del componente SVG */
+    .github-corner:hover .octo-arm {
+        animation: octocat-wave 560ms ease-in-out;
+    }
+    
+    @keyframes octocat-wave {
+        0%, 100% { transform: rotate(0); }
+        20%, 60% { transform: rotate(-25deg); }
+        40%, 80% { transform: rotate(10deg); }
+    }
+    
+    @media (max-width: 500px) {
+        .github-corner:hover .octo-arm {
+            animation: none;
+        }
+        .github-corner .octo-arm {
+            animation: octocat-wave 560ms ease-in-out;
+        }
+    }
+</style>
+    </div>
+    
+    <script src="/assets/js/scripts.js"></script>
+</body>
+</html>

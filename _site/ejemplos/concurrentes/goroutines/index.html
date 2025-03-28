@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Goroutines | Miguel's Programing Notes</title>
+    <link rel="stylesheet" href="/assets/css/styles.css">
+</head>
+<body>
+    <div class="app">
+        <nav class="navbar">
+    <div class="nav-container">
+        <a href="/" class="nav-brand">
+            Miguel's Programming Notes
+        </a>
+
+        <div class="nav-sections">
+            
+                
+                
+                
+                <a href="/paquetes/"
+                    class="nav-section "
+                    data-section="paquetes">
+                    📦 Paquetes
+                </a>
+            
+                
+                
+                
+                <a href="/ejemplos/"
+                    class="nav-section active"
+                    data-section="ejemplos">
+                    🧩 Ejemplos
+                </a>
+            
+        </div>
+    </div>
+</nav>
+        
+        <div class="container">
+            <button class="menu-toggle" aria-label="Abrir menú">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            
+            <aside class="sidebar" id="dynamic-sidebar">
+    <div class="sidebar-header">
+        <h3 class="sidebar-title">Miguel's Programming Notes</h3>
+    </div>
+    
+    <div class="sidebar-content">
+        
+            
+        
+            
+                <h3 class="sidebar-title">🧩 Ejemplos</h3>
+                <nav class="sidebar-nav">
+                    
+                        <a href="/ejemplos/api-rest/"
+                            class="sidebar-item "
+                            data-item="api-rest">
+                            API REST
+                        </a>
+                    
+                        <a href="/ejemplos/concurrentes/"
+                            class="sidebar-item "
+                            data-item="concurrentes">
+                            Concurrentes
+                        </a>
+                    
+                        <a href="/ejemplos/tests/"
+                            class="sidebar-item "
+                            data-item="test-unitarios">
+                            Test Unitarios
+                        </a>
+                    
+                </nav>
+            
+        
+    </div>
+</aside>
+            
+            <main class="content">
+                <h1 id="aprendiendo-goroutines">Aprendiendo Goroutines</h1>
+
+<h2 id="1-introducción-a-goroutines">1 Introducción a Goroutines</h2>
+
+<p><strong><code class="language-plaintext highlighter-rouge">1.1 Conceptos básicos de Concurrencia y Paralelismo</code></strong></p>
+
+<p>La concurrencia y el paralelismo son dos conceptos comunes en la programación multi-hilos. Se utilizan para describir eventos o ejecuciones de programas que pueden ocurrir simultáneamente.</p>
+
+<p>Concurrencia se refiere a múltiples tareas que se procesan en el mismo marco de tiempo, pero solo una tarea se ejecuta en un momento dado. Las tareas cambian rápidamente entre sí, dando al usuario la ilusión de una ejecución simultánea. La concurrencia es adecuada para procesadores de un solo núcleo.</p>
+
+<p>Paralelismo se refiere a múltiples tareas que se ejecutan verdaderamente simultáneamente al mismo tiempo, lo cual requiere soporte de procesadores de varios núcleos.</p>
+
+<p>El lenguaje Go está diseñado con la concurrencia en mente como uno de sus objetivos principales. Logra modelos eficientes de programación concurrente a través de Goroutines y Canales. La ejecución de las Goroutines es gestionada por el tiempo de ejecución de Go, y puede planificar estas Goroutines en múltiples hilos del sistema para lograr un procesamiento paralelo.</p>
+
+<p><strong><code class="language-plaintext highlighter-rouge">1.2 Goroutines en el lenguaje Go</code></strong></p>
+
+<p>Las Goroutines son el concepto principal para lograr la programación concurrente en el lenguaje Go. Son hilos livianos gestionados por el tiempo de ejecución de Go. Desde la perspectiva del usuario, son similares a los hilos, pero consumen menos recursos y se inician más rápidamente.</p>
+
+<p><code class="language-plaintext highlighter-rouge">Las características de las Goroutines incluyen:</code></p>
+
+<p><code class="language-plaintext highlighter-rouge">Livianas:</code> Las Goroutines ocupan menos memoria de pila en comparación con los hilos tradicionales, y su tamaño de pila puede expandirse o contraerse dinámicamente según sea necesario.</p>
+
+<p><code class="language-plaintext highlighter-rouge">Bajo costo operativo:</code> El costo operativo de crear y destruir Goroutines es mucho menor que el de los hilos tradicionales.</p>
+
+<p><code class="language-plaintext highlighter-rouge">Mecanismo de comunicación simple:</code> Los Canales proporcionan un mecanismo de comunicación simple y efectivo entre las Goroutines.</p>
+
+<p><code class="language-plaintext highlighter-rouge">Diseño no bloqueante:</code> Las Goroutines no bloquean a otras Goroutines para ejecutarse en ciertas operaciones. Por ejemplo, mientras una Goroutine está esperando operaciones de E/S, otras Goroutines pueden continuar ejecutándose.</p>
+
+<h2 id="2-creación-y-gestión-de-goroutines">2 Creación y Gestión de Goroutines</h2>
+
+<p><strong><code class="language-plaintext highlighter-rouge">2.1 Cómo Crear una Goroutine</code></strong></p>
+
+<p>En el lenguaje Go, puedes crear fácilmente una Goroutine usando la palabra clave go. Cuando precedes una llamada de función con la palabra clave go, la función se ejecutará de forma asíncrona en una nueva Goroutine.</p>
+
+<p><code class="language-plaintext highlighter-rouge">Veamos un ejemplo simple:</code></p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="p">(</span>
+    <span class="s">"fmt"</span>
+    <span class="s">"time"</span>
+        <span class="p">)</span>
+
+<span class="c">// Define una función para imprimir Hola</span>
+<span class="k">func</span> <span class="n">decirHola</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Hola"</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c">// Inicia una nueva Goroutine usando la palabra clave go</span>
+    <span class="k">go</span> <span class="n">decirHola</span><span class="p">()</span>
+
+<span class="c">// La Goroutine principal espera un tiempo para permitir que decirHola se ejecute</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">Sleep</span><span class="p">(</span><span class="m">1</span> <span class="o">*</span> <span class="n">time</span><span class="o">.</span><span class="n">Second</span><span class="p">)</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Función principal"</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>En el código anterior, la función <code class="language-plaintext highlighter-rouge">decirHola()</code> se ejecutará de forma asíncrona en una nueva Goroutine. Esto significa que la función <code class="language-plaintext highlighter-rouge">main()</code> no esperará a que termine <code class="language-plaintext highlighter-rouge">decirHola()</code> antes de continuar. Por lo tanto, usamos <code class="language-plaintext highlighter-rouge">time.Sleep</code> para pausar la Goroutine principal, permitiendo que se ejecute la instrucción de impresión en decirHola. Esto es solo con fines de demostración. En el desarrollo real, típicamente utilizamos canales u otros métodos de sincronización para coordinar la ejecución de diferentes Goroutines.</p>
+
+<p><strong>Nota:</strong> En aplicaciones prácticas, no se debe usar <code class="language-plaintext highlighter-rouge">time.Sleep()</code> para esperar a que termine una Goroutine, ya que no es un mecanismo de sincronización confiable.</p>
+
+<p><strong><code class="language-plaintext highlighter-rouge">2.2 Mecanismo de Programación de Goroutines</code></strong></p>
+
+<p>En Go, la programación de las Goroutines es manejada por el planificador del tiempo de ejecución de Go, que es responsable de asignar tiempo de ejecución en los procesadores lógicos disponibles. El planificador de Go utiliza la tecnología de programación M:N (múltiples Goroutines asignadas a múltiples hilos del sistema operativo) para lograr un mejor rendimiento en procesadores de varios núcleos.</p>
+
+<p><strong>GOMAXPROCS y Procesadores Lógicos:</strong>
+<code class="language-plaintext highlighter-rouge">GOMAXPROCS</code> es una variable de entorno que define el número máximo de CPU disponibles para el planificador de tiempo de ejecución, con el valor predeterminado siendo el número de núcleos de CPU en la máquina. El tiempo de ejecución de Go asigna un hilo del sistema operativo para cada procesador lógico. Al establecer <code class="language-plaintext highlighter-rouge">GOMAXPROCS</code>, podemos restringir el número de núcleos utilizados por el tiempo de ejecución.</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="s">"runtime"</span>
+
+<span class="k">func</span> <span class="n">init</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">runtime</span><span class="o">.</span><span class="n">GOMAXPROCS</span><span class="p">(</span><span class="m">2</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>El código anterior establece un máximo de dos núcleos para programar las Goroutines, incluso al ejecutar el programa en una máquina con más núcleos.</p>
+
+<p><strong>Operación del Programador</strong>
+El programador funciona utilizando tres entidades importantes: M (máquina), P (procesador) y G (Goroutine). M representa una máquina o hilo, P representa el contexto de planificación y G representa una Goroutine específica.</p>
+
+<p><strong>M:</strong> Representa una máquina o hilo, sirviendo como una abstracción de los hilos del kernel del sistema operativo.</p>
+
+<p><strong>P:</strong> Representa los recursos necesarios para ejecutar una Goroutine. Cada P tiene una cola local de Goroutines.</p>
+
+<p><strong>G:</strong> Representa una Goroutine, incluyendo su pila de ejecución, conjunto de instrucciones y otra información.
+Los principios de funcionamiento del programador de Go son:</p>
+
+<p>M debe tener un P para ejecutar G. Si no hay un P, M será devuelto a la memoria caché del hilo.</p>
+
+<p>Cuando G no está bloqueada por otras G (por ejemplo, en llamadas al sistema), se ejecuta en el mismo M tanto como sea posible, lo que ayuda a mantener los datos locales de G “calientes” para una utilización más eficiente de la caché de la CPU.</p>
+
+<p>Cuando un G está bloqueada, M y P se separarán, y P buscará un nuevo M o despertará un nuevo M para atender a otros G.</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">go</span> <span class="k">func</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Hola desde Goroutine"</span><span class="p">)</span>
+<span class="p">}()</span>
+</code></pre></div></div>
+
+<p>El código anterior demuestra cómo iniciar una nueva Goroutine, lo que llevará al programador a agregar esta nueva G a la cola para su ejecución.</p>
+
+<p><strong>Programación Preventiva de Goroutines:</strong>
+En las etapas iniciales, Go usaba programación cooperativa, lo que significa que las Goroutines podían dejar sin recursos a otras Goroutines si se ejecutaban durante mucho tiempo sin ceder el control voluntariamente. Ahora, el programador de Go implementa programación preventiva, permitiendo pausar las G largas para darle la oportunidad a otras G de ejecutarse.</p>
+
+<p><strong><code class="language-plaintext highlighter-rouge">2.3 Gestión del Ciclo de Vida de Goroutines</code></strong></p>
+
+<p>Para garantizar la robustez y el rendimiento de tu aplicación Go, es crucial comprender y gestionar adecuadamente el ciclo de vida de las Goroutines. Iniciar Goroutines es sencillo, pero sin una gestión adecuada, pueden provocar problemas como fugas de memoria y condiciones de carrera.</p>
+
+<p><strong>Iniciar Goroutines de forma segura:</strong>
+Antes de iniciar una Goroutine, asegúrate de comprender su carga de trabajo y características en tiempo de ejecución. Una Goroutine debe tener un inicio y fin claros para evitar crear “huérfanos de Goroutines” sin condiciones de terminación.</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">worker</span><span class="p">(</span><span class="n">done</span> <span class="k">chan</span> <span class="kt">bool</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Trabajando..."</span><span class="p">)</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">Sleep</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">Second</span><span class="p">)</span> <span class="c">// simular tarea costosa</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"¡Trabajo terminado!"</span><span class="p">)</span>
+    <span class="n">done</span> <span class="o">&lt;-</span> <span class="no">true</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c">// Aquí se utiliza el mecanismo de canales en Go. Simplemente piensa en el canal como una cola de mensajes básica y utiliza el operador "&lt;-" para leer y escribir datos en la cola.</span>
+    <span class="n">done</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="k">chan</span> <span class="kt">bool</span><span class="p">,</span> <span class="m">1</span><span class="p">)</span>
+    <span class="k">go</span> <span class="n">worker</span><span class="p">(</span><span class="n">done</span><span class="p">)</span>
+    
+    <span class="c">// Espera a que la Goroutine termine</span>
+    <span class="o">&lt;-</span><span class="n">done</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>El código anterior muestra una forma de esperar a que una Goroutine termine utilizando el canal done.</p>
+
+<p><strong>Nota:</strong> Este ejemplo utiliza el mecanismo de canales en Go, que se detallará en capítulos posteriores.</p>
+
+<p>Detener Goroutines
+En general, el final del programa implícitamente terminará todas las Goroutines. Sin embargo, en servicios de larga duración, es posible que necesitemos detener activamente las Goroutines.</p>
+
+<p>Usar canales para enviar señales de detención: Las Goroutines pueden sondear los canales para verificar señales de detención.</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">stop</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="k">chan</span> <span class="k">struct</span><span class="p">{})</span>
+
+<span class="k">go</span> <span class="k">func</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">{</span>
+        <span class="k">select</span> <span class="p">{</span>
+        <span class="k">case</span> <span class="o">&lt;-</span><span class="n">stop</span><span class="o">:</span>
+            <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Se recibió la señal de detención. Apagando..."</span><span class="p">)</span>
+            <span class="k">return</span>
+        <span class="k">default</span><span class="o">:</span>
+            <span class="c">// ejecutar operación normal</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}()</span>
+
+<span class="c">// Enviar señal de detención</span>
+<span class="n">stop</span> <span class="o">&lt;-</span> <span class="k">struct</span><span class="p">{}{}</span>
+
+<span class="c">// Usar el paquete context para gestionar el ciclo de vida:</span>
+<span class="n">ctx</span><span class="p">,</span> <span class="n">cancel</span> <span class="o">:=</span> <span class="n">context</span><span class="o">.</span><span class="n">WithCancel</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">Background</span><span class="p">())</span>
+
+<span class="k">go</span> <span class="k">func</span><span class="p">(</span><span class="n">ctx</span> <span class="n">context</span><span class="o">.</span><span class="n">Context</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">{</span>
+        <span class="k">select</span> <span class="p">{</span>
+        <span class="k">case</span> <span class="o">&lt;-</span><span class="n">ctx</span><span class="o">.</span><span class="n">Done</span><span class="p">()</span><span class="o">:</span>
+            <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Se recibió la señal de detención. Apagando..."</span><span class="p">)</span>
+            <span class="k">return</span>
+        <span class="k">default</span><span class="o">:</span>
+            <span class="c">// ejecutar operación normal</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}(</span><span class="n">ctx</span><span class="p">)</span>
+
+<span class="c">// cuando desees detener la Goroutine</span>
+<span class="n">cancel</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p>El uso del paquete <strong><code class="language-plaintext highlighter-rouge">context</code></strong> permite un control más flexible de las Goroutines, proporcionando capacidades de tiempo de espera y cancelación. En aplicaciones grandes o microservicios, <strong><code class="language-plaintext highlighter-rouge">context</code></strong> es la forma recomendada de controlar los ciclos de vida de las Goroutines.</p>
+
+            </main>
+        </div>
+        
+        <!-- Componente flotante de GitHub -->
+<div class="github-floating">
+    <a href="https://github.com/" target="_blank" rel="noopener noreferrer" class="github-link" title="Ver en GitHub">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-github">
+            <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+        </svg>
+    </a>
+    
+    
+    <a href="https://github.com//MiguelP-Dev.github.io/blob/main/_pages/ejemplos/concurrentes/goroutines.md" target="_blank" rel="noopener noreferrer" class="edit-link" title="Editar esta página">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-2">
+            <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+        </svg>
+    </a>
+    
+</div>
+
+<style>
+    /* Estilos del componente SVG */
+    .github-corner:hover .octo-arm {
+        animation: octocat-wave 560ms ease-in-out;
+    }
+    
+    @keyframes octocat-wave {
+        0%, 100% { transform: rotate(0); }
+        20%, 60% { transform: rotate(-25deg); }
+        40%, 80% { transform: rotate(10deg); }
+    }
+    
+    @media (max-width: 500px) {
+        .github-corner:hover .octo-arm {
+            animation: none;
+        }
+        .github-corner .octo-arm {
+            animation: octocat-wave 560ms ease-in-out;
+        }
+    }
+</style>
+    </div>
+    
+    <script src="/assets/js/scripts.js"></script>
+</body>
+</html>

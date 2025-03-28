@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>regexp | Miguel's Programing Notes</title>
+    <link rel="stylesheet" href="/assets/css/styles.css">
+</head>
+<body>
+    <div class="app">
+        <nav class="navbar">
+    <div class="nav-container">
+        <a href="/" class="nav-brand">
+            Miguel's Programming Notes
+        </a>
+
+        <div class="nav-sections">
+            
+                
+                
+                
+                <a href="/paquetes/"
+                    class="nav-section active"
+                    data-section="paquetes">
+                    📦 Paquetes
+                </a>
+            
+                
+                
+                
+                <a href="/ejemplos/"
+                    class="nav-section "
+                    data-section="ejemplos">
+                    🧩 Ejemplos
+                </a>
+            
+        </div>
+    </div>
+</nav>
+        
+        <div class="container">
+            <button class="menu-toggle" aria-label="Abrir menú">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            
+            <aside class="sidebar" id="dynamic-sidebar">
+    <div class="sidebar-header">
+        <h3 class="sidebar-title">Miguel's Programming Notes</h3>
+    </div>
+    
+    <div class="sidebar-content">
+        
+            
+                <h3 class="sidebar-title">📦 Paquetes</h3>
+                <nav class="sidebar-nav">
+                    
+                        <a href="/paquetes/fmt/"
+                            class="sidebar-item "
+                            data-item="fmt">
+                            fmt
+                        </a>
+                    
+                        <a href="/paquetes/net/"
+                            class="sidebar-item "
+                            data-item="net-http">
+                            net/http
+                        </a>
+                    
+                        <a href="/paquetes/encoding/"
+                            class="sidebar-item "
+                            data-item="encoding">
+                            encoding
+                        </a>
+                    
+                </nav>
+            
+        
+            
+        
+    </div>
+</aside>
+            
+            <main class="content">
+                <h1 id="paquete-regexp-en-go-guía-completa-con-ejemplos">Paquete <code class="language-plaintext highlighter-rouge">regexp</code> en Go: Guía Completa con Ejemplos</h1>
+
+<p>El paquete <code class="language-plaintext highlighter-rouge">regexp</code> en Go permite trabajar con expresiones regulares para buscar, validar y manipular texto. Aquí tienes una guía detallada con ejemplos prácticos:</p>
+
+<hr />
+
+<h2 id="1-compilar-expresiones-regulares">1. <strong>Compilar Expresiones Regulares</strong></h2>
+
+<h3 id="compile-y-mustcompile"><code class="language-plaintext highlighter-rouge">Compile</code> y <code class="language-plaintext highlighter-rouge">MustCompile</code></h3>
+
+<ul>
+  <li><strong><code class="language-plaintext highlighter-rouge">Compile</code></strong>: Compila una expresión regular, retornando un error si es inválida.</li>
+</ul>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="n">re</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">regexp</span><span class="o">.</span><span class="n">Compile</span><span class="p">(</span><span class="s">`\d+`</span><span class="p">)</span> <span class="c">// Busca números</span>
+    <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">Fatal</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>
+    <span class="p">}</span>
+</code></pre></div></div>
+
+<ul>
+  <li><strong><code class="language-plaintext highlighter-rouge">MustCompile</code></strong>: Útil para expresiones conocidas y válidas.</li>
+</ul>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="n">re</span> <span class="o">:=</span> <span class="n">regexp</span><span class="o">.</span><span class="n">MustCompile</span><span class="p">(</span><span class="s">`\d+`</span><span class="p">)</span> <span class="c">// Pánico si hay error</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="2-búsquedas-básicas">2. <strong>Búsquedas Básicas</strong></h2>
+
+<h3 id="matchstring"><code class="language-plaintext highlighter-rouge">MatchString</code></h3>
+
+<p>Verifica si una cadena coincide con el patrón.</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">matched</span> <span class="o">:=</span> <span class="n">re</span><span class="o">.</span><span class="n">MatchString</span><span class="p">(</span><span class="s">"El año 2023"</span><span class="p">)</span>
+<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">matched</span><span class="p">)</span> <span class="c">// true</span>
+</code></pre></div></div>
+
+<h3 id="findstring"><code class="language-plaintext highlighter-rouge">FindString</code></h3>
+
+<p>Encuentra la primera coincidencia.</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">match</span> <span class="o">:=</span> <span class="n">re</span><span class="o">.</span><span class="n">FindString</span><span class="p">(</span><span class="s">"Precio: $1500"</span><span class="p">)</span>
+<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">match</span><span class="p">)</span> <span class="c">// "1500"</span>
+</code></pre></div></div>
+
+<h3 id="findallstring"><code class="language-plaintext highlighter-rouge">FindAllString</code></h3>
+
+<p>Encuentra todas las coincidencias.</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">matches</span> <span class="o">:=</span> <span class="n">re</span><span class="o">.</span><span class="n">FindAllString</span><span class="p">(</span><span class="s">"Tel: 555-1234, 555-5678"</span><span class="p">,</span> <span class="o">-</span><span class="m">1</span><span class="p">)</span>
+<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">matches</span><span class="p">)</span> <span class="c">// [555 1234 555 5678]</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="3-extracción-de-subgrupos">3. <strong>Extracción de Subgrupos</strong></h2>
+
+<h3 id="findstringsubmatch"><code class="language-plaintext highlighter-rouge">FindStringSubmatch</code></h3>
+
+<p>Captura grupos definidos con paréntesis <code class="language-plaintext highlighter-rouge">()</code>.</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">re</span> <span class="o">:=</span> <span class="n">regexp</span><span class="o">.</span><span class="n">MustCompile</span><span class="p">(</span><span class="s">`(\d{4})-(\d{2})-(\d{2})`</span><span class="p">)</span> <span class="c">// Fecha YYYY-MM-DD</span>
+<span class="n">submatches</span> <span class="o">:=</span> <span class="n">re</span><span class="o">.</span><span class="n">FindStringSubmatch</span><span class="p">(</span><span class="s">"Fecha: 2023-10-25"</span><span class="p">)</span>
+<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">submatches</span><span class="p">)</span> <span class="c">// [2023-10-25 2023 10 25]</span>
+</code></pre></div></div>
+
+<h3 id="findallstringsubmatch"><code class="language-plaintext highlighter-rouge">FindAllStringSubmatch</code></h3>
+
+<p>Captura múltiples coincidencias con subgrupos.</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">dates</span> <span class="o">:=</span> <span class="n">re</span><span class="o">.</span><span class="n">FindAllStringSubmatch</span><span class="p">(</span><span class="s">"Fechas: 2023-10-25 y 2024-01-01"</span><span class="p">,</span> <span class="o">-</span><span class="m">1</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">date</span> <span class="o">:=</span> <span class="k">range</span> <span class="n">dates</span> <span class="p">{</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Año: %s, Mes: %s, Día: %s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">date</span><span class="p">[</span><span class="m">1</span><span class="p">],</span> <span class="n">date</span><span class="p">[</span><span class="m">2</span><span class="p">],</span> <span class="n">date</span><span class="p">[</span><span class="m">3</span><span class="p">])</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="4-reemplazo-de-texto">4. <strong>Reemplazo de Texto</strong></h2>
+
+<h3 id="replaceallstring"><code class="language-plaintext highlighter-rouge">ReplaceAllString</code></h3>
+
+<p>Reemplaza todas las coincidencias.</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">re</span> <span class="o">:=</span> <span class="n">regexp</span><span class="o">.</span><span class="n">MustCompile</span><span class="p">(</span><span class="s">`\s+`</span><span class="p">)</span> <span class="c">// Espacios en blanco</span>
+<span class="n">result</span> <span class="o">:=</span> <span class="n">re</span><span class="o">.</span><span class="n">ReplaceAllString</span><span class="p">(</span><span class="s">"Hola   mundo   Go"</span><span class="p">,</span> <span class="s">" "</span><span class="p">)</span>
+<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">result</span><span class="p">)</span> <span class="c">// "Hola mundo Go"</span>
+</code></pre></div></div>
+
+<h3 id="replaceallstringfunc"><code class="language-plaintext highlighter-rouge">ReplaceAllStringFunc</code></h3>
+
+<p>Reemplazo personalizado con una función.</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">re</span> <span class="o">:=</span> <span class="n">regexp</span><span class="o">.</span><span class="n">MustCompile</span><span class="p">(</span><span class="s">`\b\w`</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">:=</span> <span class="n">re</span><span class="o">.</span><span class="n">ReplaceAllStringFunc</span><span class="p">(</span><span class="s">"hello world"</span><span class="p">,</span> <span class="n">strings</span><span class="o">.</span><span class="n">ToUpper</span><span class="p">)</span>
+<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">result</span><span class="p">)</span> <span class="c">// "Hello World"</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="5-división-de-cadenas">5. <strong>División de Cadenas</strong></h2>
+
+<h3 id="split"><code class="language-plaintext highlighter-rouge">Split</code></h3>
+
+<p>Divide una cadena usando el patrón como separador.</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">re</span> <span class="o">:=</span> <span class="n">regexp</span><span class="o">.</span><span class="n">MustCompile</span><span class="p">(</span><span class="s">`[,;]\s*`</span><span class="p">)</span> <span class="c">// Comas o puntos y coma</span>
+<span class="n">parts</span> <span class="o">:=</span> <span class="n">re</span><span class="o">.</span><span class="n">Split</span><span class="p">(</span><span class="s">"manzana, banana; pera"</span><span class="p">,</span> <span class="o">-</span><span class="m">1</span><span class="p">)</span>
+<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span> <span class="c">// [manzana banana pera]</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="6-índices-de-coincidencias">6. <strong>Índices de Coincidencias</strong></h2>
+
+<h3 id="findstringindex"><code class="language-plaintext highlighter-rouge">FindStringIndex</code></h3>
+
+<p>Obtiene las posiciones de la primera coincidencia.</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">re</span> <span class="o">:=</span> <span class="n">regexp</span><span class="o">.</span><span class="n">MustCompile</span><span class="p">(</span><span class="s">`\d+`</span><span class="p">)</span>
+<span class="n">idx</span> <span class="o">:=</span> <span class="n">re</span><span class="o">.</span><span class="n">FindStringIndex</span><span class="p">(</span><span class="s">"ID: 12345"</span><span class="p">)</span>
+<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span> <span class="c">// [4 9] (substring "12345")</span>
+</code></pre></div></div>
+
+<h3 id="findallstringindex"><code class="language-plaintext highlighter-rouge">FindAllStringIndex</code></h3>
+
+<p>Posiciones de todas las coincidencias.</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">indices</span> <span class="o">:=</span> <span class="n">re</span><span class="o">.</span><span class="n">FindAllStringIndex</span><span class="p">(</span><span class="s">"Números: 1, 2, 3"</span><span class="p">,</span> <span class="o">-</span><span class="m">1</span><span class="p">)</span>
+<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">indices</span><span class="p">)</span> <span class="c">// [[9 10] [12 13] [15 16]]</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="7-validación-de-patrones">7. <strong>Validación de Patrones</strong></h2>
+
+<h3 id="validar-un-email">Validar un email</h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">emailRe</span> <span class="o">:=</span> <span class="n">regexp</span><span class="o">.</span><span class="n">MustCompile</span><span class="p">(</span><span class="s">`^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`</span><span class="p">)</span>
+<span class="n">email</span> <span class="o">:=</span> <span class="s">"usuario@example.com"</span>
+<span class="n">valid</span> <span class="o">:=</span> <span class="n">emailRe</span><span class="o">.</span><span class="n">MatchString</span><span class="p">(</span><span class="n">email</span><span class="p">)</span>
+<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Email válido:"</span><span class="p">,</span> <span class="n">valid</span><span class="p">)</span> <span class="c">// true</span>
+</code></pre></div></div>
+
+<h3 id="validar-una-url">Validar una URL</h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">urlRe</span> <span class="o">:=</span> <span class="n">regexp</span><span class="o">.</span><span class="n">MustCompile</span><span class="p">(</span><span class="s">`^(https?://)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*/?$`</span><span class="p">)</span>
+<span class="n">url</span> <span class="o">:=</span> <span class="s">"https://www.example.com/path"</span>
+<span class="n">valid</span> <span class="o">:=</span> <span class="n">urlRe</span><span class="o">.</span><span class="n">MatchString</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="8-mejores-prácticas">8. <strong>Mejores Prácticas</strong></h2>
+
+<ol>
+  <li>
+    <p><strong>Reutilizar Expresiones Compiladas</strong>:</p>
+
+    <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">var</span> <span class="p">(</span>
+    <span class="n">dateRe</span> <span class="o">=</span> <span class="n">regexp</span><span class="o">.</span><span class="n">MustCompile</span><span class="p">(</span><span class="s">`\d{4}-\d{2}-\d{2}`</span><span class="p">)</span>
+    <span class="n">emailRe</span> <span class="o">=</span> <span class="n">regexp</span><span class="o">.</span><span class="n">MustCompile</span><span class="p">(</span><span class="s">`...`</span><span class="p">)</span>
+<span class="p">)</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p><strong>Evitar Compilar en Bucles</strong>:</p>
+  </li>
+</ol>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="c">// ❌ Ineficiente</span>
+    <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">text</span> <span class="o">:=</span> <span class="k">range</span> <span class="n">textos</span> <span class="p">{</span>
+        <span class="n">re</span> <span class="o">:=</span> <span class="n">regexp</span><span class="o">.</span><span class="n">MustCompile</span><span class="p">(</span><span class="s">`...`</span><span class="p">)</span>
+        <span class="c">// ...</span>
+    <span class="p">}</span>
+
+    <span class="c">// ✅ Correcto</span>
+    <span class="n">re</span> <span class="o">:=</span> <span class="n">regexp</span><span class="o">.</span><span class="n">MustCompile</span><span class="p">(</span><span class="s">`...`</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">text</span> <span class="o">:=</span> <span class="k">range</span> <span class="n">textos</span> <span class="p">{</span>
+        <span class="c">// ...</span>
+    <span class="p">}</span>
+</code></pre></div></div>
+
+<ol>
+  <li><strong>Usar Subgrupos con Moderación</strong>:</li>
+</ol>
+
+<ul>
+  <li>Los subgrupos impactan en el rendimiento. Úsalos solo cuando sean necesarios.</li>
+</ul>
+
+<hr />
+
+<h2 id="ejemplo-integrado-procesamiento-de-logs">Ejemplo Integrado: Procesamiento de Logs</h2>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="p">(</span>
+    <span class="s">"fmt"</span>
+    <span class="s">"regexp"</span>
+<span class="p">)</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">logEntry</span> <span class="o">:=</span> <span class="s">`[ERROR] 2023-10-25 14:30:45 - Conexión fallida desde 192.168.1.1`</span>
+    <span class="n">re</span> <span class="o">:=</span> <span class="n">regexp</span><span class="o">.</span><span class="n">MustCompile</span><span class="p">(</span><span class="s">`\[(\w+)\] (\d{4}-\d{2}-\d{2}) \d{2}:\d{2}:\d{2} - (.+) desde (\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})`</span><span class="p">)</span>
+    <span class="n">matches</span> <span class="o">:=</span> <span class="n">re</span><span class="o">.</span><span class="n">FindStringSubmatch</span><span class="p">(</span><span class="n">logEntry</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">matches</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="m">5</span> <span class="p">{</span>
+        <span class="n">nivel</span> <span class="o">:=</span> <span class="n">matches</span><span class="p">[</span><span class="m">1</span><span class="p">]</span>
+        <span class="n">fecha</span> <span class="o">:=</span> <span class="n">matches</span><span class="p">[</span><span class="m">2</span><span class="p">]</span>
+        <span class="n">mensaje</span> <span class="o">:=</span> <span class="n">matches</span><span class="p">[</span><span class="m">3</span><span class="p">]</span>
+        <span class="n">ip</span> <span class="o">:=</span> <span class="n">matches</span><span class="p">[</span><span class="m">4</span><span class="p">]</span>
+        <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Nivel: %s</span><span class="se">\n</span><span class="s">Fecha: %s</span><span class="se">\n</span><span class="s">Mensaje: %s</span><span class="se">\n</span><span class="s">IP: %s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">nivel</span><span class="p">,</span> <span class="n">fecha</span><span class="p">,</span> <span class="n">mensaje</span><span class="p">,</span> <span class="n">ip</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+<span class="c">// Salida:</span>
+<span class="c">// Nivel: ERROR</span>
+<span class="c">// Fecha: 2023-10-25</span>
+<span class="c">// Mensaje: Conexión fallida</span>
+<span class="c">// IP: 192.168.1.1</span>
+</code></pre></div></div>
+
+<hr />
+
+<p>Con esta guía, podrás aprovechar al máximo el paquete <code class="language-plaintext highlighter-rouge">regexp</code> en Go para tareas comunes como validación, extracción de datos y manipulación de texto. ¡Experimenta con estos ejemplos y adapta los patrones a tus necesidades!</p>
+
+            </main>
+        </div>
+        
+        <!-- Componente flotante de GitHub -->
+<div class="github-floating">
+    <a href="https://github.com/" target="_blank" rel="noopener noreferrer" class="github-link" title="Ver en GitHub">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-github">
+            <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+        </svg>
+    </a>
+    
+    
+    <a href="https://github.com//MiguelP-Dev.github.io/blob/main/_pages/paquetes/regexp.md" target="_blank" rel="noopener noreferrer" class="edit-link" title="Editar esta página">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-2">
+            <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+        </svg>
+    </a>
+    
+</div>
+
+<style>
+    /* Estilos del componente SVG */
+    .github-corner:hover .octo-arm {
+        animation: octocat-wave 560ms ease-in-out;
+    }
+    
+    @keyframes octocat-wave {
+        0%, 100% { transform: rotate(0); }
+        20%, 60% { transform: rotate(-25deg); }
+        40%, 80% { transform: rotate(10deg); }
+    }
+    
+    @media (max-width: 500px) {
+        .github-corner:hover .octo-arm {
+            animation: none;
+        }
+        .github-corner .octo-arm {
+            animation: octocat-wave 560ms ease-in-out;
+        }
+    }
+</style>
+    </div>
+    
+    <script src="/assets/js/scripts.js"></script>
+</body>
+</html>

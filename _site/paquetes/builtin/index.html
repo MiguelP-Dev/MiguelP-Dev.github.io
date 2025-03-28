@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>builtin | Miguel's Programing Notes</title>
+    <link rel="stylesheet" href="/assets/css/styles.css">
+</head>
+<body>
+    <div class="app">
+        <nav class="navbar">
+    <div class="nav-container">
+        <a href="/" class="nav-brand">
+            Miguel's Programming Notes
+        </a>
+
+        <div class="nav-sections">
+            
+                
+                
+                
+                <a href="/paquetes/"
+                    class="nav-section active"
+                    data-section="paquetes">
+                    📦 Paquetes
+                </a>
+            
+                
+                
+                
+                <a href="/ejemplos/"
+                    class="nav-section "
+                    data-section="ejemplos">
+                    🧩 Ejemplos
+                </a>
+            
+        </div>
+    </div>
+</nav>
+        
+        <div class="container">
+            <button class="menu-toggle" aria-label="Abrir menú">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            
+            <aside class="sidebar" id="dynamic-sidebar">
+    <div class="sidebar-header">
+        <h3 class="sidebar-title">Miguel's Programming Notes</h3>
+    </div>
+    
+    <div class="sidebar-content">
+        
+            
+                <h3 class="sidebar-title">📦 Paquetes</h3>
+                <nav class="sidebar-nav">
+                    
+                        <a href="/paquetes/fmt/"
+                            class="sidebar-item "
+                            data-item="fmt">
+                            fmt
+                        </a>
+                    
+                        <a href="/paquetes/net/"
+                            class="sidebar-item "
+                            data-item="net-http">
+                            net/http
+                        </a>
+                    
+                        <a href="/paquetes/encoding/"
+                            class="sidebar-item "
+                            data-item="encoding">
+                            encoding
+                        </a>
+                    
+                </nav>
+            
+        
+            
+        
+    </div>
+</aside>
+            
+            <main class="content">
+                <h1 id="paquete-builtin-en-go">Paquete builtin en Go</h1>
+
+<p>El paquete <code class="language-plaintext highlighter-rouge">builtin</code> en Go no es un paquete tradicional que requiera importación. Representa las funciones, tipos y constantes predefinidas en el lenguaje Go que están disponibles globalmente sin necesidad de importación.</p>
+
+<h2 id="1-funciones-predefinidas">1. Funciones Predefinidas</h2>
+
+<h3 id="11-append">1.1 append</h3>
+
+<p>Agrega elementos a un slice y devuelve el slice resultante.</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">ejemplosAppend</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c">// Ejemplo básico</span>
+    <span class="n">slice</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{</span><span class="m">1</span><span class="p">,</span> <span class="m">2</span><span class="p">}</span>
+    <span class="n">slice</span> <span class="o">=</span> <span class="nb">append</span><span class="p">(</span><span class="n">slice</span><span class="p">,</span> <span class="m">3</span><span class="p">,</span> <span class="m">4</span><span class="p">)</span>
+    
+    <span class="c">// Append con múltiples elementos</span>
+    <span class="n">extras</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{</span><span class="m">5</span><span class="p">,</span> <span class="m">6</span><span class="p">,</span> <span class="m">7</span><span class="p">}</span>
+    <span class="n">slice</span> <span class="o">=</span> <span class="nb">append</span><span class="p">(</span><span class="n">slice</span><span class="p">,</span> <span class="n">extras</span><span class="o">...</span><span class="p">)</span>
+    
+    <span class="c">// Append con capacidad pre-reservada</span>
+    <span class="n">slice</span> <span class="o">=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">int</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">10</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="o">:=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="m">5</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span> <span class="p">{</span>
+        <span class="n">slice</span> <span class="o">=</span> <span class="nb">append</span><span class="p">(</span><span class="n">slice</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+    <span class="p">}</span>
+    
+    <span class="c">// Append en slices de interfaces</span>
+    <span class="k">var</span> <span class="n">mixed</span> <span class="p">[]</span><span class="k">interface</span><span class="p">{}</span>
+    <span class="n">mixed</span> <span class="o">=</span> <span class="nb">append</span><span class="p">(</span><span class="n">mixed</span><span class="p">,</span> <span class="m">42</span><span class="p">,</span> <span class="s">"hola"</span><span class="p">,</span> <span class="no">true</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="12-cap-y-len">1.2 cap y len</h3>
+
+<p>Funciones para manejar capacidad y longitud de estructuras de datos.</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">ejemplosCapLen</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c">// Arrays</span>
+    <span class="n">arr</span> <span class="o">:=</span> <span class="p">[</span><span class="m">5</span><span class="p">]</span><span class="kt">int</span><span class="p">{</span><span class="m">1</span><span class="p">,</span> <span class="m">2</span><span class="p">,</span> <span class="m">3</span><span class="p">}</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Array - len: %d, cap: %d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">arr</span><span class="p">),</span> <span class="nb">cap</span><span class="p">(</span><span class="n">arr</span><span class="p">))</span>
+    
+    <span class="c">// Slices</span>
+    <span class="n">slice</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">int</span><span class="p">,</span> <span class="m">3</span><span class="p">,</span> <span class="m">10</span><span class="p">)</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Slice - len: %d, cap: %d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">slice</span><span class="p">),</span> <span class="nb">cap</span><span class="p">(</span><span class="n">slice</span><span class="p">))</span>
+    
+    <span class="c">// Strings</span>
+    <span class="n">str</span> <span class="o">:=</span> <span class="s">"hola"</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"String - len: %d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">str</span><span class="p">))</span>
+    
+    <span class="c">// Canales</span>
+    <span class="n">ch</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="k">chan</span> <span class="kt">int</span><span class="p">,</span> <span class="m">5</span><span class="p">)</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Canal - len: %d, cap: %d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">ch</span><span class="p">),</span> <span class="nb">cap</span><span class="p">(</span><span class="n">ch</span><span class="p">))</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="13-copy">1.3 copy</h3>
+
+<p>Copia elementos entre slices.</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">ejemplosCopy</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c">// Copia básica</span>
+    <span class="n">src</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{</span><span class="m">1</span><span class="p">,</span> <span class="m">2</span><span class="p">,</span> <span class="m">3</span><span class="p">,</span> <span class="m">4</span><span class="p">,</span> <span class="m">5</span><span class="p">}</span>
+    <span class="n">dst</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">int</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">src</span><span class="p">))</span>
+    <span class="n">copied</span> <span class="o">:=</span> <span class="nb">copy</span><span class="p">(</span><span class="n">dst</span><span class="p">,</span> <span class="n">src</span><span class="p">)</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Copiados: %d elementos</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">copied</span><span class="p">)</span>
+    
+    <span class="c">// Copia parcial</span>
+    <span class="n">dst2</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">int</span><span class="p">,</span> <span class="m">3</span><span class="p">)</span>
+    <span class="n">copied</span> <span class="o">=</span> <span class="nb">copy</span><span class="p">(</span><span class="n">dst2</span><span class="p">,</span> <span class="n">src</span><span class="p">)</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Copiados parcialmente: %d elementos</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">copied</span><span class="p">)</span>
+    
+    <span class="c">// Copia con solapamiento</span>
+    <span class="n">slice</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{</span><span class="m">1</span><span class="p">,</span> <span class="m">2</span><span class="p">,</span> <span class="m">3</span><span class="p">,</span> <span class="m">4</span><span class="p">,</span> <span class="m">5</span><span class="p">}</span>
+    <span class="nb">copy</span><span class="p">(</span><span class="n">slice</span><span class="p">[</span><span class="m">2</span><span class="o">:</span><span class="p">],</span> <span class="n">slice</span><span class="p">[</span><span class="m">1</span><span class="o">:</span><span class="p">])</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Después del solapamiento:"</span><span class="p">,</span> <span class="n">slice</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="14-delete-y-make">1.4 delete y make</h3>
+
+<p>Operaciones con mapas y creación de estructuras de datos.</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">ejemplosDeleteMake</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c">// Mapas</span>
+    <span class="n">m</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="k">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">int</span><span class="p">)</span>
+    <span class="n">m</span><span class="p">[</span><span class="s">"uno"</span><span class="p">]</span> <span class="o">=</span> <span class="m">1</span>
+    <span class="n">m</span><span class="p">[</span><span class="s">"dos"</span><span class="p">]</span> <span class="o">=</span> <span class="m">2</span>
+    
+    <span class="nb">delete</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="s">"uno"</span><span class="p">)</span>
+    
+    <span class="c">// Slices</span>
+    <span class="n">slice</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">int</span><span class="p">,</span> <span class="m">5</span><span class="p">,</span> <span class="m">10</span><span class="p">)</span>
+    
+    <span class="c">// Canales</span>
+    <span class="n">ch</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="k">chan</span> <span class="kt">string</span><span class="p">,</span> <span class="m">5</span><span class="p">)</span>
+    
+    <span class="c">// Mapas con tipo personalizado</span>
+    <span class="k">type</span> <span class="n">Persona</span> <span class="k">struct</span> <span class="p">{</span>
+        <span class="n">Nombre</span> <span class="kt">string</span>
+        <span class="n">Edad</span>   <span class="kt">int</span>
+    <span class="p">}</span>
+    <span class="n">personas</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="k">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="n">Persona</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="15-panic-y-recover">1.5 panic y recover</h3>
+
+<p>Manejo de errores y recuperación.</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">ejemplosPanicRecover</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c">// Ejemplo básico</span>
+    <span class="k">defer</span> <span class="k">func</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="n">r</span> <span class="o">:=</span> <span class="nb">recover</span><span class="p">();</span> <span class="n">r</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+            <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Recuperado de: %v</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span>
+        <span class="p">}</span>
+    <span class="p">}()</span>
+    
+    <span class="c">// Panic con error personalizado</span>
+    <span class="k">type</span> <span class="n">ErrorPersonalizado</span> <span class="k">struct</span> <span class="p">{</span>
+        <span class="n">Mensaje</span> <span class="kt">string</span>
+        <span class="n">Codigo</span>  <span class="kt">int</span>
+    <span class="p">}</span>
+    
+    <span class="c">// Función que puede entrar en pánico</span>
+    <span class="n">procesarDatos</span> <span class="o">:=</span> <span class="k">func</span><span class="p">(</span><span class="n">data</span> <span class="p">[]</span><span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">==</span> <span class="m">0</span> <span class="p">{</span>
+            <span class="nb">panic</span><span class="p">(</span><span class="n">ErrorPersonalizado</span><span class="p">{</span>
+                <span class="n">Mensaje</span><span class="o">:</span> <span class="s">"Datos vacíos"</span><span class="p">,</span>
+                <span class="n">Codigo</span><span class="o">:</span>  <span class="m">500</span><span class="p">,</span>
+            <span class="p">})</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    
+    <span class="n">procesarDatos</span><span class="p">([]</span><span class="kt">int</span><span class="p">{})</span> <span class="c">// Esto causará pánico</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="2-tipos-predefinidos">2. Tipos Predefinidos</h2>
+
+<h3 id="21-tipos-numéricos">2.1 Tipos Numéricos</h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">ejemplosTiposNumericos</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c">// Enteros</span>
+    <span class="k">var</span> <span class="p">(</span>
+        <span class="n">a</span> <span class="kt">int</span>     <span class="o">=</span> <span class="m">42</span>
+        <span class="n">b</span> <span class="kt">int8</span>    <span class="o">=</span> <span class="m">127</span>
+        <span class="n">c</span> <span class="kt">int16</span>   <span class="o">=</span> <span class="m">32767</span>
+        <span class="n">d</span> <span class="kt">int32</span>   <span class="o">=</span> <span class="m">2147483647</span>
+        <span class="n">e</span> <span class="kt">int64</span>   <span class="o">=</span> <span class="m">9223372036854775807</span>
+    <span class="p">)</span>
+    
+    <span class="c">// Enteros sin signo</span>
+    <span class="k">var</span> <span class="p">(</span>
+        <span class="n">f</span> <span class="kt">uint</span>     <span class="o">=</span> <span class="m">42</span>
+        <span class="n">g</span> <span class="kt">uint8</span>    <span class="o">=</span> <span class="m">255</span>
+        <span class="n">h</span> <span class="kt">uint16</span>   <span class="o">=</span> <span class="m">65535</span>
+        <span class="n">i</span> <span class="kt">uint32</span>   <span class="o">=</span> <span class="m">4294967295</span>
+        <span class="n">j</span> <span class="kt">uint64</span>   <span class="o">=</span> <span class="m">18446744073709551615</span>
+        <span class="n">k</span> <span class="kt">uintptr</span>  <span class="o">=</span> <span class="kt">uintptr</span><span class="p">(</span><span class="n">unsafe</span><span class="o">.</span><span class="n">Pointer</span><span class="p">(</span><span class="o">&amp;</span><span class="n">a</span><span class="p">))</span>
+    <span class="p">)</span>
+    
+    <span class="c">// Punto flotante</span>
+    <span class="k">var</span> <span class="p">(</span>
+        <span class="n">l</span> <span class="kt">float32</span> <span class="o">=</span> <span class="m">3.14159</span>
+        <span class="n">m</span> <span class="kt">float64</span> <span class="o">=</span> <span class="m">3.14159265359</span>
+    <span class="p">)</span>
+    
+    <span class="c">// Complejos</span>
+    <span class="k">var</span> <span class="p">(</span>
+        <span class="n">n</span> <span class="kt">complex64</span>  <span class="o">=</span> <span class="m">1</span> <span class="o">+</span> <span class="m">2i</span>
+        <span class="n">o</span> <span class="kt">complex128</span> <span class="o">=</span> <span class="m">1.5</span> <span class="o">+</span> <span class="m">2.5i</span>
+    <span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="22-tipos-compuestos">2.2 Tipos Compuestos</h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">ejemplosTiposCompuestos</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c">// Arrays</span>
+    <span class="k">var</span> <span class="n">matriz</span> <span class="p">[</span><span class="m">3</span><span class="p">][</span><span class="m">4</span><span class="p">]</span><span class="kt">int</span>
+    
+    <span class="c">// Slices</span>
+    <span class="n">slice</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">string</span><span class="p">{</span><span class="s">"a"</span><span class="p">,</span> <span class="s">"b"</span><span class="p">,</span> <span class="s">"c"</span><span class="p">}</span>
+    
+    <span class="c">// Mapas</span>
+    <span class="n">mapa</span> <span class="o">:=</span> <span class="k">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="k">interface</span><span class="p">{}{</span>
+        <span class="s">"nombre"</span><span class="o">:</span> <span class="s">"Juan"</span><span class="p">,</span>
+        <span class="s">"edad"</span><span class="o">:</span>   <span class="m">30</span><span class="p">,</span>
+        <span class="s">"activo"</span><span class="o">:</span> <span class="no">true</span><span class="p">,</span>
+    <span class="p">}</span>
+    
+    <span class="c">// Canales</span>
+    <span class="n">ch1</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="k">chan</span> <span class="kt">int</span><span class="p">)</span>        <span class="c">// Canal sin buffer</span>
+    <span class="n">ch2</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="k">chan</span> <span class="kt">int</span><span class="p">,</span> <span class="m">10</span><span class="p">)</span>    <span class="c">// Canal con buffer</span>
+    <span class="n">ch3</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="k">chan</span><span class="o">&lt;-</span> <span class="kt">int</span><span class="p">)</span>      <span class="c">// Canal solo envío</span>
+    <span class="n">ch4</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="o">&lt;-</span><span class="k">chan</span> <span class="kt">int</span><span class="p">)</span>      <span class="c">// Canal solo recepción</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="3-constantes-predefinidas">3. Constantes Predefinidas</h2>
+
+<h3 id="31-iota">3.1 iota</h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">ejemplosIota</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">const</span> <span class="p">(</span>
+        <span class="n">Domingo</span> <span class="o">=</span> <span class="no">iota</span>
+        <span class="n">Lunes</span>
+        <span class="n">Martes</span>
+        <span class="n">Miércoles</span>
+        <span class="n">Jueves</span>
+        <span class="n">Viernes</span>
+        <span class="n">Sábado</span>
+    <span class="p">)</span>
+    
+    <span class="k">const</span> <span class="p">(</span>
+        <span class="n">_</span>           <span class="o">=</span> <span class="no">iota</span>             <span class="c">// 0</span>
+        <span class="n">KB</span> <span class="kt">float64</span>  <span class="o">=</span> <span class="m">1</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="m">10</span> <span class="o">*</span> <span class="no">iota</span><span class="p">)</span> <span class="c">// 1 &lt;&lt; 10</span>
+        <span class="n">MB</span>                             <span class="c">// 1 &lt;&lt; 20</span>
+        <span class="n">GB</span>                             <span class="c">// 1 &lt;&lt; 30</span>
+        <span class="n">TB</span>                             <span class="c">// 1 &lt;&lt; 40</span>
+    <span class="p">)</span>
+    
+    <span class="k">const</span> <span class="p">(</span>
+        <span class="n">Norte</span> <span class="o">=</span> <span class="m">1</span> <span class="o">&lt;&lt;</span> <span class="no">iota</span> <span class="c">// 1</span>
+        <span class="n">Este</span>             <span class="c">// 2</span>
+        <span class="n">Sur</span>              <span class="c">// 4</span>
+        <span class="n">Oeste</span>           <span class="c">// 8</span>
+    <span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="4-ejemplos-prácticos">4. Ejemplos Prácticos</h2>
+
+<h3 id="41-manejo-de-colecciones">4.1 Manejo de Colecciones</h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">ejemplosColecciones</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c">// Slice dinámico</span>
+    <span class="n">datos</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">int</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">10</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="o">:=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="m">20</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span> <span class="p">{</span>
+        <span class="n">datos</span> <span class="o">=</span> <span class="nb">append</span><span class="p">(</span><span class="n">datos</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+        <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"len=%d cap=%d %v</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">datos</span><span class="p">),</span> <span class="nb">cap</span><span class="p">(</span><span class="n">datos</span><span class="p">),</span> <span class="n">datos</span><span class="p">)</span>
+    <span class="p">}</span>
+    
+    <span class="c">// Mapa con valores compuestos</span>
+    <span class="k">type</span> <span class="n">Producto</span> <span class="k">struct</span> <span class="p">{</span>
+        <span class="n">Nombre</span>  <span class="kt">string</span>
+        <span class="n">Precio</span>  <span class="kt">float64</span>
+        <span class="n">Stock</span>   <span class="kt">int</span>
+    <span class="p">}</span>
+    
+    <span class="n">inventario</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="k">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="n">Producto</span><span class="p">)</span>
+    <span class="n">inventario</span><span class="p">[</span><span class="s">"A001"</span><span class="p">]</span> <span class="o">=</span> <span class="n">Producto</span><span class="p">{</span><span class="s">"Laptop"</span><span class="p">,</span> <span class="m">999.99</span><span class="p">,</span> <span class="m">10</span><span class="p">}</span>
+    <span class="n">inventario</span><span class="p">[</span><span class="s">"A002"</span><span class="p">]</span> <span class="o">=</span> <span class="n">Producto</span><span class="p">{</span><span class="s">"Mouse"</span><span class="p">,</span> <span class="m">29.99</span><span class="p">,</span> <span class="m">50</span><span class="p">}</span>
+    
+    <span class="c">// Eliminación segura</span>
+    <span class="k">if</span> <span class="n">_</span><span class="p">,</span> <span class="n">existe</span> <span class="o">:=</span> <span class="n">inventario</span><span class="p">[</span><span class="s">"A003"</span><span class="p">];</span> <span class="n">existe</span> <span class="p">{</span>
+        <span class="nb">delete</span><span class="p">(</span><span class="n">inventario</span><span class="p">,</span> <span class="s">"A003"</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="42-manejo-de-errores-avanzado">4.2 Manejo de Errores Avanzado</h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">ejemploErroresAvanzados</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">type</span> <span class="n">ErrorOperacion</span> <span class="k">struct</span> <span class="p">{</span>
+        <span class="n">Operacion</span> <span class="kt">string</span>
+        <span class="n">Err</span>       <span class="kt">error</span>
+    <span class="p">}</span>
+    
+    <span class="k">func</span> <span class="p">(</span><span class="n">e</span> <span class="o">*</span><span class="n">ErrorOperacion</span><span class="p">)</span> <span class="n">Error</span><span class="p">()</span> <span class="kt">string</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">fmt</span><span class="o">.</span><span class="n">Sprintf</span><span class="p">(</span><span class="s">"error en %s: %v"</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">Operacion</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">Err</span><span class="p">)</span>
+    <span class="p">}</span>
+    
+    <span class="c">// Función que usa panic y recover</span>
+    <span class="n">procesarOperacion</span> <span class="o">:=</span> <span class="k">func</span><span class="p">(</span><span class="n">operacion</span> <span class="kt">string</span><span class="p">)</span> <span class="p">(</span><span class="n">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">defer</span> <span class="k">func</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="n">r</span> <span class="o">:=</span> <span class="nb">recover</span><span class="p">();</span> <span class="n">r</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+                <span class="n">err</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">ErrorOperacion</span><span class="p">{</span>
+                    <span class="n">Operacion</span><span class="o">:</span> <span class="n">operacion</span><span class="p">,</span>
+                    <span class="n">Err</span><span class="o">:</span>       <span class="n">fmt</span><span class="o">.</span><span class="n">Errorf</span><span class="p">(</span><span class="s">"%v"</span><span class="p">,</span> <span class="n">r</span><span class="p">),</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}()</span>
+        
+        <span class="c">// Simular operación que puede fallar</span>
+        <span class="k">if</span> <span class="n">operacion</span> <span class="o">==</span> <span class="s">""</span> <span class="p">{</span>
+            <span class="nb">panic</span><span class="p">(</span><span class="s">"operación inválida"</span><span class="p">)</span>
+        <span class="p">}</span>
+        
+        <span class="k">return</span> <span class="no">nil</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="5-mejores-prácticas">5. Mejores Prácticas</h2>
+
+<ol>
+  <li><strong>Uso de append</strong>
+    <ul>
+      <li>Pre-reserva capacidad cuando conoces el tamaño final</li>
+      <li>Usa append(…) para concatenar slices</li>
+      <li>Considera la capacidad al hacer operaciones en batch</li>
+    </ul>
+  </li>
+  <li><strong>Manejo de Errores</strong>
+    <ul>
+      <li>Usa panic solo para errores irrecuperables</li>
+      <li>Implementa recover en funciones críticas</li>
+      <li>Propaga errores apropiadamente</li>
+    </ul>
+  </li>
+  <li><strong>Optimización de Memoria</strong>
+    <ul>
+      <li>Reutiliza slices y mapas cuando sea posible</li>
+      <li>Libera referencias a objetos grandes</li>
+      <li>Usa make con capacidad inicial apropiada</li>
+    </ul>
+  </li>
+  <li><strong>Concurrencia</strong>
+    <ul>
+      <li>Cierra canales desde el emisor</li>
+      <li>Usa canales con buffer cuando sea apropiado</li>
+      <li>Considera el uso de select para operaciones timeout</li>
+    </ul>
+  </li>
+</ol>
+
+<h2 id="6-referencias-y-recursos-adicionales">6. Referencias y Recursos Adicionales</h2>
+
+<ul>
+  <li><a href="https://golang.org/pkg/builtin/">Documentación oficial de Go</a></li>
+  <li><a href="https://golang.org/doc/effective_go.html">Effective Go</a></li>
+  <li><a href="https://gobyexample.com/">Go by Example</a></li>
+</ul>
+
+            </main>
+        </div>
+        
+        <!-- Componente flotante de GitHub -->
+<div class="github-floating">
+    <a href="https://github.com/" target="_blank" rel="noopener noreferrer" class="github-link" title="Ver en GitHub">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-github">
+            <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+        </svg>
+    </a>
+    
+    
+    <a href="https://github.com//MiguelP-Dev.github.io/blob/main/_pages/paquetes/builtin.md" target="_blank" rel="noopener noreferrer" class="edit-link" title="Editar esta página">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-2">
+            <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+        </svg>
+    </a>
+    
+</div>
+
+<style>
+    /* Estilos del componente SVG */
+    .github-corner:hover .octo-arm {
+        animation: octocat-wave 560ms ease-in-out;
+    }
+    
+    @keyframes octocat-wave {
+        0%, 100% { transform: rotate(0); }
+        20%, 60% { transform: rotate(-25deg); }
+        40%, 80% { transform: rotate(10deg); }
+    }
+    
+    @media (max-width: 500px) {
+        .github-corner:hover .octo-arm {
+            animation: none;
+        }
+        .github-corner .octo-arm {
+            animation: octocat-wave 560ms ease-in-out;
+        }
+    }
+</style>
+    </div>
+    
+    <script src="/assets/js/scripts.js"></script>
+</body>
+</html>

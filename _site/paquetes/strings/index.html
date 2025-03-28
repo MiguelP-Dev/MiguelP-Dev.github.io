@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>strings | Miguel's Programing Notes</title>
+    <link rel="stylesheet" href="/assets/css/styles.css">
+</head>
+<body>
+    <div class="app">
+        <nav class="navbar">
+    <div class="nav-container">
+        <a href="/" class="nav-brand">
+            Miguel's Programming Notes
+        </a>
+
+        <div class="nav-sections">
+            
+                
+                
+                
+                <a href="/paquetes/"
+                    class="nav-section active"
+                    data-section="paquetes">
+                    📦 Paquetes
+                </a>
+            
+                
+                
+                
+                <a href="/ejemplos/"
+                    class="nav-section "
+                    data-section="ejemplos">
+                    🧩 Ejemplos
+                </a>
+            
+        </div>
+    </div>
+</nav>
+        
+        <div class="container">
+            <button class="menu-toggle" aria-label="Abrir menú">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            
+            <aside class="sidebar" id="dynamic-sidebar">
+    <div class="sidebar-header">
+        <h3 class="sidebar-title">Miguel's Programming Notes</h3>
+    </div>
+    
+    <div class="sidebar-content">
+        
+            
+                <h3 class="sidebar-title">📦 Paquetes</h3>
+                <nav class="sidebar-nav">
+                    
+                        <a href="/paquetes/fmt/"
+                            class="sidebar-item "
+                            data-item="fmt">
+                            fmt
+                        </a>
+                    
+                        <a href="/paquetes/net/"
+                            class="sidebar-item "
+                            data-item="net-http">
+                            net/http
+                        </a>
+                    
+                        <a href="/paquetes/encoding/"
+                            class="sidebar-item "
+                            data-item="encoding">
+                            encoding
+                        </a>
+                    
+                </nav>
+            
+        
+            
+        
+    </div>
+</aside>
+            
+            <main class="content">
+                <h1 id="paquete-strings-en-go">Paquete <code class="language-plaintext highlighter-rouge">strings</code> en Go</h1>
+
+<p>El paquete <code class="language-plaintext highlighter-rouge">strings</code> ofrece herramientas completas para manipular y analizar cadenas en Go. Esta guía ampliada incluye ejemplos detallados, mejores prácticas y casos de uso avanzados.</p>
+
+<hr />
+
+<h2 id="1-funciones-esenciales">1. Funciones Esenciales</h2>
+
+<h3 id="11-búsqueda-y-comparación">1.1 Búsqueda y Comparación</h3>
+
+<p><strong>Funciones clave</strong>:</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>  
+
+<span class="k">import</span> <span class="p">(</span>  
+    <span class="s">"fmt"</span>  
+    <span class="s">"strings"</span>  
+<span class="p">)</span>  
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>  
+    <span class="n">s</span> <span class="o">:=</span> <span class="s">"Go es rápido y divertido 🔥"</span>  
+
+    <span class="c">// Contains vs ContainsAny  </span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Contiene 'rápido':"</span><span class="p">,</span> <span class="n">strings</span><span class="o">.</span><span class="n">Contains</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s">"rápido"</span><span class="p">))</span>          <span class="c">// true  </span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Contiene 'aeiou':"</span><span class="p">,</span> <span class="n">strings</span><span class="o">.</span><span class="n">ContainsAny</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s">"aeiou"</span><span class="p">))</span>        <span class="c">// true (busca cualquier carácter)  </span>
+
+    <span class="c">// Index y LastIndex con Unicode  </span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Índice de 'es':"</span><span class="p">,</span> <span class="n">strings</span><span class="o">.</span><span class="n">Index</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s">"es"</span><span class="p">))</span>                   <span class="c">// 3  </span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Última 'o':"</span><span class="p">,</span> <span class="n">strings</span><span class="o">.</span><span class="n">LastIndex</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s">"o"</span><span class="p">))</span>                    <span class="c">// 1  </span>
+
+    <span class="c">// Comparación exacta vs insensible a mayúsculas  </span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Igualdad exacta:"</span><span class="p">,</span> <span class="n">strings</span><span class="o">.</span><span class="n">Compare</span><span class="p">(</span><span class="s">"Go"</span><span class="p">,</span> <span class="s">"go"</span><span class="p">))</span>             <span class="c">// -1  </span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Igualdad insensible:"</span><span class="p">,</span> <span class="n">strings</span><span class="o">.</span><span class="n">EqualFold</span><span class="p">(</span><span class="s">"Go"</span><span class="p">,</span> <span class="s">"go"</span><span class="p">))</span>       <span class="c">// true  </span>
+<span class="p">}</span>  
+</code></pre></div></div>
+
+<hr />
+
+<h3 id="12-división-y-unión">1.2 División y Unión</h3>
+
+<p><strong>Ejemplos con manejo de slices</strong>:</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>  
+    <span class="c">// Split con múltiples separadores  </span>
+    <span class="n">csv</span> <span class="o">:=</span> <span class="s">"a,b;c|d"</span>  
+    <span class="n">parts</span> <span class="o">:=</span> <span class="n">strings</span><span class="o">.</span><span class="n">FieldsFunc</span><span class="p">(</span><span class="n">csv</span><span class="p">,</span> <span class="k">func</span><span class="p">(</span><span class="n">r</span> <span class="kt">rune</span><span class="p">)</span> <span class="kt">bool</span> <span class="p">{</span>  
+        <span class="k">return</span> <span class="n">r</span> <span class="o">==</span> <span class="sc">','</span> <span class="o">||</span> <span class="n">r</span> <span class="o">==</span> <span class="sc">';'</span> <span class="o">||</span> <span class="n">r</span> <span class="o">==</span> <span class="sc">'|'</span>  
+    <span class="p">})</span>  
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Split personalizado:"</span><span class="p">,</span> <span class="n">parts</span><span class="p">)</span> <span class="c">// [a b c d]  </span>
+
+    <span class="c">// Unión eficiente  </span>
+    <span class="n">palabras</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">string</span><span class="p">{</span><span class="s">"Go"</span><span class="p">,</span> <span class="s">"es"</span><span class="p">,</span> <span class="s">"genial"</span><span class="p">}</span>  
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Unido:"</span><span class="p">,</span> <span class="n">strings</span><span class="o">.</span><span class="n">Join</span><span class="p">(</span><span class="n">palabras</span><span class="p">,</span> <span class="s">"💡"</span><span class="p">))</span> <span class="c">// Go💡es💡genial  </span>
+
+    <span class="c">// Repetición de cadenas  </span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Ritmo:"</span><span class="p">,</span> <span class="n">strings</span><span class="o">.</span><span class="n">Repeat</span><span class="p">(</span><span class="s">"🎵"</span><span class="p">,</span> <span class="m">3</span><span class="p">))</span> <span class="c">// 🎵🎵🎵  </span>
+<span class="p">}</span>  
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="2-transformaciones-avanzadas">2. Transformaciones Avanzadas</h2>
+
+<h3 id="21-manipulación-de-caracteres">2.1 Manipulación de Caracteres</h3>
+
+<p><strong>Uso de <code class="language-plaintext highlighter-rouge">strings.Map</code> y <code class="language-plaintext highlighter-rouge">strings.ToValidUTF8</code></strong>:</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>  
+    <span class="c">// Eliminar dígitos de una cadena  </span>
+    <span class="n">limpio</span> <span class="o">:=</span> <span class="n">strings</span><span class="o">.</span><span class="n">Map</span><span class="p">(</span><span class="k">func</span><span class="p">(</span><span class="n">r</span> <span class="kt">rune</span><span class="p">)</span> <span class="kt">rune</span> <span class="p">{</span>  
+        <span class="k">if</span> <span class="n">r</span> <span class="o">&gt;=</span> <span class="sc">'0'</span> <span class="o">&amp;&amp;</span> <span class="n">r</span> <span class="o">&lt;=</span> <span class="sc">'9'</span> <span class="p">{</span>  
+            <span class="k">return</span> <span class="o">-</span><span class="m">1</span> <span class="c">// Eliminar  </span>
+        <span class="p">}</span>  
+        <span class="k">return</span> <span class="n">r</span>  
+    <span class="p">},</span> <span class="s">"H0l4 MUnd0"</span><span class="p">)</span>  
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Sin dígitos:"</span><span class="p">,</span> <span class="n">limpio</span><span class="p">)</span> <span class="c">// Hl MUnd  </span>
+
+    <span class="c">// Sanitizar UTF-8  </span>
+    <span class="n">corrupto</span> <span class="o">:=</span> <span class="s">"Hola</span><span class="se">\x80</span><span class="s">Mundo"</span>  
+    <span class="n">seguro</span> <span class="o">:=</span> <span class="n">strings</span><span class="o">.</span><span class="n">ToValidUTF8</span><span class="p">(</span><span class="n">corrupto</span><span class="p">,</span> <span class="s">""</span><span class="p">)</span>  
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Sanitizado:"</span><span class="p">,</span> <span class="n">seguro</span><span class="p">)</span> <span class="c">// HolaMundo  </span>
+<span class="p">}</span>  
+</code></pre></div></div>
+
+<hr />
+
+<h3 id="22-recortes-específicos">2.2 Recortes Específicos</h3>
+
+<p><strong>Ejemplos con <code class="language-plaintext highlighter-rouge">TrimPrefix</code>, <code class="language-plaintext highlighter-rouge">TrimSuffix</code> y <code class="language-plaintext highlighter-rouge">TrimFunc</code></strong>:</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>  
+    <span class="c">// Eliminar prefijos/sufijos  </span>
+    <span class="n">path</span> <span class="o">:=</span> <span class="s">"/home/usuario/archivo.txt"</span>  
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Sin prefijo:"</span><span class="p">,</span> <span class="n">strings</span><span class="o">.</span><span class="n">TrimPrefix</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s">"/home/"</span><span class="p">))</span> <span class="c">// usuario/archivo.txt  </span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Sin extensión:"</span><span class="p">,</span> <span class="n">strings</span><span class="o">.</span><span class="n">TrimSuffix</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s">".txt"</span><span class="p">))</span> <span class="c">// /home/usuario/archivo  </span>
+
+    <span class="c">// Recortar usando lógica personalizada  </span>
+    <span class="n">s</span> <span class="o">:=</span> <span class="s">"!!!¡Alerta!!!¡¡"</span>  
+    <span class="n">trimmed</span> <span class="o">:=</span> <span class="n">strings</span><span class="o">.</span><span class="n">TrimFunc</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="k">func</span><span class="p">(</span><span class="n">r</span> <span class="kt">rune</span><span class="p">)</span> <span class="kt">bool</span> <span class="p">{</span>  
+        <span class="k">return</span> <span class="n">r</span> <span class="o">==</span> <span class="sc">'!'</span> <span class="o">||</span> <span class="n">r</span> <span class="o">==</span> <span class="sc">'¡'</span>  
+    <span class="p">})</span>  
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Recortado:"</span><span class="p">,</span> <span class="n">trimmed</span><span class="p">)</span> <span class="c">// Alerta  </span>
+<span class="p">}</span>  
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="3-casos-de-uso-profesionales">3. Casos de Uso Profesionales</h2>
+
+<h3 id="31-procesamiento-de-csv">3.1 Procesamiento de CSV</h3>
+
+<p><strong>Parseo seguro con manejo de comillas</strong>:</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">parseCSV</span><span class="p">(</span><span class="n">csvData</span> <span class="kt">string</span><span class="p">)</span> <span class="p">[][]</span><span class="kt">string</span> <span class="p">{</span>  
+    <span class="n">reader</span> <span class="o">:=</span> <span class="n">strings</span><span class="o">.</span><span class="n">NewReader</span><span class="p">(</span><span class="n">csvData</span><span class="p">)</span>  
+    <span class="k">var</span> <span class="n">result</span> <span class="p">[][]</span><span class="kt">string</span>  
+
+    <span class="k">for</span> <span class="p">{</span>  
+        <span class="n">line</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">reader</span><span class="o">.</span><span class="n">ReadString</span><span class="p">(</span><span class="sc">'\n'</span><span class="p">)</span>  
+        <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>  
+            <span class="k">break</span>  
+        <span class="p">}</span>  
+        <span class="n">line</span> <span class="o">=</span> <span class="n">strings</span><span class="o">.</span><span class="n">TrimSpace</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>  
+        <span class="n">fields</span> <span class="o">:=</span> <span class="n">strings</span><span class="o">.</span><span class="n">Split</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="s">","</span><span class="p">)</span>  
+        <span class="c">// Manejar comillas dobles  </span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">field</span> <span class="o">:=</span> <span class="k">range</span> <span class="n">fields</span> <span class="p">{</span>  
+            <span class="n">fields</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">strings</span><span class="o">.</span><span class="n">Trim</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="s">`"`</span><span class="p">)</span>  
+        <span class="p">}</span>  
+        <span class="n">result</span> <span class="o">=</span> <span class="nb">append</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">fields</span><span class="p">)</span>  
+    <span class="p">}</span>  
+    <span class="k">return</span> <span class="n">result</span>  
+<span class="p">}</span>  
+</code></pre></div></div>
+
+<hr />
+
+<h3 id="32-validación-de-correo-electrónico">3.2 Validación de Correo Electrónico</h3>
+
+<p><strong>Implementación básica</strong>:</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">esEmailValido</span><span class="p">(</span><span class="n">email</span> <span class="kt">string</span><span class="p">)</span> <span class="kt">bool</span> <span class="p">{</span>  
+    <span class="c">// Verificar estructura básica  </span>
+    <span class="k">if</span> <span class="o">!</span><span class="n">strings</span><span class="o">.</span><span class="n">Contains</span><span class="p">(</span><span class="n">email</span><span class="p">,</span> <span class="s">"@"</span><span class="p">)</span> <span class="o">||</span> <span class="n">strings</span><span class="o">.</span><span class="n">Count</span><span class="p">(</span><span class="n">email</span><span class="p">,</span> <span class="s">"@"</span><span class="p">)</span> <span class="o">&gt;</span> <span class="m">1</span> <span class="p">{</span>  
+        <span class="k">return</span> <span class="no">false</span>  
+    <span class="p">}</span>  
+    <span class="n">partes</span> <span class="o">:=</span> <span class="n">strings</span><span class="o">.</span><span class="n">Split</span><span class="p">(</span><span class="n">email</span><span class="p">,</span> <span class="s">"@"</span><span class="p">)</span>  
+    <span class="n">local</span><span class="p">,</span> <span class="n">dominio</span> <span class="o">:=</span> <span class="n">partes</span><span class="p">[</span><span class="m">0</span><span class="p">],</span> <span class="n">partes</span><span class="p">[</span><span class="m">1</span><span class="p">]</span>  
+
+    <span class="c">// Longitudes mínimas  </span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">local</span><span class="p">)</span> <span class="o">&lt;</span> <span class="m">1</span> <span class="o">||</span> <span class="nb">len</span><span class="p">(</span><span class="n">dominio</span><span class="p">)</span> <span class="o">&lt;</span> <span class="m">3</span> <span class="p">{</span>  
+        <span class="k">return</span> <span class="no">false</span>  
+    <span class="p">}</span>  
+
+    <span class="c">// Caracteres prohibidos en dominio  </span>
+    <span class="k">return</span> <span class="o">!</span><span class="n">strings</span><span class="o">.</span><span class="n">ContainsAny</span><span class="p">(</span><span class="n">dominio</span><span class="p">,</span> <span class="s">"!#$%^&amp;*()"</span><span class="p">)</span>  
+<span class="p">}</span>  
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="4-rendimiento-y-optimización">4. Rendimiento y Optimización</h2>
+
+<h3 id="41-benchmarks-de-concatenación">4.1 Benchmarks de Concatenación</h3>
+
+<p><strong>Resultados típicos</strong>:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Método</th>
+      <th>1000 iteraciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">+</code></td>
+      <td>1500 µs</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">strings.Join</code></td>
+      <td>200 µs</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">strings.Builder</code></td>
+      <td>50 µs</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Código recomendado</strong>:</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">concatenarEficiente</span><span class="p">(</span><span class="n">palabras</span> <span class="p">[]</span><span class="kt">string</span><span class="p">)</span> <span class="kt">string</span> <span class="p">{</span>  
+    <span class="k">var</span> <span class="n">sb</span> <span class="n">strings</span><span class="o">.</span><span class="n">Builder</span>  
+    <span class="n">sb</span><span class="o">.</span><span class="n">Grow</span><span class="p">(</span><span class="m">1000</span><span class="p">)</span> <span class="c">// Pre-asignar capacidad  </span>
+    <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">p</span> <span class="o">:=</span> <span class="k">range</span> <span class="n">palabras</span> <span class="p">{</span>  
+        <span class="n">sb</span><span class="o">.</span><span class="n">WriteString</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>  
+    <span class="p">}</span>  
+    <span class="k">return</span> <span class="n">sb</span><span class="o">.</span><span class="n">String</span><span class="p">()</span>  
+<span class="p">}</span>  
+</code></pre></div></div>
+
+<hr />
+
+<h3 id="42-manejo-de-slices">4.2 Manejo de Slices</h3>
+
+<p><strong>Peligro de aliasing</strong>:</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>  
+    <span class="n">s</span> <span class="o">:=</span> <span class="s">"uno,dos,tres"</span>  
+    <span class="n">partes</span> <span class="o">:=</span> <span class="n">strings</span><span class="o">.</span><span class="n">Split</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s">","</span><span class="p">)</span>  
+    <span class="n">partes</span><span class="p">[</span><span class="m">0</span><span class="p">]</span> <span class="o">=</span> <span class="s">"cero"</span>  
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="c">// "uno,dos,tres" (el original no cambia)  </span>
+<span class="p">}</span>  
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="5-errores-comunes">5. Errores Comunes</h2>
+
+<h3 id="51-índices-y-subcadenas">5.1 Índices y Subcadenas</h3>
+
+<p><strong>Ejemplo problemático</strong>:</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>  
+    <span class="n">s</span> <span class="o">:=</span> <span class="s">"café"</span>  
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Longitud incorrecta:"</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">))</span> <span class="c">// 5 (bytes), no 4 (runas)  </span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Subcadena rota:"</span><span class="p">,</span> <span class="n">s</span><span class="p">[</span><span class="m">0</span><span class="o">:</span><span class="m">3</span><span class="p">])</span>      <span class="c">// "caf" incompleto  </span>
+<span class="p">}</span>  
+
+<span class="c">// Solución:  </span>
+<span class="k">func</span> <span class="n">subcadenaSegura</span><span class="p">(</span><span class="n">s</span> <span class="kt">string</span><span class="p">,</span> <span class="n">inicio</span><span class="p">,</span> <span class="n">fin</span> <span class="kt">int</span><span class="p">)</span> <span class="kt">string</span> <span class="p">{</span>  
+    <span class="n">runas</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">rune</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>  
+    <span class="k">if</span> <span class="n">inicio</span> <span class="o">&lt;</span> <span class="m">0</span> <span class="o">||</span> <span class="n">fin</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">runas</span><span class="p">)</span> <span class="p">{</span>  
+        <span class="k">return</span> <span class="s">""</span>  
+    <span class="p">}</span>  
+    <span class="k">return</span> <span class="kt">string</span><span class="p">(</span><span class="n">runas</span><span class="p">[</span><span class="n">inicio</span><span class="o">:</span><span class="n">fin</span><span class="p">])</span>  
+<span class="p">}</span>  
+</code></pre></div></div>
+
+<hr />
+
+<h3 id="52-trim-vs-replace">5.2 Trim vs Replace</h3>
+
+<p><strong>Confusión frecuente</strong>:</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// TrimSpace solo elimina espacios al inicio/final  </span>
+<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">strings</span><span class="o">.</span><span class="n">TrimSpace</span><span class="p">(</span><span class="s">"  hola</span><span class="se">\t\n</span><span class="s">"</span><span class="p">))</span> <span class="c">// "hola"  </span>
+
+<span class="c">// Replace elimina todos los espacios  </span>
+<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">strings</span><span class="o">.</span><span class="n">ReplaceAll</span><span class="p">(</span><span class="s">"  hola</span><span class="se">\t\n</span><span class="s">"</span><span class="p">,</span> <span class="s">" "</span><span class="p">,</span> <span class="s">""</span><span class="p">))</span> <span class="c">// No maneja tabs ni newlines  </span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="6-ejercicios-prácticos">6. Ejercicios Prácticos</h2>
+
+<ol>
+  <li>
+    <p><strong>Inversión de Cadena</strong>:</p>
+
+    <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">invertir</span><span class="p">(</span><span class="n">s</span> <span class="kt">string</span><span class="p">)</span> <span class="kt">string</span> <span class="p">{</span>  
+    <span class="n">runas</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">rune</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>  
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="o">:=</span> <span class="m">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">runas</span><span class="p">)</span><span class="o">-</span><span class="m">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">j</span><span class="p">;</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="o">=</span> <span class="n">i</span><span class="o">+</span><span class="m">1</span><span class="p">,</span> <span class="n">j</span><span class="o">-</span><span class="m">1</span> <span class="p">{</span>  
+        <span class="n">runas</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">runas</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">runas</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">runas</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>  
+    <span class="p">}</span>  
+    <span class="k">return</span> <span class="kt">string</span><span class="p">(</span><span class="n">runas</span><span class="p">)</span>  
+<span class="p">}</span>  
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p><strong>Contador de Palabras Únicas</strong>:</p>
+
+    <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">contarUnicas</span><span class="p">(</span><span class="n">s</span> <span class="kt">string</span><span class="p">)</span> <span class="kt">int</span> <span class="p">{</span>  
+    <span class="n">palabras</span> <span class="o">:=</span> <span class="n">strings</span><span class="o">.</span><span class="n">Fields</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>  
+    <span class="n">unicas</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="k">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">bool</span><span class="p">)</span>  
+    <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">p</span> <span class="o">:=</span> <span class="k">range</span> <span class="n">palabras</span> <span class="p">{</span>  
+        <span class="n">unicas</span><span class="p">[</span><span class="n">strings</span><span class="o">.</span><span class="n">ToLower</span><span class="p">(</span><span class="n">p</span><span class="p">)]</span> <span class="o">=</span> <span class="no">true</span>  
+    <span class="p">}</span>  
+    <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">unicas</span><span class="p">)</span>  
+<span class="p">}</span>  
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<hr />
+
+<h2 id="7-mejores-prácticas">7. Mejores Prácticas</h2>
+
+<ul>
+  <li><strong>Unicode</strong>: Usar <code class="language-plaintext highlighter-rouge">[]rune</code> para manipulación de caracteres multibyte.</li>
+  <li><strong>Pre-asignación</strong>: Utilizar <code class="language-plaintext highlighter-rouge">Grow()</code> en <code class="language-plaintext highlighter-rouge">strings.Builder</code> para reducir asignaciones.</li>
+  <li><strong>Seguridad</strong>: Sanitizar entradas con <code class="language-plaintext highlighter-rouge">strings.ToValidUTF8</code> y <code class="language-plaintext highlighter-rouge">strings.TrimSpace</code>.</li>
+  <li><strong>Testing</strong>: Validar edge cases como cadenas vacías, UTF-8 complejo y caracteres de control.</li>
+</ul>
+
+<hr />
+
+<h2 id="conclusión">Conclusión</h2>
+
+<p>El paquete <code class="language-plaintext highlighter-rouge">strings</code> es una herramienta poderosa para cualquier desarrollador Go. Al dominar sus funciones y aplicar estas prácticas, podrás escribir código más eficiente, seguro y mantenible.</p>
+
+            </main>
+        </div>
+        
+        <!-- Componente flotante de GitHub -->
+<div class="github-floating">
+    <a href="https://github.com/" target="_blank" rel="noopener noreferrer" class="github-link" title="Ver en GitHub">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-github">
+            <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+        </svg>
+    </a>
+    
+    
+    <a href="https://github.com//MiguelP-Dev.github.io/blob/main/_pages/paquetes/strings.md" target="_blank" rel="noopener noreferrer" class="edit-link" title="Editar esta página">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-2">
+            <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+        </svg>
+    </a>
+    
+</div>
+
+<style>
+    /* Estilos del componente SVG */
+    .github-corner:hover .octo-arm {
+        animation: octocat-wave 560ms ease-in-out;
+    }
+    
+    @keyframes octocat-wave {
+        0%, 100% { transform: rotate(0); }
+        20%, 60% { transform: rotate(-25deg); }
+        40%, 80% { transform: rotate(10deg); }
+    }
+    
+    @media (max-width: 500px) {
+        .github-corner:hover .octo-arm {
+            animation: none;
+        }
+        .github-corner .octo-arm {
+            animation: octocat-wave 560ms ease-in-out;
+        }
+    }
+</style>
+    </div>
+    
+    <script src="/assets/js/scripts.js"></script>
+</body>
+</html>

@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>mime | Miguel's Programing Notes</title>
+    <link rel="stylesheet" href="/assets/css/styles.css">
+</head>
+<body>
+    <div class="app">
+        <nav class="navbar">
+    <div class="nav-container">
+        <a href="/" class="nav-brand">
+            Miguel's Programming Notes
+        </a>
+
+        <div class="nav-sections">
+            
+                
+                
+                
+                <a href="/paquetes/"
+                    class="nav-section active"
+                    data-section="paquetes">
+                    📦 Paquetes
+                </a>
+            
+                
+                
+                
+                <a href="/ejemplos/"
+                    class="nav-section "
+                    data-section="ejemplos">
+                    🧩 Ejemplos
+                </a>
+            
+        </div>
+    </div>
+</nav>
+        
+        <div class="container">
+            <button class="menu-toggle" aria-label="Abrir menú">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            
+            <aside class="sidebar" id="dynamic-sidebar">
+    <div class="sidebar-header">
+        <h3 class="sidebar-title">Miguel's Programming Notes</h3>
+    </div>
+    
+    <div class="sidebar-content">
+        
+            
+                <h3 class="sidebar-title">📦 Paquetes</h3>
+                <nav class="sidebar-nav">
+                    
+                        <a href="/paquetes/fmt/"
+                            class="sidebar-item "
+                            data-item="fmt">
+                            fmt
+                        </a>
+                    
+                        <a href="/paquetes/net/"
+                            class="sidebar-item "
+                            data-item="net-http">
+                            net/http
+                        </a>
+                    
+                        <a href="/paquetes/encoding/"
+                            class="sidebar-item "
+                            data-item="encoding">
+                            encoding
+                        </a>
+                    
+                </nav>
+            
+        
+            
+        
+    </div>
+</aside>
+            
+            <main class="content">
+                <h1 id="paquete-mime-en-go-guía-detallada-y-consideraciones-prácticas">Paquete <code class="language-plaintext highlighter-rouge">mime</code> en Go: Guía Detallada y Consideraciones Prácticas</h1>
+
+<p>El paquete <code class="language-plaintext highlighter-rouge">mime</code> en Go facilita el manejo de tipos MIME (Multipurpose Internet Mail Extensions), esenciales para identificar el tipo de contenido de archivos y datos. A continuación, se presenta una guía ampliada con ejemplos, consideraciones y casos de uso avanzados.</p>
+
+<hr />
+
+<h2 id="funciones-principales">Funciones Principales</h2>
+
+<h3 id="1-mimetypebyextensionext-string-string">1. <strong><code class="language-plaintext highlighter-rouge">mime.TypeByExtension(ext string) string</code></strong></h3>
+<p><strong>Propósito</strong>: Obtiene el tipo MIME asociado a una extensión de archivo.<br />
+<strong>Ejemplo</strong>:</p>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">mime</span><span class="o">.</span><span class="n">TypeByExtension</span><span class="p">(</span><span class="s">".png"</span><span class="p">))</span> <span class="c">// "image/png"</span>
+<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">mime</span><span class="o">.</span><span class="n">TypeByExtension</span><span class="p">(</span><span class="s">".xyz"</span><span class="p">))</span> <span class="c">// "" (extensión desconocida)</span>
+</code></pre></div></div>
+<p><strong>Consideraciones</strong>:</p>
+<ul>
+  <li>Las extensiones deben incluir el punto (ej: <code class="language-plaintext highlighter-rouge">.jpg</code>, no <code class="language-plaintext highlighter-rouge">jpg</code>).</li>
+  <li>No distingue entre mayúsculas y minúsculas: <code class="language-plaintext highlighter-rouge">.JPG</code> y <code class="language-plaintext highlighter-rouge">.jpg</code> devuelven <code class="language-plaintext highlighter-rouge">image/jpeg</code>.</li>
+</ul>
+
+<h3 id="2-mimeextensionsbytypetyp-string-string-error">2. <strong><code class="language-plaintext highlighter-rouge">mime.ExtensionsByType(typ string) ([]string, error)</code></strong></h3>
+<p><strong>Propósito</strong>: Obtiene las extensiones asociadas a un tipo MIME.<br />
+<strong>Ejemplo</strong>:</p>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">exts</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">mime</span><span class="o">.</span><span class="n">ExtensionsByType</span><span class="p">(</span><span class="s">"application/json"</span><span class="p">)</span>
+<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">exts</span><span class="p">)</span> <span class="c">// [".json"]</span>
+</code></pre></div></div>
+<p><strong>Manejo de Errores</strong>:</p>
+<ul>
+  <li>Devuelve <code class="language-plaintext highlighter-rouge">nil, nil</code> si el tipo MIME no existe (no un error explícito).</li>
+  <li>Para tipos con parámetros (ej: <code class="language-plaintext highlighter-rouge">text/html; charset=utf-8</code>), ignora los parámetros:
+    <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">exts</span><span class="p">,</span> <span class="n">_</span> <span class="o">:=</span> <span class="n">mime</span><span class="o">.</span><span class="n">ExtensionsByType</span><span class="p">(</span><span class="s">"text/html; charset=utf-8"</span><span class="p">)</span>
+<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">exts</span><span class="p">)</span> <span class="c">// [".html"]</span>
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<h3 id="3-mimeaddextensiontypeext-typ-string-error">3. <strong><code class="language-plaintext highlighter-rouge">mime.AddExtensionType(ext, typ string) error</code></strong></h3>
+<p><strong>Propósito</strong>: Asocia una extensión a un tipo MIME personalizado.<br />
+<strong>Ejemplo</strong>:</p>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">err</span> <span class="o">:=</span> <span class="n">mime</span><span class="o">.</span><span class="n">AddExtensionType</span><span class="p">(</span><span class="s">".md"</span><span class="p">,</span> <span class="s">"text/markdown"</span><span class="p">)</span>
+<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">mime</span><span class="o">.</span><span class="n">TypeByExtension</span><span class="p">(</span><span class="s">".md"</span><span class="p">))</span> <span class="c">// "text/markdown"</span>
+</code></pre></div></div>
+<p><strong>Advertencias</strong>:</p>
+<ul>
+  <li>Sobrescribe asociaciones existentes:
+    <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">mime</span><span class="o">.</span><span class="n">AddExtensionType</span><span class="p">(</span><span class="s">".jpg"</span><span class="p">,</span> <span class="s">"application/x-custom-image"</span><span class="p">)</span>
+<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">mime</span><span class="o">.</span><span class="n">TypeByExtension</span><span class="p">(</span><span class="s">".jpg"</span><span class="p">))</span> <span class="c">// "application/x-custom-image"</span>
+</code></pre></div>    </div>
+  </li>
+  <li>Las asociaciones son globales en la aplicación, no por instancia.</li>
+</ul>
+
+<hr />
+
+<h2 id="casos-de-uso-avanzados">Casos de Uso Avanzados</h2>
+
+<h3 id="1-servir-archivos-con-el-tipo-mime-correcto">1. <strong>Servir Archivos con el Tipo MIME Correcto</strong></h3>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">handleRequest</span><span class="p">(</span><span class="n">w</span> <span class="n">http</span><span class="o">.</span><span class="n">ResponseWriter</span><span class="p">,</span> <span class="n">r</span> <span class="o">*</span><span class="n">http</span><span class="o">.</span><span class="n">Request</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">filePath</span> <span class="o">:=</span> <span class="n">r</span><span class="o">.</span><span class="n">URL</span><span class="o">.</span><span class="n">Path</span><span class="p">[</span><span class="m">1</span><span class="o">:</span><span class="p">]</span>
+    <span class="n">ext</span> <span class="o">:=</span> <span class="n">filepath</span><span class="o">.</span><span class="n">Ext</span><span class="p">(</span><span class="n">filePath</span><span class="p">)</span>
+    
+    <span class="c">// Obtener tipo MIME</span>
+    <span class="n">mimeType</span> <span class="o">:=</span> <span class="n">mime</span><span class="o">.</span><span class="n">TypeByExtension</span><span class="p">(</span><span class="n">ext</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">mimeType</span> <span class="o">==</span> <span class="s">""</span> <span class="p">{</span>
+        <span class="n">mimeType</span> <span class="o">=</span> <span class="s">"application/octet-stream"</span> <span class="c">// Tipo por defecto</span>
+    <span class="p">}</span>
+    
+    <span class="n">w</span><span class="o">.</span><span class="n">Header</span><span class="p">()</span><span class="o">.</span><span class="n">Set</span><span class="p">(</span><span class="s">"Content-Type"</span><span class="p">,</span> <span class="n">mimeType</span><span class="p">)</span>
+    <span class="n">http</span><span class="o">.</span><span class="n">ServeFile</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">filePath</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="2-manejo-de-tipos-mime-personalizados">2. <strong>Manejo de Tipos MIME Personalizados</strong></h3>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">init</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c">// Registrar tipos personalizados al iniciar la app</span>
+    <span class="n">mime</span><span class="o">.</span><span class="n">AddExtensionType</span><span class="p">(</span><span class="s">".webp"</span><span class="p">,</span> <span class="s">"image/webp"</span><span class="p">)</span>
+    <span class="n">mime</span><span class="o">.</span><span class="n">AddExtensionType</span><span class="p">(</span><span class="s">".avif"</span><span class="p">,</span> <span class="s">"image/avif"</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">mime</span><span class="o">.</span><span class="n">TypeByExtension</span><span class="p">(</span><span class="s">".webp"</span><span class="p">))</span> <span class="c">// "image/webp"</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="consideraciones-clave">Consideraciones Clave</h2>
+
+<ol>
+  <li><strong>Listado de Tipos MIME</strong>:
+    <ul>
+      <li>Go incluye una lista interna de tipos comunes (ej: <code class="language-plaintext highlighter-rouge">.html</code>, <code class="language-plaintext highlighter-rouge">.png</code>, <code class="language-plaintext highlighter-rouge">.json</code>).</li>
+      <li>No incluye tipos modernos como <code class="language-plaintext highlighter-rouge">.webp</code> o <code class="language-plaintext highlighter-rouge">.avif</code>; deben agregarse manualmente.</li>
+    </ul>
+  </li>
+  <li><strong>Portabilidad</strong>:
+    <ul>
+      <li>Las asociaciones son independientes del sistema operativo.</li>
+      <li>No se ven afectadas por configuraciones externas (como <code class="language-plaintext highlighter-rouge">/etc/mime.types</code> en Unix).</li>
+    </ul>
+  </li>
+  <li><strong>Rendimiento</strong>:
+    <ul>
+      <li>Las funciones son eficientes para uso general.</li>
+      <li><code class="language-plaintext highlighter-rouge">AddExtensionType</code> no es concurrente-seguro; debe usarse durante la inicialización.</li>
+    </ul>
+  </li>
+</ol>
+
+<hr />
+
+<h2 id="comparativa-con-el-paquete-mimefiletype">Comparativa con el Paquete <code class="language-plaintext highlighter-rouge">mime/filetype</code></h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Característica</th>
+      <th><code class="language-plaintext highlighter-rouge">mime</code> (estándar)</th>
+      <th><code class="language-plaintext highlighter-rouge">mime/filetype</code> (terceros)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Detección por extensión</td>
+      <td>Sí</td>
+      <td>Sí</td>
+    </tr>
+    <tr>
+      <td>Detección por contenido</td>
+      <td>No</td>
+      <td>Sí</td>
+    </tr>
+    <tr>
+      <td>Tipos modernos</td>
+      <td>Limitados</td>
+      <td>Amplios</td>
+    </tr>
+    <tr>
+      <td>Personalización</td>
+      <td>Manual (<code class="language-plaintext highlighter-rouge">AddExtensionType</code>)</td>
+      <td>Flexible</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<h2 id="ejemplo-completo-servidor-web-con-tipos-personalizados">Ejemplo Completo: Servidor Web con Tipos Personalizados</h2>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="p">(</span>
+    <span class="s">"fmt"</span>
+    <span class="s">"mime"</span>
+    <span class="s">"net/http"</span>
+    <span class="s">"path/filepath"</span>
+<span class="p">)</span>
+
+<span class="k">func</span> <span class="n">init</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c">// Registrar tipos personalizados</span>
+    <span class="n">mime</span><span class="o">.</span><span class="n">AddExtensionType</span><span class="p">(</span><span class="s">".md"</span><span class="p">,</span> <span class="s">"text/markdown"</span><span class="p">)</span>
+    <span class="n">mime</span><span class="o">.</span><span class="n">AddExtensionType</span><span class="p">(</span><span class="s">".webp"</span><span class="p">,</span> <span class="s">"image/webp"</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">http</span><span class="o">.</span><span class="n">HandleFunc</span><span class="p">(</span><span class="s">"/"</span><span class="p">,</span> <span class="k">func</span><span class="p">(</span><span class="n">w</span> <span class="n">http</span><span class="o">.</span><span class="n">ResponseWriter</span><span class="p">,</span> <span class="n">r</span> <span class="o">*</span><span class="n">http</span><span class="o">.</span><span class="n">Request</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">file</span> <span class="o">:=</span> <span class="n">r</span><span class="o">.</span><span class="n">URL</span><span class="o">.</span><span class="n">Path</span><span class="p">[</span><span class="m">1</span><span class="o">:</span><span class="p">]</span>
+        <span class="n">ext</span> <span class="o">:=</span> <span class="n">filepath</span><span class="o">.</span><span class="n">Ext</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+        
+        <span class="n">mimeType</span> <span class="o">:=</span> <span class="n">mime</span><span class="o">.</span><span class="n">TypeByExtension</span><span class="p">(</span><span class="n">ext</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">mimeType</span> <span class="o">==</span> <span class="s">""</span> <span class="p">{</span>
+            <span class="n">mimeType</span> <span class="o">=</span> <span class="s">"application/octet-stream"</span>
+        <span class="p">}</span>
+        
+        <span class="n">w</span><span class="o">.</span><span class="n">Header</span><span class="p">()</span><span class="o">.</span><span class="n">Set</span><span class="p">(</span><span class="s">"Content-Type"</span><span class="p">,</span> <span class="n">mimeType</span><span class="p">)</span>
+        <span class="n">http</span><span class="o">.</span><span class="n">ServeFile</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">file</span><span class="p">)</span>
+    <span class="p">})</span>
+    
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Servidor iniciado en http://localhost:8080"</span><span class="p">)</span>
+    <span class="n">http</span><span class="o">.</span><span class="n">ListenAndServe</span><span class="p">(</span><span class="s">":8080"</span><span class="p">,</span> <span class="no">nil</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="conclusión">Conclusión</h2>
+
+<p>El paquete <code class="language-plaintext highlighter-rouge">mime</code> de Go es una herramienta esencial para:</p>
+<ul>
+  <li>Identificar tipos de contenido por extensiones.</li>
+  <li>Personalizar asociaciones MIME en aplicaciones.</li>
+  <li>Garantizar encabezados HTTP correctos al servir archivos.</li>
+</ul>
+
+<p><strong>Recomendaciones</strong>:</p>
+<ul>
+  <li>Usar <code class="language-plaintext highlighter-rouge">AddExtensionType</code> para tipos no incluidos por defecto.</li>
+  <li>Combinar con detección por contenido (bibliotecas de terceros) para mayor precisión.</li>
+  <li>Verificar extensiones en minúsculas para consistencia.</li>
+</ul>
+
+<p>Esta guía cubre desde usos básicos hasta escenarios avanzados, proporcionando una base sólida para integrar MIME en aplicaciones Go.</p>
+
+            </main>
+        </div>
+        
+        <!-- Componente flotante de GitHub -->
+<div class="github-floating">
+    <a href="https://github.com/" target="_blank" rel="noopener noreferrer" class="github-link" title="Ver en GitHub">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-github">
+            <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+        </svg>
+    </a>
+    
+    
+    <a href="https://github.com//MiguelP-Dev.github.io/blob/main/_pages/paquetes/mime.md" target="_blank" rel="noopener noreferrer" class="edit-link" title="Editar esta página">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-2">
+            <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+        </svg>
+    </a>
+    
+</div>
+
+<style>
+    /* Estilos del componente SVG */
+    .github-corner:hover .octo-arm {
+        animation: octocat-wave 560ms ease-in-out;
+    }
+    
+    @keyframes octocat-wave {
+        0%, 100% { transform: rotate(0); }
+        20%, 60% { transform: rotate(-25deg); }
+        40%, 80% { transform: rotate(10deg); }
+    }
+    
+    @media (max-width: 500px) {
+        .github-corner:hover .octo-arm {
+            animation: none;
+        }
+        .github-corner .octo-arm {
+            animation: octocat-wave 560ms ease-in-out;
+        }
+    }
+</style>
+    </div>
+    
+    <script src="/assets/js/scripts.js"></script>
+</body>
+</html>

@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Programación Concurrente en Go | Miguel's Programing Notes</title>
+    <link rel="stylesheet" href="/assets/css/styles.css">
+</head>
+<body>
+    <div class="app">
+        <nav class="navbar">
+    <div class="nav-container">
+        <a href="/" class="nav-brand">
+            Miguel's Programming Notes
+        </a>
+
+        <div class="nav-sections">
+            
+                
+                
+                
+                <a href="/paquetes/"
+                    class="nav-section "
+                    data-section="paquetes">
+                    📦 Paquetes
+                </a>
+            
+                
+                
+                
+                <a href="/ejemplos/"
+                    class="nav-section active"
+                    data-section="ejemplos">
+                    🧩 Ejemplos
+                </a>
+            
+        </div>
+    </div>
+</nav>
+        
+        <div class="container">
+            <button class="menu-toggle" aria-label="Abrir menú">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            
+            <aside class="sidebar" id="dynamic-sidebar">
+    <div class="sidebar-header">
+        <h3 class="sidebar-title">Miguel's Programming Notes</h3>
+    </div>
+    
+    <div class="sidebar-content">
+        
+            
+        
+            
+                <h3 class="sidebar-title">🧩 Ejemplos</h3>
+                <nav class="sidebar-nav">
+                    
+                        <a href="/ejemplos/api-rest/"
+                            class="sidebar-item "
+                            data-item="api-rest">
+                            API REST
+                        </a>
+                    
+                        <a href="/ejemplos/concurrentes/"
+                            class="sidebar-item active"
+                            data-item="concurrentes">
+                            Concurrentes
+                        </a>
+                    
+                        <a href="/ejemplos/tests/"
+                            class="sidebar-item "
+                            data-item="test-unitarios">
+                            Test Unitarios
+                        </a>
+                    
+                </nav>
+            
+        
+    </div>
+</aside>
+            
+            <main class="content">
+                <h1 id="programación-concurrente-en-go">Programación Concurrente en Go</h1>
+
+<p>Go es conocido por su excelente soporte para la programación concurrente con goroutines y channels. Esta sección contiene ejemplos prácticos de cómo utilizar estas características para crear programas concurrentes eficientes.</p>
+
+<h2 id="ejemplos-disponibles">Ejemplos disponibles</h2>
+
+<div class="grid-container">
+
+
+    <a href="/ejemplos/concurrentes/goroutines/" class="card">
+        <div>
+            <div class="card-icon">⚡</div>
+            <h3>Goroutines</h3>
+            <p>Guía completa sobre el uso de goroutines en Go</p>
+        </div>
+    </a>
+
+</div>
+
+<h2 id="conceptos-clave">Conceptos clave</h2>
+
+<h3 id="goroutines">Goroutines</h3>
+<p>Las goroutines son funciones que se ejecutan concurrentemente con otras goroutines en el mismo espacio de direcciones. Son mucho más livianas que los hilos del sistema operativo, lo que permite crear miles de goroutines sin un impacto significativo en el rendimiento.</p>
+
+<h3 id="channels">Channels</h3>
+<p>Los channels son conductos tipados a través de los cuales se pueden enviar y recibir valores con la operación de canal. Por defecto, el envío y la recepción bloquean hasta que el otro lado esté listo, lo que permite la sincronización sin locks explícitos.</p>
+
+<h3 id="patrones-de-concurrencia">Patrones de concurrencia</h3>
+<p>Go fomenta un enfoque de “compartir memoria mediante la comunicación” en lugar de “comunicación mediante la memoria compartida”, lo que reduce los problemas comunes asociados con la programación concurrente.</p>
+
+<h3 id="ejemplo-básico">Ejemplo básico</h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="p">(</span>
+    <span class="s">"fmt"</span>
+    <span class="s">"time"</span>
+<span class="p">)</span>
+
+<span class="k">func</span> <span class="n">worker</span><span class="p">(</span><span class="n">id</span> <span class="kt">int</span><span class="p">,</span> <span class="n">jobs</span> <span class="o">&lt;-</span><span class="k">chan</span> <span class="kt">int</span><span class="p">,</span> <span class="n">results</span> <span class="k">chan</span><span class="o">&lt;-</span> <span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="o">:=</span> <span class="k">range</span> <span class="n">jobs</span> <span class="p">{</span>
+        <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Trabajador %d procesando trabajo %d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">id</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">Sleep</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">Second</span><span class="p">)</span> <span class="c">// Simular trabajo</span>
+        <span class="n">results</span> <span class="o">&lt;-</span> <span class="n">j</span> <span class="o">*</span> <span class="m">2</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">const</span> <span class="n">numJobs</span> <span class="o">=</span> <span class="m">5</span>
+    <span class="n">jobs</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="k">chan</span> <span class="kt">int</span><span class="p">,</span> <span class="n">numJobs</span><span class="p">)</span>
+    <span class="n">results</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="k">chan</span> <span class="kt">int</span><span class="p">,</span> <span class="n">numJobs</span><span class="p">)</span>
+
+    <span class="c">// Iniciar 3 workers</span>
+    <span class="k">for</span> <span class="n">w</span> <span class="o">:=</span> <span class="m">1</span><span class="p">;</span> <span class="n">w</span> <span class="o">&lt;=</span> <span class="m">3</span><span class="p">;</span> <span class="n">w</span><span class="o">++</span> <span class="p">{</span>
+        <span class="k">go</span> <span class="n">worker</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">jobs</span><span class="p">,</span> <span class="n">results</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="c">// Enviar trabajos</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="o">:=</span> <span class="m">1</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;=</span> <span class="n">numJobs</span><span class="p">;</span> <span class="n">j</span><span class="o">++</span> <span class="p">{</span>
+        <span class="n">jobs</span> <span class="o">&lt;-</span> <span class="n">j</span>
+    <span class="p">}</span>
+    <span class="nb">close</span><span class="p">(</span><span class="n">jobs</span><span class="p">)</span>
+
+    <span class="c">// Recoger resultados</span>
+    <span class="k">for</span> <span class="n">a</span> <span class="o">:=</span> <span class="m">1</span><span class="p">;</span> <span class="n">a</span> <span class="o">&lt;=</span> <span class="n">numJobs</span><span class="p">;</span> <span class="n">a</span><span class="o">++</span> <span class="p">{</span>
+        <span class="o">&lt;-</span><span class="n">results</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+            </main>
+        </div>
+        
+        <!-- Componente flotante de GitHub -->
+<div class="github-floating">
+    <a href="https://github.com/" target="_blank" rel="noopener noreferrer" class="github-link" title="Ver en GitHub">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-github">
+            <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+        </svg>
+    </a>
+    
+    
+    <a href="https://github.com//MiguelP-Dev.github.io/blob/main/_pages/ejemplos/concurrentes/index.md" target="_blank" rel="noopener noreferrer" class="edit-link" title="Editar esta página">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-2">
+            <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+        </svg>
+    </a>
+    
+</div>
+
+<style>
+    /* Estilos del componente SVG */
+    .github-corner:hover .octo-arm {
+        animation: octocat-wave 560ms ease-in-out;
+    }
+    
+    @keyframes octocat-wave {
+        0%, 100% { transform: rotate(0); }
+        20%, 60% { transform: rotate(-25deg); }
+        40%, 80% { transform: rotate(10deg); }
+    }
+    
+    @media (max-width: 500px) {
+        .github-corner:hover .octo-arm {
+            animation: none;
+        }
+        .github-corner .octo-arm {
+            animation: octocat-wave 560ms ease-in-out;
+        }
+    }
+</style>
+    </div>
+    
+    <script src="/assets/js/scripts.js"></script>
+</body>
+</html>

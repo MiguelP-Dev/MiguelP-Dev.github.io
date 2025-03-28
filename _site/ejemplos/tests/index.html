@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Testing en Go | Miguel's Programing Notes</title>
+    <link rel="stylesheet" href="/assets/css/styles.css">
+</head>
+<body>
+    <div class="app">
+        <nav class="navbar">
+    <div class="nav-container">
+        <a href="/" class="nav-brand">
+            Miguel's Programming Notes
+        </a>
+
+        <div class="nav-sections">
+            
+                
+                
+                
+                <a href="/paquetes/"
+                    class="nav-section "
+                    data-section="paquetes">
+                    📦 Paquetes
+                </a>
+            
+                
+                
+                
+                <a href="/ejemplos/"
+                    class="nav-section active"
+                    data-section="ejemplos">
+                    🧩 Ejemplos
+                </a>
+            
+        </div>
+    </div>
+</nav>
+        
+        <div class="container">
+            <button class="menu-toggle" aria-label="Abrir menú">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            
+            <aside class="sidebar" id="dynamic-sidebar">
+    <div class="sidebar-header">
+        <h3 class="sidebar-title">Miguel's Programming Notes</h3>
+    </div>
+    
+    <div class="sidebar-content">
+        
+            
+        
+            
+                <h3 class="sidebar-title">🧩 Ejemplos</h3>
+                <nav class="sidebar-nav">
+                    
+                        <a href="/ejemplos/api-rest/"
+                            class="sidebar-item "
+                            data-item="api-rest">
+                            API REST
+                        </a>
+                    
+                        <a href="/ejemplos/concurrentes/"
+                            class="sidebar-item "
+                            data-item="concurrentes">
+                            Concurrentes
+                        </a>
+                    
+                        <a href="/ejemplos/tests/"
+                            class="sidebar-item active"
+                            data-item="test-unitarios">
+                            Test Unitarios
+                        </a>
+                    
+                </nav>
+            
+        
+    </div>
+</aside>
+            
+            <main class="content">
+                <h1 id="testing-en-go">Testing en Go</h1>
+
+<p>Go incluye un framework de testing simple pero potente en su biblioteca estándar. Esta sección muestra cómo realizar diferentes tipos de pruebas en Go, desde tests unitarios básicos hasta benchmarks y tests de integración.</p>
+
+<h2 id="ejemplos-disponibles">Ejemplos disponibles</h2>
+<div class="grid-container">
+
+
+</div>
+
+<h2 id="conceptos-clave">Conceptos clave</h2>
+
+<h3 id="tests-unitarios">Tests unitarios</h3>
+<p>Los tests unitarios en Go se escriben utilizando el paquete <code class="language-plaintext highlighter-rouge">testing</code> y se colocan en archivos con el sufijo <code class="language-plaintext highlighter-rouge">_test.go</code>. El comando <code class="language-plaintext highlighter-rouge">go test</code> ejecuta automáticamente estos tests.</p>
+
+<h3 id="table-driven-tests">Table-driven tests</h3>
+<p>Un patrón común en Go es el uso de “table-driven tests”, donde se define una tabla de casos de prueba y se itera sobre ellos para realizar las pruebas.</p>
+
+<h3 id="benchmarks">Benchmarks</h3>
+<p>Go permite medir el rendimiento del código utilizando benchmarks, que son funciones de prueba especiales que se ejecutan múltiples veces para obtener mediciones estadísticas.</p>
+
+<h3 id="mocks-y-stubs">Mocks y stubs</h3>
+<p>Para tests que requieren aislar componentes, Go utiliza interfaces para facilitar la creación de mocks y stubs.</p>
+
+<h3 id="ejemplo-básico">Ejemplo básico</h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="s">"testing"</span>
+
+<span class="k">func</span> <span class="n">Suma</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="kt">int</span><span class="p">)</span> <span class="kt">int</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="n">TestSuma</span><span class="p">(</span><span class="n">t</span> <span class="o">*</span><span class="n">testing</span><span class="o">.</span><span class="n">T</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">cases</span> <span class="o">:=</span> <span class="p">[]</span><span class="k">struct</span> <span class="p">{</span>
+        <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">esperado</span> <span class="kt">int</span>
+        <span class="n">nombre</span>         <span class="kt">string</span>
+    <span class="p">}{</span>
+        <span class="p">{</span><span class="m">1</span><span class="p">,</span> <span class="m">2</span><span class="p">,</span> <span class="m">3</span><span class="p">,</span> <span class="s">"positivos"</span><span class="p">},</span>
+        <span class="p">{</span><span class="o">-</span><span class="m">1</span><span class="p">,</span> <span class="o">-</span><span class="m">2</span><span class="p">,</span> <span class="o">-</span><span class="m">3</span><span class="p">,</span> <span class="s">"negativos"</span><span class="p">},</span>
+        <span class="p">{</span><span class="m">0</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="s">"ceros"</span><span class="p">},</span>
+    <span class="p">}</span>
+
+    <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">c</span> <span class="o">:=</span> <span class="k">range</span> <span class="n">cases</span> <span class="p">{</span>
+        <span class="n">t</span><span class="o">.</span><span class="n">Run</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">nombre</span><span class="p">,</span> <span class="k">func</span><span class="p">(</span><span class="n">t</span> <span class="o">*</span><span class="n">testing</span><span class="o">.</span><span class="n">T</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">resultado</span> <span class="o">:=</span> <span class="n">Suma</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">a</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">b</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">resultado</span> <span class="o">!=</span> <span class="n">c</span><span class="o">.</span><span class="n">esperado</span> <span class="p">{</span>
+                <span class="n">t</span><span class="o">.</span><span class="n">Errorf</span><span class="p">(</span><span class="s">"Suma(%d, %d) = %d; esperado %d"</span><span class="p">,</span> 
+                    <span class="n">c</span><span class="o">.</span><span class="n">a</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">b</span><span class="p">,</span> <span class="n">resultado</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">esperado</span><span class="p">)</span>
+            <span class="p">}</span>
+        <span class="p">})</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+            </main>
+        </div>
+        
+        <!-- Componente flotante de GitHub -->
+<div class="github-floating">
+    <a href="https://github.com/" target="_blank" rel="noopener noreferrer" class="github-link" title="Ver en GitHub">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-github">
+            <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+        </svg>
+    </a>
+    
+    
+    <a href="https://github.com//MiguelP-Dev.github.io/blob/main/_pages/ejemplos/tests/index.md" target="_blank" rel="noopener noreferrer" class="edit-link" title="Editar esta página">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-2">
+            <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+        </svg>
+    </a>
+    
+</div>
+
+<style>
+    /* Estilos del componente SVG */
+    .github-corner:hover .octo-arm {
+        animation: octocat-wave 560ms ease-in-out;
+    }
+    
+    @keyframes octocat-wave {
+        0%, 100% { transform: rotate(0); }
+        20%, 60% { transform: rotate(-25deg); }
+        40%, 80% { transform: rotate(10deg); }
+    }
+    
+    @media (max-width: 500px) {
+        .github-corner:hover .octo-arm {
+            animation: none;
+        }
+        .github-corner .octo-arm {
+            animation: octocat-wave 560ms ease-in-out;
+        }
+    }
+</style>
+    </div>
+    
+    <script src="/assets/js/scripts.js"></script>
+</body>
+</html>

@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>maps | Miguel's Programing Notes</title>
+    <link rel="stylesheet" href="/assets/css/styles.css">
+</head>
+<body>
+    <div class="app">
+        <nav class="navbar">
+    <div class="nav-container">
+        <a href="/" class="nav-brand">
+            Miguel's Programming Notes
+        </a>
+
+        <div class="nav-sections">
+            
+                
+                
+                
+                <a href="/paquetes/"
+                    class="nav-section active"
+                    data-section="paquetes">
+                    📦 Paquetes
+                </a>
+            
+                
+                
+                
+                <a href="/ejemplos/"
+                    class="nav-section "
+                    data-section="ejemplos">
+                    🧩 Ejemplos
+                </a>
+            
+        </div>
+    </div>
+</nav>
+        
+        <div class="container">
+            <button class="menu-toggle" aria-label="Abrir menú">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            
+            <aside class="sidebar" id="dynamic-sidebar">
+    <div class="sidebar-header">
+        <h3 class="sidebar-title">Miguel's Programming Notes</h3>
+    </div>
+    
+    <div class="sidebar-content">
+        
+            
+                <h3 class="sidebar-title">📦 Paquetes</h3>
+                <nav class="sidebar-nav">
+                    
+                        <a href="/paquetes/fmt/"
+                            class="sidebar-item "
+                            data-item="fmt">
+                            fmt
+                        </a>
+                    
+                        <a href="/paquetes/net/"
+                            class="sidebar-item "
+                            data-item="net-http">
+                            net/http
+                        </a>
+                    
+                        <a href="/paquetes/encoding/"
+                            class="sidebar-item "
+                            data-item="encoding">
+                            encoding
+                        </a>
+                    
+                </nav>
+            
+        
+            
+        
+    </div>
+</aside>
+            
+            <main class="content">
+                <h1 id="paquete-golangorgxexpmaps-en-go-guía-completa">Paquete <code class="language-plaintext highlighter-rouge">golang.org/x/exp/maps</code> en Go: Guía Completa</h1>
+
+<p>El paquete <code class="language-plaintext highlighter-rouge">maps</code> del repositorio experimental de Go (<code class="language-plaintext highlighter-rouge">golang.org/x/exp/maps</code>) ofrece utilidades para manipular mapas. A continuación, se detallan sus funciones clave con ejemplos mejorados y consideraciones importantes.</p>
+
+<hr />
+
+<h2 id="instalación-y-uso">Instalación y Uso</h2>
+<p>Primero, instala el paquete:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>go get golang.org/x/exp/maps
+</code></pre></div></div>
+<p>Importa en tu código:</p>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="s">"golang.org/x/exp/maps"</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="funciones-principales">Funciones Principales</h2>
+
+<h3 id="1-mapsclear">1. <strong><code class="language-plaintext highlighter-rouge">maps.Clear</code></strong></h3>
+<p><strong>Propósito</strong>: Elimina todas las entradas de un mapa.<br />
+<strong>Ejemplo</strong>:</p>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">m</span> <span class="o">:=</span> <span class="k">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">int</span><span class="p">{</span><span class="s">"a"</span><span class="o">:</span> <span class="m">1</span><span class="p">,</span> <span class="s">"b"</span><span class="o">:</span> <span class="m">2</span><span class="p">}</span>
+<span class="n">maps</span><span class="o">.</span><span class="n">Clear</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">m</span><span class="p">))</span> <span class="c">// 0</span>
+</code></pre></div></div>
+<p><strong>Advertencia</strong>: Si el mapa es <code class="language-plaintext highlighter-rouge">nil</code>, causa pánico.</p>
+
+<h3 id="2-mapsclone">2. <strong><code class="language-plaintext highlighter-rouge">maps.Clone</code></strong></h3>
+<p><strong>Propósito</strong>: Crea una copia superficial del mapa.<br />
+<strong>Ejemplo</strong>:</p>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">original</span> <span class="o">:=</span> <span class="k">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">int</span><span class="p">{</span><span class="s">"a"</span><span class="o">:</span> <span class="m">1</span><span class="p">}</span>
+<span class="n">copia</span> <span class="o">:=</span> <span class="n">maps</span><span class="o">.</span><span class="n">Clone</span><span class="p">(</span><span class="n">original</span><span class="p">)</span>
+<span class="n">copia</span><span class="p">[</span><span class="s">"a"</span><span class="p">]</span> <span class="o">=</span> <span class="m">2</span>
+<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">original</span><span class="p">[</span><span class="s">"a"</span><span class="p">])</span> <span class="c">// 1 (no afecta al original)</span>
+</code></pre></div></div>
+<p><strong>Limitación</strong>: No clona mapas anidados profundamente.</p>
+
+<h3 id="3-mapscopy">3. <strong><code class="language-plaintext highlighter-rouge">maps.Copy</code></strong></h3>
+<p><strong>Propósito</strong>: Copia entradas de un mapa a otro.<br />
+<strong>Ejemplo</strong>:</p>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">destino</span> <span class="o">:=</span> <span class="k">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">int</span><span class="p">{</span><span class="s">"b"</span><span class="o">:</span> <span class="m">3</span><span class="p">}</span>
+<span class="n">origen</span> <span class="o">:=</span> <span class="k">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">int</span><span class="p">{</span><span class="s">"a"</span><span class="o">:</span> <span class="m">1</span><span class="p">,</span> <span class="s">"b"</span><span class="o">:</span> <span class="m">2</span><span class="p">}</span>
+<span class="n">maps</span><span class="o">.</span><span class="n">Copy</span><span class="p">(</span><span class="n">destino</span><span class="p">,</span> <span class="n">origen</span><span class="p">)</span>
+<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">destino</span><span class="p">)</span> <span class="c">// map[a:1 b:2]</span>
+</code></pre></div></div>
+<p><strong>Nota</strong>: Claves existentes en <code class="language-plaintext highlighter-rouge">destino</code> se sobrescriben.</p>
+
+<h3 id="4-mapsequal">4. <strong><code class="language-plaintext highlighter-rouge">maps.Equal</code></strong></h3>
+<p><strong>Propósito</strong>: Compara si dos mapas tienen las mismas claves/valores.<br />
+<strong>Ejemplo</strong>:</p>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">m1</span> <span class="o">:=</span> <span class="k">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">int</span><span class="p">{</span><span class="s">"a"</span><span class="o">:</span> <span class="m">1</span><span class="p">}</span>
+<span class="n">m2</span> <span class="o">:=</span> <span class="k">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">int</span><span class="p">{</span><span class="s">"a"</span><span class="o">:</span> <span class="m">1</span><span class="p">}</span>
+<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">maps</span><span class="o">.</span><span class="n">Equal</span><span class="p">(</span><span class="n">m1</span><span class="p">,</span> <span class="n">m2</span><span class="p">))</span> <span class="c">// true</span>
+</code></pre></div></div>
+<p><strong>Detalle</strong>: Funciona con tipos comparables (<code class="language-plaintext highlighter-rouge">int</code>, <code class="language-plaintext highlighter-rouge">string</code>, etc.).</p>
+
+<h3 id="5-mapskeys-y-mapsvalues">5. <strong><code class="language-plaintext highlighter-rouge">maps.Keys</code></strong> y <strong><code class="language-plaintext highlighter-rouge">maps.Values</code></strong></h3>
+<p><strong>Propósito</strong>: Obtiene claves o valores como slice.<br />
+<strong>Ejemplo</strong>:</p>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">m</span> <span class="o">:=</span> <span class="k">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">int</span><span class="p">{</span><span class="s">"a"</span><span class="o">:</span> <span class="m">1</span><span class="p">,</span> <span class="s">"b"</span><span class="o">:</span> <span class="m">2</span><span class="p">}</span>
+<span class="n">claves</span> <span class="o">:=</span> <span class="n">maps</span><span class="o">.</span><span class="n">Keys</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>   <span class="c">// []string{"a", "b"}</span>
+<span class="n">valores</span> <span class="o">:=</span> <span class="n">maps</span><span class="o">.</span><span class="n">Values</span><span class="p">(</span><span class="n">m</span><span class="p">)</span> <span class="c">// []int{1, 2}</span>
+</code></pre></div></div>
+<p><strong>Advertencia</strong>: El orden de los elementos no está garantizado.</p>
+
+<hr />
+
+<h2 id="consideraciones-clave">Consideraciones Clave</h2>
+
+<ol>
+  <li><strong>Manejo de <code class="language-plaintext highlighter-rouge">nil</code></strong>:
+    <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">var</span> <span class="n">m</span> <span class="k">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">int</span>
+<span class="n">maps</span><span class="o">.</span><span class="n">Clear</span><span class="p">(</span><span class="n">m</span><span class="p">)</span> <span class="c">// Pánico: assignment to entry in nil map</span>
+</code></pre></div>    </div>
+  </li>
+  <li><strong>Rendimiento</strong>:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">Clone</code> y <code class="language-plaintext highlighter-rouge">Copy</code> tienen complejidad O(n).</li>
+      <li><code class="language-plaintext highlighter-rouge">Keys</code>/<code class="language-plaintext highlighter-rouge">Values</code> crean slices nuevos (uso de memoria).</li>
+    </ul>
+  </li>
+  <li><strong>Tipos No Comparables</strong>:
+    <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">type</span> <span class="n">Person</span> <span class="k">struct</span> <span class="p">{</span> <span class="n">Name</span> <span class="kt">string</span> <span class="p">}</span>
+<span class="n">m1</span> <span class="o">:=</span> <span class="k">map</span><span class="p">[</span><span class="kt">int</span><span class="p">]</span><span class="n">Person</span><span class="p">{</span><span class="m">1</span><span class="o">:</span> <span class="p">{</span><span class="s">"Alice"</span><span class="p">}}</span>
+<span class="n">m2</span> <span class="o">:=</span> <span class="k">map</span><span class="p">[</span><span class="kt">int</span><span class="p">]</span><span class="n">Person</span><span class="p">{</span><span class="m">1</span><span class="o">:</span> <span class="p">{</span><span class="s">"Alice"</span><span class="p">}}</span>
+<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">maps</span><span class="o">.</span><span class="n">Equal</span><span class="p">(</span><span class="n">m1</span><span class="p">,</span> <span class="n">m2</span><span class="p">))</span> <span class="c">// Error si Person no es comparable</span>
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<hr />
+
+<h2 id="ejemplo-integrado-gestión-de-configuraciones">Ejemplo Integrado: Gestión de Configuraciones</h2>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">mergeConfigs</span><span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="n">override</span> <span class="k">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">string</span><span class="p">)</span> <span class="k">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">string</span> <span class="p">{</span>
+    <span class="n">merged</span> <span class="o">:=</span> <span class="n">maps</span><span class="o">.</span><span class="n">Clone</span><span class="p">(</span><span class="n">base</span><span class="p">)</span>
+    <span class="n">maps</span><span class="o">.</span><span class="n">Copy</span><span class="p">(</span><span class="n">merged</span><span class="p">,</span> <span class="n">override</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">merged</span>
+<span class="p">}</span>
+
+<span class="c">// Uso:</span>
+<span class="n">config</span> <span class="o">:=</span> <span class="k">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">string</span><span class="p">{</span><span class="s">"theme"</span><span class="o">:</span> <span class="s">"dark"</span><span class="p">}</span>
+<span class="n">userConfig</span> <span class="o">:=</span> <span class="k">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">string</span><span class="p">{</span><span class="s">"theme"</span><span class="o">:</span> <span class="s">"light"</span><span class="p">,</span> <span class="s">"lang"</span><span class="o">:</span> <span class="s">"es"</span><span class="p">}</span>
+<span class="n">finalConfig</span> <span class="o">:=</span> <span class="n">mergeConfigs</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">userConfig</span><span class="p">)</span>
+<span class="c">// finalConfig: map[lang:es theme:light]</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="alternativas-en-la-biblioteca-estándar">Alternativas en la Biblioteca Estándar</h2>
+<p>Para proyectos que no pueden usar paquetes experimentales:</p>
+<ul>
+  <li><strong><code class="language-plaintext highlighter-rouge">Clear</code></strong>: Iterar y eliminar claves.</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">Clone</code></strong>: Crear nuevo mapa y copiar manualmente.</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">Equal</code></strong>: Comparar clave por clave.</li>
+</ul>
+
+<hr />
+
+<p>Este paquete experimental simplifica operaciones comunes con mapas, pero es crucial evaluar su estabilidad antes de usarlo en producción. Para casos críticos, implementa versiones personalizadas de estas funciones.</p>
+
+            </main>
+        </div>
+        
+        <!-- Componente flotante de GitHub -->
+<div class="github-floating">
+    <a href="https://github.com/" target="_blank" rel="noopener noreferrer" class="github-link" title="Ver en GitHub">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-github">
+            <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+        </svg>
+    </a>
+    
+    
+    <a href="https://github.com//MiguelP-Dev.github.io/blob/main/_pages/paquetes/maps.md" target="_blank" rel="noopener noreferrer" class="edit-link" title="Editar esta página">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-2">
+            <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+        </svg>
+    </a>
+    
+</div>
+
+<style>
+    /* Estilos del componente SVG */
+    .github-corner:hover .octo-arm {
+        animation: octocat-wave 560ms ease-in-out;
+    }
+    
+    @keyframes octocat-wave {
+        0%, 100% { transform: rotate(0); }
+        20%, 60% { transform: rotate(-25deg); }
+        40%, 80% { transform: rotate(10deg); }
+    }
+    
+    @media (max-width: 500px) {
+        .github-corner:hover .octo-arm {
+            animation: none;
+        }
+        .github-corner .octo-arm {
+            animation: octocat-wave 560ms ease-in-out;
+        }
+    }
+</style>
+    </div>
+    
+    <script src="/assets/js/scripts.js"></script>
+</body>
+</html>

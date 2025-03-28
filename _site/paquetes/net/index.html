@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>net | Miguel's Programing Notes</title>
+    <link rel="stylesheet" href="/assets/css/styles.css">
+</head>
+<body>
+    <div class="app">
+        <nav class="navbar">
+    <div class="nav-container">
+        <a href="/" class="nav-brand">
+            Miguel's Programming Notes
+        </a>
+
+        <div class="nav-sections">
+            
+                
+                
+                
+                <a href="/paquetes/"
+                    class="nav-section active"
+                    data-section="paquetes">
+                    📦 Paquetes
+                </a>
+            
+                
+                
+                
+                <a href="/ejemplos/"
+                    class="nav-section "
+                    data-section="ejemplos">
+                    🧩 Ejemplos
+                </a>
+            
+        </div>
+    </div>
+</nav>
+        
+        <div class="container">
+            <button class="menu-toggle" aria-label="Abrir menú">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            
+            <aside class="sidebar" id="dynamic-sidebar">
+    <div class="sidebar-header">
+        <h3 class="sidebar-title">Miguel's Programming Notes</h3>
+    </div>
+    
+    <div class="sidebar-content">
+        
+            
+                <h3 class="sidebar-title">📦 Paquetes</h3>
+                <nav class="sidebar-nav">
+                    
+                        <a href="/paquetes/fmt/"
+                            class="sidebar-item "
+                            data-item="fmt">
+                            fmt
+                        </a>
+                    
+                        <a href="/paquetes/net/"
+                            class="sidebar-item active"
+                            data-item="net-http">
+                            net/http
+                        </a>
+                    
+                        <a href="/paquetes/encoding/"
+                            class="sidebar-item "
+                            data-item="encoding">
+                            encoding
+                        </a>
+                    
+                </nav>
+            
+        
+            
+        
+    </div>
+</aside>
+            
+            <main class="content">
+                <h1 id="paquete-net-en-go-guía-completa-con-ejemplos-prácticos">Paquete <code class="language-plaintext highlighter-rouge">net</code> en Go: Guía Completa con Ejemplos Prácticos</h1>
+
+<p>El paquete <code class="language-plaintext highlighter-rouge">net</code> en Go es fundamental para desarrollar aplicaciones de red, ofreciendo funcionalidades para manejar conexiones TCP/UDP, resolver direcciones DNS y trabajar con interfaces de red. A continuación, se presenta una guía detallada con ejemplos y mejores prácticas.</p>
+
+<hr />
+
+<h2 id="funciones-clave-y-uso">Funciones Clave y Uso</h2>
+
+<h3 id="1-netdialnetwork-address-string-conn-error">1. <strong><code class="language-plaintext highlighter-rouge">net.Dial(network, address string) (Conn, error)</code></strong></h3>
+<p><strong>Propósito</strong>: Establece una conexión a un servidor remoto.<br />
+<strong>Redes soportadas</strong>: <code class="language-plaintext highlighter-rouge">tcp</code>, <code class="language-plaintext highlighter-rouge">tcp4</code>, <code class="language-plaintext highlighter-rouge">tcp6</code>, <code class="language-plaintext highlighter-rouge">udp</code>, <code class="language-plaintext highlighter-rouge">udp4</code>, <code class="language-plaintext highlighter-rouge">udp6</code>, <code class="language-plaintext highlighter-rouge">unix</code>, <code class="language-plaintext highlighter-rouge">unixpacket</code>.<br />
+<strong>Ejemplo (TCP)</strong>:</p>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">conn</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">net</span><span class="o">.</span><span class="n">Dial</span><span class="p">(</span><span class="s">"tcp"</span><span class="p">,</span> <span class="s">"google.com:80"</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">Fatal</span><span class="p">(</span><span class="s">"Error de conexión:"</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span>
+<span class="p">}</span>
+<span class="k">defer</span> <span class="n">conn</span><span class="o">.</span><span class="n">Close</span><span class="p">()</span>
+<span class="n">fmt</span><span class="o">.</span><span class="n">Fprintf</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="s">"GET / HTTP/1.0</span><span class="se">\r\n\r\n</span><span class="s">"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="2-netlistennetwork-address-string-listener-error">2. <strong><code class="language-plaintext highlighter-rouge">net.Listen(network, address string) (Listener, error)</code></strong></h3>
+<p><strong>Propósito</strong>: Crea un servidor que escucha conexiones entrantes.<br />
+<strong>Ejemplo (Servidor TCP)</strong>:</p>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">ln</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">net</span><span class="o">.</span><span class="n">Listen</span><span class="p">(</span><span class="s">"tcp"</span><span class="p">,</span> <span class="s">":8080"</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">Fatal</span><span class="p">(</span><span class="s">"Error al escuchar:"</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span>
+<span class="p">}</span>
+<span class="k">defer</span> <span class="n">ln</span><span class="o">.</span><span class="n">Close</span><span class="p">()</span>
+
+<span class="k">for</span> <span class="p">{</span>
+    <span class="n">conn</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">ln</span><span class="o">.</span><span class="n">Accept</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Error aceptando conexión:"</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span>
+        <span class="k">continue</span>
+    <span class="p">}</span>
+    <span class="k">go</span> <span class="n">manejarConexion</span><span class="p">(</span><span class="n">conn</span><span class="p">)</span> <span class="c">// Manejar en una goroutine</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="n">manejarConexion</span><span class="p">(</span><span class="n">conn</span> <span class="n">net</span><span class="o">.</span><span class="n">Conn</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">defer</span> <span class="n">conn</span><span class="o">.</span><span class="n">Close</span><span class="p">()</span>
+    <span class="n">conn</span><span class="o">.</span><span class="n">Write</span><span class="p">([]</span><span class="kt">byte</span><span class="p">(</span><span class="s">"Hola desde el servidor!</span><span class="se">\n</span><span class="s">"</span><span class="p">))</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="3-netresolveipaddrnetwork-address-string-ipaddr-error">3. <strong><code class="language-plaintext highlighter-rouge">net.ResolveIPAddr(network, address string) (*IPAddr, error)</code></strong></h3>
+<p><strong>Propósito</strong>: Resuelve un nombre de host a una dirección IP.<br />
+<strong>Ejemplo</strong>:</p>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">ip</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">net</span><span class="o">.</span><span class="n">ResolveIPAddr</span><span class="p">(</span><span class="s">"ip"</span><span class="p">,</span> <span class="s">"google.com"</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">Fatal</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>
+<span class="p">}</span>
+<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"IP de Google:"</span><span class="p">,</span> <span class="n">ip</span><span class="p">)</span> <span class="c">// Ejemplo: 172.217.10.238</span>
+</code></pre></div></div>
+
+<h3 id="4-netlookuphosthost-string-string-error">4. <strong><code class="language-plaintext highlighter-rouge">net.LookupHost(host string) ([]string, error)</code></strong></h3>
+<p><strong>Propósito</strong>: Obtiene todas las direcciones IP (IPv4 e IPv6) de un host.<br />
+<strong>Ejemplo</strong>:</p>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">addrs</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">net</span><span class="o">.</span><span class="n">LookupHost</span><span class="p">(</span><span class="s">"google.com"</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">Fatal</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>
+<span class="p">}</span>
+<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Direcciones IP:"</span><span class="p">,</span> <span class="n">addrs</span><span class="p">)</span> <span class="c">// [172.217.10.238 2a00:1450:4009:81c::200e]</span>
+</code></pre></div></div>
+
+<h3 id="5-netinterfaces-interface-error">5. <strong><code class="language-plaintext highlighter-rouge">net.Interfaces() ([]Interface, error)</code></strong></h3>
+<p><strong>Propósito</strong>: Lista las interfaces de red del sistema.<br />
+<strong>Ejemplo (Listar interfaces activas)</strong>:</p>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">ifaces</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">net</span><span class="o">.</span><span class="n">Interfaces</span><span class="p">()</span>
+<span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">Fatal</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">iface</span> <span class="o">:=</span> <span class="k">range</span> <span class="n">ifaces</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="n">iface</span><span class="o">.</span><span class="n">Flags</span><span class="o">&amp;</span><span class="n">net</span><span class="o">.</span><span class="n">FlagUp</span> <span class="o">!=</span> <span class="m">0</span> <span class="p">{</span>
+        <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Interfaz activa: %v</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">iface</span><span class="o">.</span><span class="n">Name</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="6-netjoinhostporthost-port-string-string">6. <strong><code class="language-plaintext highlighter-rouge">net.JoinHostPort(host, port string) string</code></strong></h3>
+<p><strong>Propósito</strong>: Formatea una dirección IP y puerto correctamente.<br />
+<strong>Ejemplo (IPv6)</strong>:</p>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">address</span> <span class="o">:=</span> <span class="n">net</span><span class="o">.</span><span class="n">JoinHostPort</span><span class="p">(</span><span class="s">"::1"</span><span class="p">,</span> <span class="s">"8080"</span><span class="p">)</span>
+<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">address</span><span class="p">)</span> <span class="c">// [::1]:8080</span>
+</code></pre></div></div>
+
+<h3 id="7-netsplithostporthostport-string-host-port-string-err-error">7. <strong><code class="language-plaintext highlighter-rouge">net.SplitHostPort(hostport string) (host, port string, err error)</code></strong></h3>
+<p><strong>Propósito</strong>: Divide una dirección en host y puerto.<br />
+<strong>Ejemplo</strong>:</p>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">net</span><span class="o">.</span><span class="n">SplitHostPort</span><span class="p">(</span><span class="s">"[::1]:8080"</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">Fatal</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>
+<span class="p">}</span>
+<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Host:"</span><span class="p">,</span> <span class="n">host</span><span class="p">)</span> <span class="c">// ::1</span>
+<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Puerto:"</span><span class="p">,</span> <span class="n">port</span><span class="p">)</span> <span class="c">// 8080</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="tipos-principales">Tipos Principales</h2>
+
+<h3 id="netconn-interfaz"><strong><code class="language-plaintext highlighter-rouge">net.Conn</code></strong> (Interfaz)</h3>
+<p><strong>Métodos</strong>:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">Read(b []byte) (n int, err error)</code>: Lee datos de la conexión.</li>
+  <li><code class="language-plaintext highlighter-rouge">Write(b []byte) (n int, err error)</code>: Escribe datos en la conexión.</li>
+  <li><code class="language-plaintext highlighter-rouge">Close() error</code>: Cierra la conexión.</li>
+</ul>
+
+<h3 id="netlistener-interfaz"><strong><code class="language-plaintext highlighter-rouge">net.Listener</code></strong> (Interfaz)</h3>
+<p><strong>Métodos</strong>:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">Accept() (Conn, error)</code>: Acepta una conexión entrante.</li>
+  <li><code class="language-plaintext highlighter-rouge">Close() error</code>: Detiene el listener.</li>
+</ul>
+
+<h3 id="netip-tipo"><strong><code class="language-plaintext highlighter-rouge">net.IP</code></strong> (Tipo)</h3>
+<p><strong>Uso</strong>: Manipulación de direcciones IP.<br />
+<strong>Ejemplo</strong>:</p>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">ip</span> <span class="o">:=</span> <span class="n">net</span><span class="o">.</span><span class="n">ParseIP</span><span class="p">(</span><span class="s">"192.168.1.1"</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">ip</span><span class="o">.</span><span class="n">To4</span><span class="p">()</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Es IPv4:"</span><span class="p">,</span> <span class="n">ip</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="netaddr-interfaz"><strong><code class="language-plaintext highlighter-rouge">net.Addr</code></strong> (Interfaz)</h3>
+<p><strong>Propósito</strong>: Representa una dirección de red (ej: <code class="language-plaintext highlighter-rouge">TCPAddr</code>, <code class="language-plaintext highlighter-rouge">UDPAddr</code>).</p>
+
+<hr />
+
+<h2 id="mejores-prácticas">Mejores Prácticas</h2>
+
+<ol>
+  <li><strong>Manejo de Concurrencia</strong>:
+    <ul>
+      <li>Usar goroutines para manejar múltiples conexiones simultáneamente.
+        <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">ln</span><span class="p">,</span> <span class="n">_</span> <span class="o">:=</span> <span class="n">net</span><span class="o">.</span><span class="n">Listen</span><span class="p">(</span><span class="s">"tcp"</span><span class="p">,</span> <span class="s">":8080"</span><span class="p">)</span>
+<span class="k">for</span> <span class="p">{</span>
+  <span class="n">conn</span><span class="p">,</span> <span class="n">_</span> <span class="o">:=</span> <span class="n">ln</span><span class="o">.</span><span class="n">Accept</span><span class="p">()</span>
+  <span class="k">go</span> <span class="k">func</span><span class="p">(</span><span class="n">c</span> <span class="n">net</span><span class="o">.</span><span class="n">Conn</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">defer</span> <span class="n">c</span><span class="o">.</span><span class="n">Close</span><span class="p">()</span>
+      <span class="c">// Manejar conexión</span>
+  <span class="p">}(</span><span class="n">conn</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div>        </div>
+      </li>
+    </ul>
+  </li>
+  <li><strong>Cierre Adecuado de Recursos</strong>:
+    <ul>
+      <li>Siempre cerrar conexiones y listeners con <code class="language-plaintext highlighter-rouge">defer</code>.</li>
+    </ul>
+  </li>
+  <li><strong>Manejo de Errores</strong>:
+    <ul>
+      <li>Verificar errores en cada operación de red.
+        <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">conn</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">net</span><span class="o">.</span><span class="n">Dial</span><span class="p">(</span><span class="s">"tcp"</span><span class="p">,</span> <span class="s">"servidor:80"</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+  <span class="n">log</span><span class="o">.</span><span class="n">Fatal</span><span class="p">(</span><span class="s">"Error de conexión:"</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span>
+<span class="p">}</span>
+<span class="k">defer</span> <span class="n">conn</span><span class="o">.</span><span class="n">Close</span><span class="p">()</span>
+</code></pre></div>        </div>
+      </li>
+    </ul>
+  </li>
+  <li><strong>IPv6 y Formatos Especiales</strong>:
+    <ul>
+      <li>Usar <code class="language-plaintext highlighter-rouge">JoinHostPort</code> para direcciones IPv6:
+        <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">net</span><span class="o">.</span><span class="n">JoinHostPort</span><span class="p">(</span><span class="s">"2001:db8::1"</span><span class="p">,</span> <span class="s">"80"</span><span class="p">)</span> <span class="c">// [2001:db8::1]:80</span>
+</code></pre></div>        </div>
+      </li>
+    </ul>
+  </li>
+</ol>
+
+<hr />
+
+<h2 id="ejemplo-integrado-cliente-servidor-tcp">Ejemplo Integrado: Cliente-Servidor TCP</h2>
+
+<p><strong>Servidor</strong>:</p>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="p">(</span>
+    <span class="s">"log"</span>
+    <span class="s">"net"</span>
+<span class="p">)</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">ln</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">net</span><span class="o">.</span><span class="n">Listen</span><span class="p">(</span><span class="s">"tcp"</span><span class="p">,</span> <span class="s">":8080"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">Fatal</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="k">defer</span> <span class="n">ln</span><span class="o">.</span><span class="n">Close</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="p">{</span>
+        <span class="n">conn</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">ln</span><span class="o">.</span><span class="n">Accept</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Error aceptando conexión:"</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span>
+            <span class="k">continue</span>
+        <span class="p">}</span>
+        <span class="k">go</span> <span class="n">handleRequest</span><span class="p">(</span><span class="n">conn</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="n">handleRequest</span><span class="p">(</span><span class="n">conn</span> <span class="n">net</span><span class="o">.</span><span class="n">Conn</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">defer</span> <span class="n">conn</span><span class="o">.</span><span class="n">Close</span><span class="p">()</span>
+    <span class="n">conn</span><span class="o">.</span><span class="n">Write</span><span class="p">([]</span><span class="kt">byte</span><span class="p">(</span><span class="s">"Bienvenido al servidor!</span><span class="se">\n</span><span class="s">"</span><span class="p">))</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><strong>Cliente</strong>:</p>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="p">(</span>
+    <span class="s">"fmt"</span>
+    <span class="s">"io"</span>
+    <span class="s">"log"</span>
+    <span class="s">"net"</span>
+<span class="p">)</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">conn</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">net</span><span class="o">.</span><span class="n">Dial</span><span class="p">(</span><span class="s">"tcp"</span><span class="p">,</span> <span class="s">"localhost:8080"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">Fatal</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="k">defer</span> <span class="n">conn</span><span class="o">.</span><span class="n">Close</span><span class="p">()</span>
+
+    <span class="n">msg</span><span class="p">,</span> <span class="n">_</span> <span class="o">:=</span> <span class="n">io</span><span class="o">.</span><span class="n">ReadAll</span><span class="p">(</span><span class="n">conn</span><span class="p">)</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="kt">string</span><span class="p">(</span><span class="n">msg</span><span class="p">))</span> <span class="c">// "Bienvenido al servidor!"</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="consideraciones-finales">Consideraciones Finales</h2>
+
+<ul>
+  <li><strong>DNS y Resolución de Nombres</strong>: Preferir <code class="language-plaintext highlighter-rouge">net.LookupHost</code> para obtener todas las IPs asociadas a un dominio.</li>
+  <li><strong>IPv4 vs IPv6</strong>: Utilizar <code class="language-plaintext highlighter-rouge">net.ParseIP</code> y métodos como <code class="language-plaintext highlighter-rouge">To4()</code> para manejar diferentes formatos.</li>
+  <li><strong>Seguridad</strong>: Validar entradas al trabajar con direcciones de red para prevenir ataques (ej: inyecciones).</li>
+</ul>
+
+<p>El paquete <code class="language-plaintext highlighter-rouge">net</code> proporciona todas las herramientas necesarias para construir aplicaciones de red eficientes y escalables en Go, desde clientes simples hasta servidores concurrentes complejos.</p>
+
+            </main>
+        </div>
+        
+        <!-- Componente flotante de GitHub -->
+<div class="github-floating">
+    <a href="https://github.com/" target="_blank" rel="noopener noreferrer" class="github-link" title="Ver en GitHub">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-github">
+            <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+        </svg>
+    </a>
+    
+    
+    <a href="https://github.com//MiguelP-Dev.github.io/blob/main/_pages/paquetes/net.md" target="_blank" rel="noopener noreferrer" class="edit-link" title="Editar esta página">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-2">
+            <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+        </svg>
+    </a>
+    
+</div>
+
+<style>
+    /* Estilos del componente SVG */
+    .github-corner:hover .octo-arm {
+        animation: octocat-wave 560ms ease-in-out;
+    }
+    
+    @keyframes octocat-wave {
+        0%, 100% { transform: rotate(0); }
+        20%, 60% { transform: rotate(-25deg); }
+        40%, 80% { transform: rotate(10deg); }
+    }
+    
+    @media (max-width: 500px) {
+        .github-corner:hover .octo-arm {
+            animation: none;
+        }
+        .github-corner .octo-arm {
+            animation: octocat-wave 560ms ease-in-out;
+        }
+    }
+</style>
+    </div>
+    
+    <script src="/assets/js/scripts.js"></script>
+</body>
+</html>

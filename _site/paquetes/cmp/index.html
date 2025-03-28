@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>cmp | Miguel's Programing Notes</title>
+    <link rel="stylesheet" href="/assets/css/styles.css">
+</head>
+<body>
+    <div class="app">
+        <nav class="navbar">
+    <div class="nav-container">
+        <a href="/" class="nav-brand">
+            Miguel's Programming Notes
+        </a>
+
+        <div class="nav-sections">
+            
+                
+                
+                
+                <a href="/paquetes/"
+                    class="nav-section active"
+                    data-section="paquetes">
+                    📦 Paquetes
+                </a>
+            
+                
+                
+                
+                <a href="/ejemplos/"
+                    class="nav-section "
+                    data-section="ejemplos">
+                    🧩 Ejemplos
+                </a>
+            
+        </div>
+    </div>
+</nav>
+        
+        <div class="container">
+            <button class="menu-toggle" aria-label="Abrir menú">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            
+            <aside class="sidebar" id="dynamic-sidebar">
+    <div class="sidebar-header">
+        <h3 class="sidebar-title">Miguel's Programming Notes</h3>
+    </div>
+    
+    <div class="sidebar-content">
+        
+            
+                <h3 class="sidebar-title">📦 Paquetes</h3>
+                <nav class="sidebar-nav">
+                    
+                        <a href="/paquetes/fmt/"
+                            class="sidebar-item "
+                            data-item="fmt">
+                            fmt
+                        </a>
+                    
+                        <a href="/paquetes/net/"
+                            class="sidebar-item "
+                            data-item="net-http">
+                            net/http
+                        </a>
+                    
+                        <a href="/paquetes/encoding/"
+                            class="sidebar-item "
+                            data-item="encoding">
+                            encoding
+                        </a>
+                    
+                </nav>
+            
+        
+            
+        
+    </div>
+</aside>
+            
+            <main class="content">
+                <h1 id="paquete-cmp-en-go">Paquete cmp en Go</h1>
+
+<p>El paquete <code class="language-plaintext highlighter-rouge">cmp</code> en Go proporciona funciones útiles para comparar valores ordenados. Este documento explora en detalle sus funcionalidades y usos prácticos.</p>
+
+<h2 id="1-funciones-principales">1. Funciones Principales</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th><strong>Función</strong></th>
+      <th><strong>Descripción</strong></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Compare</code></td>
+      <td>Compara dos valores y devuelve -1 si el primer valor es menor que el segundo, 0 si son iguales, y +1 si el primer valor es mayor que el segundo.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Less</code></td>
+      <td>Determina si un valor es menor que otro.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Or</code></td>
+      <td>Devuelve el primer valor no igual al valor cero de sus argumentos. Si no hay argumentos no cero, devuelve el valor cero.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Equal</code></td>
+      <td>Compara dos valores y determina si son iguales, utilizando opciones personalizadas si es necesario.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Diff</code></td>
+      <td>Devuelve una cadena que describe las diferencias entre dos valores.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Indirect</code></td>
+      <td>Representa un valor indirecto, proporcionando métodos para obtener el tipo y los valores indirectos.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">MapIndex</code></td>
+      <td>Representa un índice de un mapa, proporcionando métodos para obtener la clave y los valores.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">SliceIndex</code></td>
+      <td>Representa un índice de una lista, proporcionando métodos para obtener la clave y los valores.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="2-ejemplos-prácticos">2. Ejemplos Prácticos</h2>
+
+<h3 id="21-comparación-básica">2.1 Comparación Básica</h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">ejemplosComparacionBasica</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c">// Comparación de números</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">cmp</span><span class="o">.</span><span class="n">Compare</span><span class="p">(</span><span class="m">1</span><span class="p">,</span> <span class="m">2</span><span class="p">))</span>        <span class="c">// -1</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">cmp</span><span class="o">.</span><span class="n">Compare</span><span class="p">(</span><span class="m">2</span><span class="p">,</span> <span class="m">2</span><span class="p">))</span>        <span class="c">// 0</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">cmp</span><span class="o">.</span><span class="n">Compare</span><span class="p">(</span><span class="m">3</span><span class="p">,</span> <span class="m">2</span><span class="p">))</span>        <span class="c">// 1</span>
+
+    <span class="c">// Comparación de strings</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">cmp</span><span class="o">.</span><span class="n">Compare</span><span class="p">(</span><span class="s">"a"</span><span class="p">,</span> <span class="s">"b"</span><span class="p">))</span>    <span class="c">// -1</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">cmp</span><span class="o">.</span><span class="n">Compare</span><span class="p">(</span><span class="s">"b"</span><span class="p">,</span> <span class="s">"b"</span><span class="p">))</span>    <span class="c">// 0</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">cmp</span><span class="o">.</span><span class="n">Compare</span><span class="p">(</span><span class="s">"c"</span><span class="p">,</span> <span class="s">"b"</span><span class="p">))</span>    <span class="c">// 1</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="22-comparación-de-estructuras-complejas">2.2 Comparación de Estructuras Complejas</h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">type</span> <span class="n">Persona</span> <span class="k">struct</span> <span class="p">{</span>
+    <span class="n">Nombre</span> <span class="kt">string</span>
+    <span class="n">Edad</span>   <span class="kt">int</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="n">ejemploComparacionEstructuras</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">p1</span> <span class="o">:=</span> <span class="n">Persona</span><span class="p">{</span><span class="n">Nombre</span><span class="o">:</span> <span class="s">"Juan"</span><span class="p">,</span> <span class="n">Edad</span><span class="o">:</span> <span class="m">30</span><span class="p">}</span>
+    <span class="n">p2</span> <span class="o">:=</span> <span class="n">Persona</span><span class="p">{</span><span class="n">Nombre</span><span class="o">:</span> <span class="s">"Juan"</span><span class="p">,</span> <span class="n">Edad</span><span class="o">:</span> <span class="m">30</span><span class="p">}</span>
+    <span class="n">p3</span> <span class="o">:=</span> <span class="n">Persona</span><span class="p">{</span><span class="n">Nombre</span><span class="o">:</span> <span class="s">"Ana"</span><span class="p">,</span> <span class="n">Edad</span><span class="o">:</span> <span class="m">25</span><span class="p">}</span>
+
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">cmp</span><span class="o">.</span><span class="n">Equal</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">))</span>  <span class="c">// true</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">cmp</span><span class="o">.</span><span class="n">Equal</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">p3</span><span class="p">))</span>  <span class="c">// false</span>
+
+    <span class="n">diff</span> <span class="o">:=</span> <span class="n">cmp</span><span class="o">.</span><span class="n">Diff</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">p3</span><span class="p">)</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Diferencias encontradas:</span><span class="se">\n</span><span class="s">%s"</span><span class="p">,</span> <span class="n">diff</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="23-comparación-con-opciones-personalizadas">2.3 Comparación con Opciones Personalizadas</h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">type</span> <span class="n">Producto</span> <span class="k">struct</span> <span class="p">{</span>
+    <span class="n">ID</span>        <span class="kt">int</span>
+    <span class="n">Nombre</span>    <span class="kt">string</span>
+    <span class="n">Precio</span>    <span class="kt">float64</span>
+    <span class="n">CreadoEn</span>  <span class="n">time</span><span class="o">.</span><span class="n">Time</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="n">ejemploComparacionPersonalizada</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">prod1</span> <span class="o">:=</span> <span class="n">Producto</span><span class="p">{</span>
+        <span class="n">ID</span><span class="o">:</span>       <span class="m">1</span><span class="p">,</span>
+        <span class="n">Nombre</span><span class="o">:</span>   <span class="s">"Laptop"</span><span class="p">,</span>
+        <span class="n">Precio</span><span class="o">:</span>   <span class="m">999.99</span><span class="p">,</span>
+        <span class="n">CreadoEn</span><span class="o">:</span> <span class="n">time</span><span class="o">.</span><span class="n">Now</span><span class="p">(),</span>
+    <span class="p">}</span>
+
+    <span class="n">prod2</span> <span class="o">:=</span> <span class="n">Producto</span><span class="p">{</span>
+        <span class="n">ID</span><span class="o">:</span>       <span class="m">1</span><span class="p">,</span>
+        <span class="n">Nombre</span><span class="o">:</span>   <span class="s">"Laptop"</span><span class="p">,</span>
+        <span class="n">Precio</span><span class="o">:</span>   <span class="m">999.99</span><span class="p">,</span>
+        <span class="n">CreadoEn</span><span class="o">:</span> <span class="n">time</span><span class="o">.</span><span class="n">Now</span><span class="p">()</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">Second</span><span class="p">),</span>
+    <span class="p">}</span>
+
+    <span class="c">// Ignorar el campo CreadoEn en la comparación</span>
+    <span class="n">opts</span> <span class="o">:=</span> <span class="n">cmp</span><span class="o">.</span><span class="n">Options</span><span class="p">{</span>
+        <span class="n">cmp</span><span class="o">.</span><span class="n">FilterPath</span><span class="p">(</span><span class="k">func</span><span class="p">(</span><span class="n">p</span> <span class="n">cmp</span><span class="o">.</span><span class="n">Path</span><span class="p">)</span> <span class="kt">bool</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="n">p</span><span class="o">.</span><span class="n">String</span><span class="p">()</span> <span class="o">==</span> <span class="s">"CreadoEn"</span>
+        <span class="p">},</span> <span class="n">cmp</span><span class="o">.</span><span class="n">Ignore</span><span class="p">()),</span>
+    <span class="p">}</span>
+
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">cmp</span><span class="o">.</span><span class="n">Equal</span><span class="p">(</span><span class="n">prod1</span><span class="p">,</span> <span class="n">prod2</span><span class="p">,</span> <span class="n">opts</span><span class="p">))</span>  <span class="c">// true</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="3-casos-de-uso-avanzados">3. Casos de Uso Avanzados</h2>
+
+<h3 id="31-comparación-de-slices">3.1 Comparación de Slices</h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">ejemploComparacionSlices</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">nums1</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{</span><span class="m">1</span><span class="p">,</span> <span class="m">2</span><span class="p">,</span> <span class="m">3</span><span class="p">,</span> <span class="m">4</span><span class="p">,</span> <span class="m">5</span><span class="p">}</span>
+    <span class="n">nums2</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{</span><span class="m">1</span><span class="p">,</span> <span class="m">2</span><span class="p">,</span> <span class="m">3</span><span class="p">,</span> <span class="m">4</span><span class="p">,</span> <span class="m">5</span><span class="p">}</span>
+    <span class="n">nums3</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{</span><span class="m">5</span><span class="p">,</span> <span class="m">4</span><span class="p">,</span> <span class="m">3</span><span class="p">,</span> <span class="m">2</span><span class="p">,</span> <span class="m">1</span><span class="p">}</span>
+
+    <span class="c">// Comparación directa de slices</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">cmp</span><span class="o">.</span><span class="n">Equal</span><span class="p">(</span><span class="n">nums1</span><span class="p">,</span> <span class="n">nums2</span><span class="p">))</span>  <span class="c">// true</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">cmp</span><span class="o">.</span><span class="n">Equal</span><span class="p">(</span><span class="n">nums1</span><span class="p">,</span> <span class="n">nums3</span><span class="p">))</span>  <span class="c">// false</span>
+
+    <span class="c">// Comparación con opciones personalizadas</span>
+    <span class="n">equalLength</span> <span class="o">:=</span> <span class="n">cmp</span><span class="o">.</span><span class="n">Comparer</span><span class="p">(</span><span class="k">func</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="p">[]</span><span class="kt">int</span><span class="p">)</span> <span class="kt">bool</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+    <span class="p">})</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">cmp</span><span class="o">.</span><span class="n">Equal</span><span class="p">(</span><span class="n">nums1</span><span class="p">,</span> <span class="n">nums3</span><span class="p">,</span> <span class="n">equalLength</span><span class="p">))</span>  <span class="c">// true</span>
+
+    <span class="c">// Encontrar diferencias</span>
+    <span class="n">diff</span> <span class="o">:=</span> <span class="n">cmp</span><span class="o">.</span><span class="n">Diff</span><span class="p">(</span><span class="n">nums1</span><span class="p">,</span> <span class="n">nums3</span><span class="p">)</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Diferencias encontradas:</span><span class="se">\n</span><span class="s">%s"</span><span class="p">,</span> <span class="n">diff</span><span class="p">)</span>
+
+    <span class="c">// Comparación de slices ignorando el orden</span>
+    <span class="n">opts</span> <span class="o">:=</span> <span class="n">cmp</span><span class="o">.</span><span class="n">Options</span><span class="p">{</span>
+        <span class="n">cmpopts</span><span class="o">.</span><span class="n">SortSlices</span><span class="p">(</span><span class="k">func</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="kt">int</span><span class="p">)</span> <span class="kt">bool</span> <span class="p">{</span> <span class="k">return</span> <span class="n">a</span> <span class="o">&lt;</span> <span class="n">b</span> <span class="p">}),</span>
+    <span class="p">}</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">cmp</span><span class="o">.</span><span class="n">Equal</span><span class="p">(</span><span class="n">nums1</span><span class="p">,</span> <span class="n">nums3</span><span class="p">,</span> <span class="n">opts</span><span class="p">))</span>  <span class="c">// true</span>
+<span class="p">}</span>
+
+<span class="err">###</span> <span class="m">3.2</span> <span class="n">Comparación</span> <span class="n">de</span> <span class="n">Maps</span>
+
+<span class="s">```go
+func ejemploComparacionMaps() {
+    map1 := map[string]int{"a": 1, "b": 2, "c": 3}
+    map2 := map[string]int{"c": 3, "b": 2, "a": 1}
+    map3 := map[string]int{"a": 1, "b": 2, "d": 4}
+
+    fmt.Println(cmp.Equal(map1, map2))  // true
+    fmt.Println(cmp.Equal(map1, map3))  // false
+
+    diff := cmp.Diff(map1, map3)
+    fmt.Printf("Diferencias encontradas:\n%s", diff)
+}
+</span></code></pre></div></div>
+
+            </main>
+        </div>
+        
+        <!-- Componente flotante de GitHub -->
+<div class="github-floating">
+    <a href="https://github.com/" target="_blank" rel="noopener noreferrer" class="github-link" title="Ver en GitHub">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-github">
+            <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+        </svg>
+    </a>
+    
+    
+    <a href="https://github.com//MiguelP-Dev.github.io/blob/main/_pages/paquetes/cmp.md" target="_blank" rel="noopener noreferrer" class="edit-link" title="Editar esta página">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-2">
+            <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+        </svg>
+    </a>
+    
+</div>
+
+<style>
+    /* Estilos del componente SVG */
+    .github-corner:hover .octo-arm {
+        animation: octocat-wave 560ms ease-in-out;
+    }
+    
+    @keyframes octocat-wave {
+        0%, 100% { transform: rotate(0); }
+        20%, 60% { transform: rotate(-25deg); }
+        40%, 80% { transform: rotate(10deg); }
+    }
+    
+    @media (max-width: 500px) {
+        .github-corner:hover .octo-arm {
+            animation: none;
+        }
+        .github-corner .octo-arm {
+            animation: octocat-wave 560ms ease-in-out;
+        }
+    }
+</style>
+    </div>
+    
+    <script src="/assets/js/scripts.js"></script>
+</body>
+</html>

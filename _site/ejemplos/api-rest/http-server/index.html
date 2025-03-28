@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Servidor HTTP en Go | Miguel's Programing Notes</title>
+    <link rel="stylesheet" href="/assets/css/styles.css">
+</head>
+<body>
+    <div class="app">
+        <nav class="navbar">
+    <div class="nav-container">
+        <a href="/" class="nav-brand">
+            Miguel's Programming Notes
+        </a>
+
+        <div class="nav-sections">
+            
+                
+                
+                
+                <a href="/paquetes/"
+                    class="nav-section "
+                    data-section="paquetes">
+                    📦 Paquetes
+                </a>
+            
+                
+                
+                
+                <a href="/ejemplos/"
+                    class="nav-section active"
+                    data-section="ejemplos">
+                    🧩 Ejemplos
+                </a>
+            
+        </div>
+    </div>
+</nav>
+        
+        <div class="container">
+            <button class="menu-toggle" aria-label="Abrir menú">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            
+            <aside class="sidebar" id="dynamic-sidebar">
+    <div class="sidebar-header">
+        <h3 class="sidebar-title">Miguel's Programming Notes</h3>
+    </div>
+    
+    <div class="sidebar-content">
+        
+            
+        
+            
+                <h3 class="sidebar-title">🧩 Ejemplos</h3>
+                <nav class="sidebar-nav">
+                    
+                        <a href="/ejemplos/api-rest/"
+                            class="sidebar-item "
+                            data-item="api-rest">
+                            API REST
+                        </a>
+                    
+                        <a href="/ejemplos/concurrentes/"
+                            class="sidebar-item "
+                            data-item="concurrentes">
+                            Concurrentes
+                        </a>
+                    
+                        <a href="/ejemplos/tests/"
+                            class="sidebar-item "
+                            data-item="test-unitarios">
+                            Test Unitarios
+                        </a>
+                    
+                </nav>
+            
+        
+    </div>
+</aside>
+            
+            <main class="content">
+                <h1 id="clase-completa-sobre-http-en-go-incluyendo-mejores-prácticas">Clase completa sobre HTTP en Go, incluyendo mejores prácticas</h1>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="p">(</span>
+    <span class="s">"context"</span>
+    <span class="s">"encoding/json"</span>
+    <span class="s">"errors"</span>
+    <span class="s">"fmt"</span>
+    <span class="s">"io"</span>
+    <span class="s">"log"</span>
+    <span class="s">"net"</span>
+    <span class="s">"net/http"</span>
+    <span class="s">"os"</span>
+    <span class="s">"os/signal"</span>
+    <span class="s">"sync/atomic"</span>
+    <span class="s">"syscall"</span>
+    <span class="s">"time"</span>
+<span class="p">)</span>
+
+<span class="c">// User representa un modelo de datos para nuestro ejemplo</span>
+<span class="k">type</span> <span class="n">User</span> <span class="k">struct</span> <span class="p">{</span>
+    <span class="n">ID</span>    <span class="kt">int</span>    <span class="s">`json:"id"`</span>
+    <span class="n">Name</span>  <span class="kt">string</span> <span class="s">`json:"name"`</span>
+    <span class="n">Email</span> <span class="kt">string</span> <span class="s">`json:"email"`</span>
+<span class="p">}</span>
+
+<span class="c">// CustomHandler es un ejemplo de manejador personalizado</span>
+<span class="k">type</span> <span class="n">CustomHandler</span> <span class="k">struct</span> <span class="p">{</span>
+    <span class="n">counter</span> <span class="kt">int64</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="p">(</span><span class="n">h</span> <span class="o">*</span><span class="n">CustomHandler</span><span class="p">)</span> <span class="n">ServeHTTP</span><span class="p">(</span><span class="n">w</span> <span class="n">http</span><span class="o">.</span><span class="n">ResponseWriter</span><span class="p">,</span> <span class="n">r</span> <span class="o">*</span><span class="n">http</span><span class="o">.</span><span class="n">Request</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">atomic</span><span class="o">.</span><span class="n">AddInt64</span><span class="p">(</span><span class="o">&amp;</span><span class="n">h</span><span class="o">.</span><span class="n">counter</span><span class="p">,</span> <span class="m">1</span><span class="p">)</span>
+    
+    <span class="n">w</span><span class="o">.</span><span class="n">Header</span><span class="p">()</span><span class="o">.</span><span class="n">Set</span><span class="p">(</span><span class="s">"Content-Type"</span><span class="p">,</span> <span class="s">"application/json"</span><span class="p">)</span>
+    <span class="n">json</span><span class="o">.</span><span class="n">NewEncoder</span><span class="p">(</span><span class="n">w</span><span class="p">)</span><span class="o">.</span><span class="n">Encode</span><span class="p">(</span><span class="k">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="k">interface</span><span class="p">{}{</span>
+        <span class="s">"request_count"</span><span class="o">:</span> <span class="n">h</span><span class="o">.</span><span class="n">counter</span><span class="p">,</span>
+        <span class="s">"message"</span><span class="o">:</span>      <span class="s">"Hola desde el manejador personalizado!"</span><span class="p">,</span>
+    <span class="p">})</span>
+<span class="p">}</span>
+
+<span class="c">// Middleware de registro (logging)</span>
+<span class="k">func</span> <span class="n">loggingMiddleware</span><span class="p">(</span><span class="n">next</span> <span class="n">http</span><span class="o">.</span><span class="n">Handler</span><span class="p">)</span> <span class="n">http</span><span class="o">.</span><span class="n">Handler</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">http</span><span class="o">.</span><span class="n">HandlerFunc</span><span class="p">(</span><span class="k">func</span><span class="p">(</span><span class="n">w</span> <span class="n">http</span><span class="o">.</span><span class="n">ResponseWriter</span><span class="p">,</span> <span class="n">r</span> <span class="o">*</span><span class="n">http</span><span class="o">.</span><span class="n">Request</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">start</span> <span class="o">:=</span> <span class="n">time</span><span class="o">.</span><span class="n">Now</span><span class="p">()</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Iniciando %s %s"</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">Method</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">URL</span><span class="o">.</span><span class="n">Path</span><span class="p">)</span>
+        
+        <span class="n">next</span><span class="o">.</span><span class="n">ServeHTTP</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span>
+        
+        <span class="n">log</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Finalizado %s %s en %v"</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">Method</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">URL</span><span class="o">.</span><span class="n">Path</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">Since</span><span class="p">(</span><span class="n">start</span><span class="p">))</span>
+    <span class="p">})</span>
+<span class="p">}</span>
+
+<span class="c">// Middleware de autenticación</span>
+<span class="k">func</span> <span class="n">authMiddleware</span><span class="p">(</span><span class="n">next</span> <span class="n">http</span><span class="o">.</span><span class="n">Handler</span><span class="p">)</span> <span class="n">http</span><span class="o">.</span><span class="n">Handler</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">http</span><span class="o">.</span><span class="n">HandlerFunc</span><span class="p">(</span><span class="k">func</span><span class="p">(</span><span class="n">w</span> <span class="n">http</span><span class="o">.</span><span class="n">ResponseWriter</span><span class="p">,</span> <span class="n">r</span> <span class="o">*</span><span class="n">http</span><span class="o">.</span><span class="n">Request</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">token</span> <span class="o">:=</span> <span class="n">r</span><span class="o">.</span><span class="n">Header</span><span class="o">.</span><span class="n">Get</span><span class="p">(</span><span class="s">"Authorization"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">token</span> <span class="o">!=</span> <span class="s">"Bearer mi-token-secreto"</span> <span class="p">{</span>
+            <span class="n">http</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="s">"No autorizado"</span><span class="p">,</span> <span class="n">http</span><span class="o">.</span><span class="n">StatusUnauthorized</span><span class="p">)</span>
+            <span class="k">return</span>
+        <span class="p">}</span>
+        <span class="n">next</span><span class="o">.</span><span class="n">ServeHTTP</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span>
+    <span class="p">})</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c">// Configuración del servidor con mejores prácticas</span>
+    <span class="n">server</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="n">http</span><span class="o">.</span><span class="n">Server</span><span class="p">{</span>
+        <span class="n">Addr</span><span class="o">:</span>         <span class="s">":8080"</span><span class="p">,</span>
+        <span class="n">ReadTimeout</span><span class="o">:</span>  <span class="m">5</span> <span class="o">*</span> <span class="n">time</span><span class="o">.</span><span class="n">Second</span><span class="p">,</span>
+        <span class="n">WriteTimeout</span><span class="o">:</span> <span class="m">10</span> <span class="o">*</span> <span class="n">time</span><span class="o">.</span><span class="n">Second</span><span class="p">,</span>
+        <span class="n">IdleTimeout</span><span class="o">:</span> <span class="m">15</span> <span class="o">*</span> <span class="n">time</span><span class="o">.</span><span class="n">Second</span><span class="p">,</span>
+        <span class="n">Handler</span><span class="o">:</span>      <span class="no">nil</span><span class="p">,</span> <span class="c">// se configura más abajo</span>
+    <span class="p">}</span>
+
+    <span class="c">// Router usando el paquete estándar</span>
+    <span class="n">mux</span> <span class="o">:=</span> <span class="n">http</span><span class="o">.</span><span class="n">NewServeMux</span><span class="p">()</span>
+    
+    <span class="c">// Manejadores</span>
+    <span class="n">mux</span><span class="o">.</span><span class="n">Handle</span><span class="p">(</span><span class="s">"/custom"</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">CustomHandler</span><span class="p">{})</span>
+    <span class="n">mux</span><span class="o">.</span><span class="n">HandleFunc</span><span class="p">(</span><span class="s">"/users"</span><span class="p">,</span> <span class="n">handleUsers</span><span class="p">)</span>
+    <span class="n">mux</span><span class="o">.</span><span class="n">HandleFunc</span><span class="p">(</span><span class="s">"/health"</span><span class="p">,</span> <span class="k">func</span><span class="p">(</span><span class="n">w</span> <span class="n">http</span><span class="o">.</span><span class="n">ResponseWriter</span><span class="p">,</span> <span class="n">r</span> <span class="o">*</span><span class="n">http</span><span class="o">.</span><span class="n">Request</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">w</span><span class="o">.</span><span class="n">Header</span><span class="p">()</span><span class="o">.</span><span class="n">Set</span><span class="p">(</span><span class="s">"Content-Type"</span><span class="p">,</span> <span class="s">"application/json"</span><span class="p">)</span>
+        <span class="n">json</span><span class="o">.</span><span class="n">NewEncoder</span><span class="p">(</span><span class="n">w</span><span class="p">)</span><span class="o">.</span><span class="n">Encode</span><span class="p">(</span><span class="k">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">bool</span><span class="p">{</span><span class="s">"ok"</span><span class="o">:</span> <span class="no">true</span><span class="p">})</span>
+    <span class="p">})</span>
+
+    <span class="c">// Configurar middlewares</span>
+    <span class="n">stack</span> <span class="o">:=</span> <span class="n">loggingMiddleware</span><span class="p">(</span><span class="n">authMiddleware</span><span class="p">(</span><span class="n">mux</span><span class="p">))</span>
+
+    <span class="n">server</span><span class="o">.</span><span class="n">Handler</span> <span class="o">=</span> <span class="n">stack</span>
+
+    <span class="c">// Configurar el servidor en una goroutine</span>
+    <span class="k">go</span> <span class="k">func</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Iniciando servidor en %s"</span><span class="p">,</span> <span class="n">server</span><span class="o">.</span><span class="n">Addr</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">server</span><span class="o">.</span><span class="n">ListenAndServe</span><span class="p">();</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">errors</span><span class="o">.</span><span class="n">Is</span><span class="p">(</span><span class="n">err</span><span class="p">,</span> <span class="n">http</span><span class="o">.</span><span class="n">ErrServerClosed</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">Fatalf</span><span class="p">(</span><span class="s">"Error al iniciar el servidor: %v"</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span>
+        <span class="p">}</span>
+    <span class="p">}()</span>
+
+    <span class="c">// Esperar por señales de interrupción</span>
+    <span class="n">quit</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="k">chan</span> <span class="n">os</span><span class="o">.</span><span class="n">Signal</span><span class="p">,</span> <span class="m">1</span><span class="p">)</span>
+    <span class="n">signal</span><span class="o">.</span><span class="n">Notify</span><span class="p">(</span><span class="n">quit</span><span class="p">,</span> <span class="n">syscall</span><span class="o">.</span><span class="n">SIGINT</span><span class="p">,</span> <span class="n">syscall</span><span class="o">.</span><span class="n">SIGTERM</span><span class="p">)</span>
+    <span class="o">&lt;-</span><span class="n">quit</span>
+
+    <span class="c">// Apagado graceful</span>
+    <span class="n">ctx</span><span class="p">,</span> <span class="n">cancel</span> <span class="o">:=</span> <span class="n">context</span><span class="o">.</span><span class="n">WithTimeout</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">Background</span><span class="p">(),</span> <span class="m">30</span><span class="o">*</span><span class="n">time</span><span class="o">.</span><span class="n">Second</span><span class="p">)</span>
+    <span class="k">defer</span> <span class="n">cancel</span><span class="p">()</span>
+    
+    <span class="n">server</span><span class="o">.</span><span class="n">SetKeepAlivesEnabled</span><span class="p">(</span><span class="no">false</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">server</span><span class="o">.</span><span class="n">Shutdown</span><span class="p">(</span><span class="n">ctx</span><span class="p">);</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">Fatalf</span><span class="p">(</span><span class="s">"Error durante el apagado del servidor: %v"</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Servidor detenido correctamente"</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="n">handleUsers</span><span class="p">(</span><span class="n">w</span> <span class="n">http</span><span class="o">.</span><span class="n">ResponseWriter</span><span class="p">,</span> <span class="n">r</span> <span class="o">*</span><span class="n">http</span><span class="o">.</span><span class="n">Request</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">switch</span> <span class="n">r</span><span class="o">.</span><span class="n">Method</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="n">http</span><span class="o">.</span><span class="n">MethodGet</span><span class="o">:</span>
+        <span class="n">getUsers</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span>
+    <span class="k">case</span> <span class="n">http</span><span class="o">.</span><span class="n">MethodPost</span><span class="o">:</span>
+        <span class="n">createUser</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span>
+    <span class="k">default</span><span class="o">:</span>
+        <span class="n">http</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="s">"Método no permitido"</span><span class="p">,</span> <span class="n">http</span><span class="o">.</span><span class="n">StatusMethodNotAllowed</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="n">getUsers</span><span class="p">(</span><span class="n">w</span> <span class="n">http</span><span class="o">.</span><span class="n">ResponseWriter</span><span class="p">,</span> <span class="n">r</span> <span class="o">*</span><span class="n">http</span><span class="o">.</span><span class="n">Request</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">users</span> <span class="o">:=</span> <span class="p">[]</span><span class="n">User</span><span class="p">{</span>
+        <span class="p">{</span><span class="n">ID</span><span class="o">:</span> <span class="m">1</span><span class="p">,</span> <span class="n">Name</span><span class="o">:</span> <span class="s">"Juan"</span><span class="p">,</span> <span class="n">Email</span><span class="o">:</span> <span class="s">"juan@example.com"</span><span class="p">},</span>
+        <span class="p">{</span><span class="n">ID</span><span class="o">:</span> <span class="m">2</span><span class="p">,</span> <span class="n">Name</span><span class="o">:</span> <span class="s">"María"</span><span class="p">,</span> <span class="n">Email</span><span class="o">:</span> <span class="s">"maria@example.com"</span><span class="p">},</span>
+    <span class="p">}</span>
+
+    <span class="n">w</span><span class="o">.</span><span class="n">Header</span><span class="p">()</span><span class="o">.</span><span class="n">Set</span><span class="p">(</span><span class="s">"Content-Type"</span><span class="p">,</span> <span class="s">"application/json"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">json</span><span class="o">.</span><span class="n">NewEncoder</span><span class="p">(</span><span class="n">w</span><span class="p">)</span><span class="o">.</span><span class="n">Encode</span><span class="p">(</span><span class="n">users</span><span class="p">);</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="n">http</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="s">"Error al procesar la solicitud"</span><span class="p">,</span> <span class="n">http</span><span class="o">.</span><span class="n">StatusInternalServerError</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="n">createUser</span><span class="p">(</span><span class="n">w</span> <span class="n">http</span><span class="o">.</span><span class="n">ResponseWriter</span><span class="p">,</span> <span class="n">r</span> <span class="o">*</span><span class="n">http</span><span class="o">.</span><span class="n">Request</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">var</span> <span class="n">user</span> <span class="n">User</span>
+    <span class="k">defer</span> <span class="n">r</span><span class="o">.</span><span class="n">Body</span><span class="o">.</span><span class="n">Close</span><span class="p">()</span>
+    
+    <span class="c">// Limitar el tamaño del cuerpo</span>
+    <span class="n">maxBytes</span> <span class="o">:=</span> <span class="m">1</span> <span class="o">&lt;&lt;</span> <span class="m">20</span> <span class="c">// 1 MB</span>
+    <span class="n">r</span><span class="o">.</span><span class="n">Body</span> <span class="o">=</span> <span class="n">http</span><span class="o">.</span><span class="n">MaxBytesReader</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">Body</span><span class="p">,</span> <span class="kt">int64</span><span class="p">(</span><span class="n">maxBytes</span><span class="p">))</span>
+    
+    <span class="n">body</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">io</span><span class="o">.</span><span class="n">ReadAll</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">Body</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="n">http</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="s">"Cuerpo de solicitud demasiado grande"</span><span class="p">,</span> <span class="n">http</span><span class="o">.</span><span class="n">StatusRequestEntityTooLarge</span><span class="p">)</span>
+        <span class="k">return</span>
+    <span class="p">}</span>
+    
+    <span class="k">if</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">json</span><span class="o">.</span><span class="n">Unmarshal</span><span class="p">(</span><span class="n">body</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">user</span><span class="p">);</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="n">http</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="s">"Error al decodificar JSON"</span><span class="p">,</span> <span class="n">http</span><span class="o">.</span><span class="n">StatusBadRequest</span><span class="p">)</span>
+        <span class="k">return</span>
+    <span class="p">}</span>
+    
+    <span class="c">// Validar datos</span>
+    <span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">Name</span> <span class="o">==</span> <span class="s">""</span> <span class="o">||</span> <span class="n">user</span><span class="o">.</span><span class="n">Email</span> <span class="o">==</span> <span class="s">""</span> <span class="p">{</span>
+        <span class="n">http</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="s">"Nombre y email son requeridos"</span><span class="p">,</span> <span class="n">http</span><span class="o">.</span><span class="n">StatusBadRequest</span><span class="p">)</span>
+        <span class="k">return</span>
+    <span class="p">}</span>
+    
+    <span class="c">// Simular guardado en base de datos</span>
+    <span class="n">user</span><span class="o">.</span><span class="n">ID</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">Now</span><span class="p">()</span><span class="o">.</span><span class="n">Nanosecond</span><span class="p">()</span>
+    
+    <span class="n">w</span><span class="o">.</span><span class="n">Header</span><span class="p">()</span><span class="o">.</span><span class="n">Set</span><span class="p">(</span><span class="s">"Content-Type"</span><span class="p">,</span> <span class="s">"application/json"</span><span class="p">)</span>
+    <span class="n">w</span><span class="o">.</span><span class="n">WriteHeader</span><span class="p">(</span><span class="n">http</span><span class="o">.</span><span class="n">StatusCreated</span><span class="p">)</span>
+    <span class="n">json</span><span class="o">.</span><span class="n">NewEncoder</span><span class="p">(</span><span class="n">w</span><span class="p">)</span><span class="o">.</span><span class="n">Encode</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><strong>Mejores prácticas incluidas:</strong></p>
+
+<ol>
+  <li><strong>Configuración segura del servidor:</strong>
+    <ul>
+      <li>Timeouts apropiados (Read, Write, Idle)</li>
+      <li>Manejo de conexiones Keep-Alive</li>
+      <li>Apagado graceful</li>
+    </ul>
+  </li>
+  <li><strong>Manejo de errores:</strong>
+    <ul>
+      <li>Validación de entrada</li>
+      <li>Limitación del tamaño del request body</li>
+      <li>Manejo adecuado de códigos de estado HTTP</li>
+    </ul>
+  </li>
+  <li><strong>Seguridad:</strong>
+    <ul>
+      <li>Middleware de autenticación</li>
+      <li>Headers de seguridad (deberían agregarse más)</li>
+      <li>Validación de datos de entrada</li>
+    </ul>
+  </li>
+  <li><strong>Performance:</strong>
+    <ul>
+      <li>Uso de atomic para contadores concurrentes</li>
+      <li>Middleware de logging eficiente</li>
+      <li>Codificación JSON directa a la respuesta</li>
+    </ul>
+  </li>
+  <li><strong>Mantenibilidad:</strong>
+    <ul>
+      <li>Separación de responsabilidades</li>
+      <li>Middlewares reutilizables</li>
+      <li>Manejo centralizado de rutas</li>
+    </ul>
+  </li>
+  <li><strong>Concurrencia segura:</strong>
+    <ul>
+      <li>Uso de atomic para el contador</li>
+      <li>Manejadores stateless</li>
+    </ul>
+  </li>
+</ol>
+
+<p><strong>Prácticas recomendadas adicionales:</strong></p>
+
+<ol>
+  <li>
+    <p><strong>Seguridad avanzada:</strong></p>
+
+    <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">securityHeadersMiddleware</span><span class="p">(</span><span class="n">next</span> <span class="n">http</span><span class="o">.</span><span class="n">Handler</span><span class="p">)</span> <span class="n">http</span><span class="o">.</span><span class="n">Handler</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">http</span><span class="o">.</span><span class="n">HandlerFunc</span><span class="p">(</span><span class="k">func</span><span class="p">(</span><span class="n">w</span> <span class="n">http</span><span class="o">.</span><span class="n">ResponseWriter</span><span class="p">,</span> <span class="n">r</span> <span class="o">*</span><span class="n">http</span><span class="o">.</span><span class="n">Request</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">w</span><span class="o">.</span><span class="n">Header</span><span class="p">()</span><span class="o">.</span><span class="n">Set</span><span class="p">(</span><span class="s">"X-Content-Type-Options"</span><span class="p">,</span> <span class="s">"nosniff"</span><span class="p">)</span>
+        <span class="n">w</span><span class="o">.</span><span class="n">Header</span><span class="p">()</span><span class="o">.</span><span class="n">Set</span><span class="p">(</span><span class="s">"X-Frame-Options"</span><span class="p">,</span> <span class="s">"DENY"</span><span class="p">)</span>
+        <span class="n">w</span><span class="o">.</span><span class="n">Header</span><span class="p">()</span><span class="o">.</span><span class="n">Set</span><span class="p">(</span><span class="s">"Content-Security-Policy"</span><span class="p">,</span> <span class="s">"default-src 'self'"</span><span class="p">)</span>
+        <span class="n">next</span><span class="o">.</span><span class="n">ServeHTTP</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span>
+    <span class="p">})</span>
+<span class="p">}</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p><strong>Manejo de CORS:</strong></p>
+
+    <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">corsMiddleware</span><span class="p">(</span><span class="n">next</span> <span class="n">http</span><span class="o">.</span><span class="n">Handler</span><span class="p">)</span> <span class="n">http</span><span class="o">.</span><span class="n">Handler</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">http</span><span class="o">.</span><span class="n">HandlerFunc</span><span class="p">(</span><span class="k">func</span><span class="p">(</span><span class="n">w</span> <span class="n">http</span><span class="o">.</span><span class="n">ResponseWriter</span><span class="p">,</span> <span class="n">r</span> <span class="o">*</span><span class="n">http</span><span class="o">.</span><span class="n">Request</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">w</span><span class="o">.</span><span class="n">Header</span><span class="p">()</span><span class="o">.</span><span class="n">Set</span><span class="p">(</span><span class="s">"Access-Control-Allow-Origin"</span><span class="p">,</span> <span class="s">"*"</span><span class="p">)</span>
+        <span class="n">w</span><span class="o">.</span><span class="n">Header</span><span class="p">()</span><span class="o">.</span><span class="n">Set</span><span class="p">(</span><span class="s">"Access-Control-Allow-Methods"</span><span class="p">,</span> <span class="s">"GET, POST, OPTIONS"</span><span class="p">)</span>
+        <span class="n">w</span><span class="o">.</span><span class="n">Header</span><span class="p">()</span><span class="o">.</span><span class="n">Set</span><span class="p">(</span><span class="s">"Access-Control-Allow-Headers"</span><span class="p">,</span> <span class="s">"Content-Type, Authorization"</span><span class="p">)</span>
+           
+        <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">Method</span> <span class="o">==</span> <span class="n">http</span><span class="o">.</span><span class="n">MethodOptions</span> <span class="p">{</span>
+            <span class="n">w</span><span class="o">.</span><span class="n">WriteHeader</span><span class="p">(</span><span class="n">http</span><span class="o">.</span><span class="n">StatusNoContent</span><span class="p">)</span>
+            <span class="k">return</span>
+        <span class="p">}</span>
+           
+        <span class="n">next</span><span class="o">.</span><span class="n">ServeHTTP</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span>
+    <span class="p">})</span>
+<span class="p">}</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p><strong>Rate Limiting:</strong></p>
+
+    <p>```go
+func rateLimitMiddleware(next http.Handler) http.Handler {
+    limiter := NewLimiter(100) // 100 solicitudes por minuto
+    return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+        if !limiter.Allow() {
+            http.Error(w, “Límite de tasa excedido”, http.StatusTooManyRequests)
+            return
+        }
+        next.ServeHTTP(w, r)
+    })
+}</p>
+  </li>
+</ol>
+
+
+            </main>
+        </div>
+        
+        <!-- Componente flotante de GitHub -->
+<div class="github-floating">
+    <a href="https://github.com/" target="_blank" rel="noopener noreferrer" class="github-link" title="Ver en GitHub">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-github">
+            <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+        </svg>
+    </a>
+    
+    
+    <a href="https://github.com//MiguelP-Dev.github.io/blob/main/_pages/ejemplos/api-rest/http-server.md" target="_blank" rel="noopener noreferrer" class="edit-link" title="Editar esta página">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-2">
+            <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+        </svg>
+    </a>
+    
+</div>
+
+<style>
+    /* Estilos del componente SVG */
+    .github-corner:hover .octo-arm {
+        animation: octocat-wave 560ms ease-in-out;
+    }
+    
+    @keyframes octocat-wave {
+        0%, 100% { transform: rotate(0); }
+        20%, 60% { transform: rotate(-25deg); }
+        40%, 80% { transform: rotate(10deg); }
+    }
+    
+    @media (max-width: 500px) {
+        .github-corner:hover .octo-arm {
+            animation: none;
+        }
+        .github-corner .octo-arm {
+            animation: octocat-wave 560ms ease-in-out;
+        }
+    }
+</style>
+    </div>
+    
+    <script src="/assets/js/scripts.js"></script>
+</body>
+</html>

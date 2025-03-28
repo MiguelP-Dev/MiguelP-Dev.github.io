@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>bufio | Miguel's Programing Notes</title>
+    <link rel="stylesheet" href="/assets/css/styles.css">
+</head>
+<body>
+    <div class="app">
+        <nav class="navbar">
+    <div class="nav-container">
+        <a href="/" class="nav-brand">
+            Miguel's Programming Notes
+        </a>
+
+        <div class="nav-sections">
+            
+                
+                
+                
+                <a href="/paquetes/"
+                    class="nav-section active"
+                    data-section="paquetes">
+                    📦 Paquetes
+                </a>
+            
+                
+                
+                
+                <a href="/ejemplos/"
+                    class="nav-section "
+                    data-section="ejemplos">
+                    🧩 Ejemplos
+                </a>
+            
+        </div>
+    </div>
+</nav>
+        
+        <div class="container">
+            <button class="menu-toggle" aria-label="Abrir menú">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            
+            <aside class="sidebar" id="dynamic-sidebar">
+    <div class="sidebar-header">
+        <h3 class="sidebar-title">Miguel's Programming Notes</h3>
+    </div>
+    
+    <div class="sidebar-content">
+        
+            
+                <h3 class="sidebar-title">📦 Paquetes</h3>
+                <nav class="sidebar-nav">
+                    
+                        <a href="/paquetes/fmt/"
+                            class="sidebar-item "
+                            data-item="fmt">
+                            fmt
+                        </a>
+                    
+                        <a href="/paquetes/net/"
+                            class="sidebar-item "
+                            data-item="net-http">
+                            net/http
+                        </a>
+                    
+                        <a href="/paquetes/encoding/"
+                            class="sidebar-item "
+                            data-item="encoding">
+                            encoding
+                        </a>
+                    
+                </nav>
+            
+        
+            
+        
+    </div>
+</aside>
+            
+            <main class="content">
+                <h1 id="paquete-bufio-en-go">Paquete bufio en Go</h1>
+
+<p>El paquete <code class="language-plaintext highlighter-rouge">bufio</code> en Go implementa operaciones de E/S (entrada/salida) buffered, proporcionando una capa de abstracción que mejora el rendimiento al reducir el número de llamadas al sistema operativo. Este documento explora en profundidad sus características y usos.</p>
+
+<h2 id="1-conceptos-básicos">1. Conceptos Básicos</h2>
+
+<h3 id="11-qué-es-un-buffer">1.1 ¿Qué es un Buffer?</h3>
+
+<p>Un buffer es un área temporal de memoria que almacena datos antes de procesarlos. En el contexto de E/S:</p>
+
+<ul>
+  <li><strong>Entrada</strong>: Acumula datos antes de que el programa los lea</li>
+  <li><strong>Salida</strong>: Acumula datos antes de escribirlos al dispositivo final</li>
+</ul>
+
+<h3 id="12-ventajas-del-buffering">1.2 Ventajas del Buffering</h3>
+
+<ul>
+  <li>Reduce llamadas al sistema operativo</li>
+  <li>Mejora el rendimiento</li>
+  <li>Proporciona métodos convenientes para lectura/escritura</li>
+</ul>
+
+<h2 id="2-reader">2. Reader</h2>
+
+<h3 id="21-creación-y-uso-básico">2.1 Creación y Uso Básico</h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">ejemploBasicoReader</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">input</span> <span class="o">:=</span> <span class="n">strings</span><span class="o">.</span><span class="n">NewReader</span><span class="p">(</span><span class="s">"Hola</span><span class="se">\n</span><span class="s">mundo</span><span class="se">\n</span><span class="s">desde</span><span class="se">\n</span><span class="s">Go"</span><span class="p">)</span>
+    <span class="n">reader</span> <span class="o">:=</span> <span class="n">bufio</span><span class="o">.</span><span class="n">NewReader</span><span class="p">(</span><span class="n">input</span><span class="p">)</span>
+    
+    <span class="c">// Lectura línea por línea</span>
+    <span class="k">for</span> <span class="p">{</span>
+        <span class="n">linea</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">reader</span><span class="o">.</span><span class="n">ReadString</span><span class="p">(</span><span class="sc">'\n'</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">err</span> <span class="o">==</span> <span class="n">io</span><span class="o">.</span><span class="n">EOF</span> <span class="p">{</span>
+            <span class="k">break</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">Fatal</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>
+        <span class="p">}</span>
+        <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Leído: %s"</span><span class="p">,</span> <span class="n">linea</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>{% end raw %}</p>
+
+<h3 id="22-ejemplo-de-peek">2.2 Ejemplo de Peek</h3>
+<p>{% raw %}</p>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">ejemploPeek</span><span class="p">()</span> <span class="kt">error</span> <span class="p">{</span>
+    <span class="n">archivo</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">os</span><span class="o">.</span><span class="n">Open</span><span class="p">(</span><span class="s">"documento.txt"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">err</span>
+    <span class="p">}</span>
+    <span class="k">defer</span> <span class="n">archivo</span><span class="o">.</span><span class="n">Close</span><span class="p">()</span>
+
+    <span class="n">reader</span> <span class="o">:=</span> <span class="n">bufio</span><span class="o">.</span><span class="n">NewReader</span><span class="p">(</span><span class="n">archivo</span><span class="p">)</span>
+    
+    <span class="c">// Inspeccionar los primeros 5 bytes sin consumirlos</span>
+    <span class="n">datos</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">reader</span><span class="o">.</span><span class="n">Peek</span><span class="p">(</span><span class="m">5</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">err</span>
+    <span class="p">}</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Primeros 5 bytes: %s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">datos</span><span class="p">)</span>
+    
+    <span class="c">// Leer todo el contenido</span>
+    <span class="n">contenido</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">io</span><span class="o">.</span><span class="n">ReadAll</span><span class="p">(</span><span class="n">reader</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">err</span>
+    <span class="p">}</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Contenido completo: %s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">contenido</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="no">nil</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="23-manejo-de-errores-robusto">2.3 Manejo de Errores Robusto</h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">manejoErroresRobusto</span><span class="p">(</span><span class="n">reader</span> <span class="o">*</span><span class="n">bufio</span><span class="o">.</span><span class="n">Reader</span><span class="p">)</span> <span class="kt">error</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">{</span>
+        <span class="n">linea</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">reader</span><span class="o">.</span><span class="n">ReadString</span><span class="p">(</span><span class="sc">'\n'</span><span class="p">)</span>
+        
+        <span class="c">// Procesar la línea incluso en caso de EOF</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">linea</span><span class="p">)</span> <span class="o">&gt;</span> <span class="m">0</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">procesarLinea</span><span class="p">(</span><span class="n">linea</span><span class="p">);</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="n">fmt</span><span class="o">.</span><span class="n">Errorf</span><span class="p">(</span><span class="s">"error procesando línea: %w"</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+
+        <span class="k">if</span> <span class="n">err</span> <span class="o">==</span> <span class="n">io</span><span class="o">.</span><span class="n">EOF</span> <span class="p">{</span>
+            <span class="k">break</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="n">fmt</span><span class="o">.</span><span class="n">Errorf</span><span class="p">(</span><span class="s">"error leyendo: %w"</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="no">nil</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="3-funciones-comunes">3. Funciones Comunes</h2>
+
+<h3 id="31-newreader">3.1 <code class="language-plaintext highlighter-rouge">NewReader</code></h3>
+
+<ul>
+  <li>
+    <p>Crea un nuevo <code class="language-plaintext highlighter-rouge">Reader</code> que lee desde un <code class="language-plaintext highlighter-rouge">io.Reader</code> dado (como un archivo o una conexión de red) y lo envuelve en un buffer.</p>
+  </li>
+  <li>
+    <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">reader</span> <span class="o">:=</span> <span class="n">bufio</span><span class="o">.</span><span class="n">NewReader</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<h3 id="32-newwriter">3.2 <code class="language-plaintext highlighter-rouge">NewWriter</code></h3>
+
+<ul>
+  <li>
+    <p>Crea un nuevo <code class="language-plaintext highlighter-rouge">Writer</code> que escribe en un <code class="language-plaintext highlighter-rouge">io.Writer</code> dado (como un archivo o una conexión de red) y lo envuelve en un buffer.</p>
+  </li>
+  <li>
+    <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">writer</span> <span class="o">:=</span> <span class="n">bufio</span><span class="o">.</span><span class="n">NewWriter</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<h3 id="33-newscanner">3.3 <code class="language-plaintext highlighter-rouge">NewScanner</code></h3>
+
+<ul>
+  <li>
+    <p>Crea un nuevo <code class="language-plaintext highlighter-rouge">Scanner</code> para leer datos secuenciales como líneas o palabras desde un <code class="language-plaintext highlighter-rouge">io.Reader</code>.</p>
+  </li>
+  <li>
+    <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">scanner</span> <span class="o">:=</span> <span class="n">bufio</span><span class="o">.</span><span class="n">NewScanner</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<h3 id="34-peek">3.4 <code class="language-plaintext highlighter-rouge">Peek</code></h3>
+
+<ul>
+  <li>
+    <p>Permite ver los próximos <code class="language-plaintext highlighter-rouge">n</code> bytes del buffer sin avanzar el lector. Es útil para inspeccionar datos sin consumirlos.</p>
+  </li>
+  <li>
+    <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">bytes</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">reader</span><span class="o">.</span><span class="n">Peek</span><span class="p">(</span><span class="m">10</span><span class="p">)</span>
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<h3 id="35-readline">3.5 <code class="language-plaintext highlighter-rouge">ReadLine</code></h3>
+
+<ul>
+  <li>
+    <p>Lee una línea del <code class="language-plaintext highlighter-rouge">Reader</code>, excluyendo el delimitador de línea. Es útil para leer datos línea por línea.</p>
+  </li>
+  <li>
+    <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">line</span><span class="p">,</span> <span class="n">isPrefix</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">reader</span><span class="o">.</span><span class="n">ReadLine</span><span class="p">()</span>
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<h3 id="36-readbytes">3.6 <code class="language-plaintext highlighter-rouge">ReadBytes</code></h3>
+
+<ul>
+  <li>
+    <p>Lee hasta y incluyendo el delimitador especificado y devuelve un slice de bytes.</p>
+  </li>
+  <li>
+    <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">bytes</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">reader</span><span class="o">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="sc">'\n'</span><span class="p">)</span>
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<h3 id="37-readstring">3.7 <code class="language-plaintext highlighter-rouge">ReadString</code></h3>
+
+<ul>
+  <li>
+    <p>Lee hasta e incluyendo el delimitador especificado y devuelve una cadena.</p>
+  </li>
+  <li>
+    <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">line</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">reader</span><span class="o">.</span><span class="n">ReadString</span><span class="p">(</span><span class="sc">'\n'</span><span class="p">)</span>
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<h3 id="38-write">3.8 <code class="language-plaintext highlighter-rouge">Write</code></h3>
+
+<ul>
+  <li>
+    <p>Escribe un slice de bytes en el buffer del <code class="language-plaintext highlighter-rouge">Writer</code>. Debes llamar a <code class="language-plaintext highlighter-rouge">Flush</code> para asegurarte de que los datos se escriban en el destino subyacente.</p>
+  </li>
+  <li>
+    <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">_</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">writer</span><span class="o">.</span><span class="n">Write</span><span class="p">([]</span><span class="kt">byte</span><span class="p">(</span><span class="s">"hello, world"</span><span class="p">))</span>
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<h3 id="39-writestring">3.9 <code class="language-plaintext highlighter-rouge">WriteString</code></h3>
+
+<ul>
+  <li>
+    <p>Escribe una cadena en el buffer del <code class="language-plaintext highlighter-rouge">Writer</code>. Debes llamar a <code class="language-plaintext highlighter-rouge">Flush</code> para asegurarte de que los datos se escriban en el destino subyacente.</p>
+  </li>
+  <li>
+    <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">_</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">writer</span><span class="o">.</span><span class="n">WriteString</span><span class="p">(</span><span class="s">"hello, world"</span><span class="p">)</span>
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<h3 id="310-flush">3.10 <code class="language-plaintext highlighter-rouge">Flush</code></h3>
+
+<ul>
+  <li>
+    <p>Vacía el contenido del buffer del <code class="language-plaintext highlighter-rouge">Writer</code> y lo escribe en el destino subyacente.</p>
+  </li>
+  <li>
+    <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">err</span> <span class="o">:=</span> <span class="n">writer</span><span class="o">.</span><span class="n">Flush</span><span class="p">()</span>
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<h3 id="311-scannersplit">3.11 <code class="language-plaintext highlighter-rouge">Scanner.Split</code></h3>
+
+<ul>
+  <li>
+    <p>Configura el <code class="language-plaintext highlighter-rouge">Scanner</code> para dividir el texto según una función personalizada. El paquete <code class="language-plaintext highlighter-rouge">bufio</code> proporciona varias funciones de división predefinidas como <code class="language-plaintext highlighter-rouge">ScanLines</code>, <code class="language-plaintext highlighter-rouge">ScanWords</code>, y <code class="language-plaintext highlighter-rouge">ScanRunes</code>.</p>
+  </li>
+  <li>
+    <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">scanner</span><span class="o">.</span><span class="n">Split</span><span class="p">(</span><span class="n">bufio</span><span class="o">.</span><span class="n">ScanWords</span><span class="p">)</span>
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<h3 id="312-scannerscan">3.12 <code class="language-plaintext highlighter-rouge">Scanner.Scan</code></h3>
+
+<ul>
+  <li>
+    <p>Avanza el <code class="language-plaintext highlighter-rouge">Scanner</code> al próximo token, que puede ser una línea, una palabra, o cualquier otra unidad definida por la función de división.</p>
+  </li>
+  <li>
+    <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">for</span> <span class="n">scanner</span><span class="o">.</span><span class="n">Scan</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">scanner</span><span class="o">.</span><span class="n">Text</span><span class="p">())</span>
+<span class="p">}</span>
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<h3 id="313-scannertext">3.13 <code class="language-plaintext highlighter-rouge">Scanner.Text</code></h3>
+
+<ul>
+  <li>
+    <p>Devuelve el token más reciente leído por el <code class="language-plaintext highlighter-rouge">Scanner</code> como una cadena.</p>
+  </li>
+  <li>
+    <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">text</span> <span class="o">:=</span> <span class="n">scanner</span><span class="o">.</span><span class="n">Text</span><span class="p">()</span>
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<h3 id="314-readerread">3.14 <code class="language-plaintext highlighter-rouge">Reader.Read</code></h3>
+
+<ul>
+  <li>
+    <p>Lee datos en un buffer de bytes. Similar a <code class="language-plaintext highlighter-rouge">io.Reader</code> pero con un buffer subyacente.</p>
+  </li>
+  <li>
+    <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">n</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">reader</span><span class="o">.</span><span class="n">Read</span><span class="p">(</span><span class="n">buf</span><span class="p">)</span>
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<h3 id="315-writerbuffered">3.15 <code class="language-plaintext highlighter-rouge">Writer.Buffered</code></h3>
+
+<ul>
+  <li>
+    <p>Devuelve el número de bytes que actualmente están almacenados en el buffer y que aún no se han escrito al destino subyacente.</p>
+  </li>
+  <li>
+    <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">buffered</span> <span class="o">:=</span> <span class="n">writer</span><span class="o">.</span><span class="n">Buffered</span><span class="p">()</span>
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<h3 id="316-ejemplo-de-writer">3.16 Ejemplo de Writer</h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">ejemploWriter</span><span class="p">()</span> <span class="kt">error</span> <span class="p">{</span>
+    <span class="n">archivo</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">os</span><span class="o">.</span><span class="n">Create</span><span class="p">(</span><span class="s">"salida.txt"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">err</span>
+    <span class="p">}</span>
+    <span class="k">defer</span> <span class="n">archivo</span><span class="o">.</span><span class="n">Close</span><span class="p">()</span>
+
+    <span class="n">writer</span> <span class="o">:=</span> <span class="n">bufio</span><span class="o">.</span><span class="n">NewWriter</span><span class="p">(</span><span class="n">archivo</span><span class="p">)</span>
+    
+    <span class="c">// Escribir varias líneas</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="o">:=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="m">5</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span> <span class="p">{</span>
+        <span class="n">fmt</span><span class="o">.</span><span class="n">Fprintf</span><span class="p">(</span><span class="n">writer</span><span class="p">,</span> <span class="s">"Línea %d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">i</span><span class="o">+</span><span class="m">1</span><span class="p">)</span>
+    <span class="p">}</span>
+    
+    <span class="c">// No olvidar hacer flush</span>
+    <span class="k">return</span> <span class="n">writer</span><span class="o">.</span><span class="n">Flush</span><span class="p">()</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="317-ejemplo-de-writer-avanzado">3.17 Ejemplo de Writer Avanzado</h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">ejemploWriterAvanzado</span><span class="p">()</span> <span class="kt">error</span> <span class="p">{</span>
+    <span class="n">archivo</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">os</span><span class="o">.</span><span class="n">Create</span><span class="p">(</span><span class="s">"datos_grandes.txt"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">err</span>
+    <span class="p">}</span>
+    <span class="k">defer</span> <span class="n">archivo</span><span class="o">.</span><span class="n">Close</span><span class="p">()</span>
+
+    <span class="n">writer</span> <span class="o">:=</span> <span class="n">bufio</span><span class="o">.</span><span class="n">NewWriterSize</span><span class="p">(</span><span class="n">archivo</span><span class="p">,</span> <span class="m">8192</span><span class="p">)</span> <span class="c">// Buffer de 8KB</span>
+    
+    <span class="k">for</span> <span class="n">i</span> <span class="o">:=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="m">1000</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span> <span class="p">{</span>
+        <span class="n">datos</span> <span class="o">:=</span> <span class="n">fmt</span><span class="o">.</span><span class="n">Sprintf</span><span class="p">(</span><span class="s">"Dato %d: %s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">strings</span><span class="o">.</span><span class="n">Repeat</span><span class="p">(</span><span class="s">"*"</span><span class="p">,</span> <span class="m">100</span><span class="p">))</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">writer</span><span class="o">.</span><span class="n">WriteString</span><span class="p">(</span><span class="n">datos</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="n">err</span>
+        <span class="p">}</span>
+        
+        <span class="c">// Hacer flush si el buffer está casi lleno</span>
+        <span class="k">if</span> <span class="n">writer</span><span class="o">.</span><span class="n">Available</span><span class="p">()</span> <span class="o">&lt;</span> <span class="m">1000</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">writer</span><span class="o">.</span><span class="n">Flush</span><span class="p">();</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="n">err</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    
+    <span class="k">return</span> <span class="n">writer</span><span class="o">.</span><span class="n">Flush</span><span class="p">()</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="318-ejemplo-de-scanner">3.18 Ejemplo de Scanner</h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">ejemploScanner</span><span class="p">()</span> <span class="kt">error</span> <span class="p">{</span>
+    <span class="n">archivo</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">os</span><span class="o">.</span><span class="n">Open</span><span class="p">(</span><span class="s">"datos.csv"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">err</span>
+    <span class="p">}</span>
+    <span class="k">defer</span> <span class="n">archivo</span><span class="o">.</span><span class="n">Close</span><span class="p">()</span>
+
+    <span class="n">scanner</span> <span class="o">:=</span> <span class="n">bufio</span><span class="o">.</span><span class="n">NewScanner</span><span class="p">(</span><span class="n">archivo</span><span class="p">)</span>
+    
+    <span class="c">// Configurar un buffer más grande para líneas largas</span>
+    <span class="k">const</span> <span class="n">maxCapacity</span> <span class="o">=</span> <span class="m">512</span> <span class="o">*</span> <span class="m">1024</span> <span class="c">// 512KB</span>
+    <span class="n">buf</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">byte</span><span class="p">,</span> <span class="n">maxCapacity</span><span class="p">)</span>
+    <span class="n">scanner</span><span class="o">.</span><span class="n">Buffer</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span> <span class="n">maxCapacity</span><span class="p">)</span>
+
+    <span class="c">// Configurar split personalizado</span>
+    <span class="n">scanner</span><span class="o">.</span><span class="n">Split</span><span class="p">(</span><span class="k">func</span><span class="p">(</span><span class="n">data</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="n">atEOF</span> <span class="kt">bool</span><span class="p">)</span> <span class="p">(</span><span class="n">advance</span> <span class="kt">int</span><span class="p">,</span> <span class="n">token</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="n">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="n">atEOF</span> <span class="o">&amp;&amp;</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">==</span> <span class="m">0</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="m">0</span><span class="p">,</span> <span class="no">nil</span><span class="p">,</span> <span class="no">nil</span>
+        <span class="p">}</span>
+        
+        <span class="c">// Buscar el delimitador ';'</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">:=</span> <span class="n">bytes</span><span class="o">.</span><span class="n">IndexByte</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="sc">';'</span><span class="p">);</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="m">0</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="n">i</span> <span class="o">+</span> <span class="m">1</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="m">0</span><span class="o">:</span><span class="n">i</span><span class="p">],</span> <span class="no">nil</span>
+        <span class="p">}</span>
+        
+        <span class="k">if</span> <span class="n">atEOF</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">),</span> <span class="n">data</span><span class="p">,</span> <span class="no">nil</span>
+        <span class="p">}</span>
+        
+        <span class="k">return</span> <span class="m">0</span><span class="p">,</span> <span class="no">nil</span><span class="p">,</span> <span class="no">nil</span>
+    <span class="p">})</span>
+
+    <span class="n">lineNum</span> <span class="o">:=</span> <span class="m">0</span>
+    <span class="k">for</span> <span class="n">scanner</span><span class="o">.</span><span class="n">Scan</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">lineNum</span><span class="o">++</span>
+        <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Campo %d: %s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">lineNum</span><span class="p">,</span> <span class="n">scanner</span><span class="o">.</span><span class="n">Text</span><span class="p">())</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">scanner</span><span class="o">.</span><span class="n">Err</span><span class="p">()</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="319-ejemplo-de-procesamiento-paralelo">3.19 Ejemplo de Procesamiento Paralelo</h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">procesarArchivosParalelo</span><span class="p">(</span><span class="n">archivos</span> <span class="p">[]</span><span class="kt">string</span><span class="p">)</span> <span class="kt">error</span> <span class="p">{</span>
+    <span class="k">var</span> <span class="n">wg</span> <span class="n">sync</span><span class="o">.</span><span class="n">WaitGroup</span>
+    <span class="n">errChan</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="k">chan</span> <span class="kt">error</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">archivos</span><span class="p">))</span>
+
+    <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">archivo</span> <span class="o">:=</span> <span class="k">range</span> <span class="n">archivos</span> <span class="p">{</span>
+        <span class="n">wg</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="m">1</span><span class="p">)</span>
+        <span class="k">go</span> <span class="k">func</span><span class="p">(</span><span class="n">nombre</span> <span class="kt">string</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">defer</span> <span class="n">wg</span><span class="o">.</span><span class="n">Done</span><span class="p">()</span>
+            
+            <span class="n">file</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">os</span><span class="o">.</span><span class="n">Open</span><span class="p">(</span><span class="n">nombre</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+                <span class="n">errChan</span> <span class="o">&lt;-</span> <span class="n">fmt</span><span class="o">.</span><span class="n">Errorf</span><span class="p">(</span><span class="s">"error abriendo %s: %w"</span><span class="p">,</span> <span class="n">nombre</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span>
+                <span class="k">return</span>
+            <span class="p">}</span>
+            <span class="k">defer</span> <span class="n">file</span><span class="o">.</span><span class="n">Close</span><span class="p">()</span>
+
+            <span class="n">scanner</span> <span class="o">:=</span> <span class="n">bufio</span><span class="o">.</span><span class="n">NewScanner</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">scanner</span><span class="o">.</span><span class="n">Scan</span><span class="p">()</span> <span class="p">{</span>
+                <span class="c">// Procesar línea</span>
+                <span class="n">procesarLinea</span><span class="p">(</span><span class="n">scanner</span><span class="o">.</span><span class="n">Text</span><span class="p">())</span>
+            <span class="p">}</span>
+
+            <span class="k">if</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">scanner</span><span class="o">.</span><span class="n">Err</span><span class="p">();</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+                <span class="n">errChan</span> <span class="o">&lt;-</span> <span class="n">fmt</span><span class="o">.</span><span class="n">Errorf</span><span class="p">(</span><span class="s">"error escaneando %s: %w"</span><span class="p">,</span> <span class="n">nombre</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span>
+            <span class="p">}</span>
+        <span class="p">}(</span><span class="n">archivo</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="k">go</span> <span class="k">func</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">wg</span><span class="o">.</span><span class="n">Wait</span><span class="p">()</span>
+        <span class="nb">close</span><span class="p">(</span><span class="n">errChan</span><span class="p">)</span>
+    <span class="p">}()</span>
+
+    <span class="c">// Recolectar errores</span>
+    <span class="k">for</span> <span class="n">err</span> <span class="o">:=</span> <span class="k">range</span> <span class="n">errChan</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="n">err</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="no">nil</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="n">procesarLinea</span><span class="p">(</span><span class="n">linea</span> <span class="kt">string</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c">// Implementar procesamiento específico</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="320-ejemplo-de-optimización-de-memoria">3.20 Ejemplo de Optimización de Memoria</h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">optimizacionMemoria</span><span class="p">()</span> <span class="kt">error</span> <span class="p">{</span>
+    <span class="n">archivo</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">os</span><span class="o">.</span><span class="n">Open</span><span class="p">(</span><span class="s">"archivo_grande.txt"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">err</span>
+    <span class="p">}</span>
+    <span class="k">defer</span> <span class="n">archivo</span><span class="o">.</span><span class="n">Close</span><span class="p">()</span>
+
+    <span class="k">const</span> <span class="n">bufferSize</span> <span class="o">=</span> <span class="m">4096</span>
+    <span class="n">reader</span> <span class="o">:=</span> <span class="n">bufio</span><span class="o">.</span><span class="n">NewReaderSize</span><span class="p">(</span><span class="n">archivo</span><span class="p">,</span> <span class="n">bufferSize</span><span class="p">)</span>
+    
+    <span class="n">buffer</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">byte</span><span class="p">,</span> <span class="m">1024</span><span class="p">)</span>
+    <span class="k">for</span> <span class="p">{</span>
+        <span class="n">n</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">reader</span><span class="o">.</span><span class="n">Read</span><span class="p">(</span><span class="n">buffer</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">err</span> <span class="o">==</span> <span class="n">io</span><span class="o">.</span><span class="n">EOF</span> <span class="p">{</span>
+            <span class="k">break</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="n">err</span>
+        <span class="p">}</span>
+        
+        <span class="c">// Procesar solo los bytes leídos</span>
+        <span class="k">if</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">procesarBytes</span><span class="p">(</span><span class="n">buffer</span><span class="p">[</span><span class="o">:</span><span class="n">n</span><span class="p">]);</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="n">err</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="no">nil</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="tips-y-consideraciones">Tips y Consideraciones</h3>
+
+<ul>
+  <li>Tamaño del Buffer
+    <ul>
+      <li>Ajusta el tamaño según tus necesidades</li>
+      <li>Considera la memoria disponible</li>
+      <li>Balance entre rendimiento y uso de recursos</li>
+      <li>Flush Regular</li>
+    </ul>
+  </li>
+  <li>Realiza flush periódicamente en escrituras largas
+    <ul>
+      <li>No olvides el flush final</li>
+      <li>Considera flush en puntos de sincronización</li>
+      <li>Manejo de Recursos</li>
+    </ul>
+  </li>
+  <li>Cierra siempre los archivos
+    <ul>
+      <li>Utiliza defer para garantizar la limpieza</li>
+      <li>Considera el uso de context para operaciones cancelables</li>
+      <li>Rendimiento</li>
+    </ul>
+  </li>
+  <li>Evita crear buffers innecesarios
+    <ul>
+      <li>Reutiliza buffers cuando sea posible</li>
+      <li>Considera la concurrencia para operaciones intensivas</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="ejemplos-de-casos-de-uso-comunes">Ejemplos de Casos de Uso Comunes</h3>
+
+<ul>
+  <li>Procesamiento de Logs</li>
+  <li>Parsing de CSV</li>
+  <li>Procesamiento de Streams</li>
+  <li>Lectura de Configuraciones</li>
+</ul>
+
+<p>Estas funciones te permiten manejar entradas y salidas de manera más eficiente utilizando buffers, lo que puede mejorar el rendimiento de tus aplicaciones. Si necesitas más detalles o ejemplos específicos, ¡házmelo saber! Estoy aquí para ayudarte.</p>
+
+            </main>
+        </div>
+        
+        <!-- Componente flotante de GitHub -->
+<div class="github-floating">
+    <a href="https://github.com/" target="_blank" rel="noopener noreferrer" class="github-link" title="Ver en GitHub">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-github">
+            <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+        </svg>
+    </a>
+    
+    
+    <a href="https://github.com//MiguelP-Dev.github.io/blob/main/_pages/paquetes/bufio.md" target="_blank" rel="noopener noreferrer" class="edit-link" title="Editar esta página">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-2">
+            <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+        </svg>
+    </a>
+    
+</div>
+
+<style>
+    /* Estilos del componente SVG */
+    .github-corner:hover .octo-arm {
+        animation: octocat-wave 560ms ease-in-out;
+    }
+    
+    @keyframes octocat-wave {
+        0%, 100% { transform: rotate(0); }
+        20%, 60% { transform: rotate(-25deg); }
+        40%, 80% { transform: rotate(10deg); }
+    }
+    
+    @media (max-width: 500px) {
+        .github-corner:hover .octo-arm {
+            animation: none;
+        }
+        .github-corner .octo-arm {
+            animation: octocat-wave 560ms ease-in-out;
+        }
+    }
+</style>
+    </div>
+    
+    <script src="/assets/js/scripts.js"></script>
+</body>
+</html>

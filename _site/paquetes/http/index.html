@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>http | Miguel's Programing Notes</title>
+    <link rel="stylesheet" href="/assets/css/styles.css">
+</head>
+<body>
+    <div class="app">
+        <nav class="navbar">
+    <div class="nav-container">
+        <a href="/" class="nav-brand">
+            Miguel's Programming Notes
+        </a>
+
+        <div class="nav-sections">
+            
+                
+                
+                
+                <a href="/paquetes/"
+                    class="nav-section active"
+                    data-section="paquetes">
+                    📦 Paquetes
+                </a>
+            
+                
+                
+                
+                <a href="/ejemplos/"
+                    class="nav-section "
+                    data-section="ejemplos">
+                    🧩 Ejemplos
+                </a>
+            
+        </div>
+    </div>
+</nav>
+        
+        <div class="container">
+            <button class="menu-toggle" aria-label="Abrir menú">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            
+            <aside class="sidebar" id="dynamic-sidebar">
+    <div class="sidebar-header">
+        <h3 class="sidebar-title">Miguel's Programming Notes</h3>
+    </div>
+    
+    <div class="sidebar-content">
+        
+            
+                <h3 class="sidebar-title">📦 Paquetes</h3>
+                <nav class="sidebar-nav">
+                    
+                        <a href="/paquetes/fmt/"
+                            class="sidebar-item "
+                            data-item="fmt">
+                            fmt
+                        </a>
+                    
+                        <a href="/paquetes/net/"
+                            class="sidebar-item "
+                            data-item="net-http">
+                            net/http
+                        </a>
+                    
+                        <a href="/paquetes/encoding/"
+                            class="sidebar-item "
+                            data-item="encoding">
+                            encoding
+                        </a>
+                    
+                </nav>
+            
+        
+            
+        
+    </div>
+</aside>
+            
+            <main class="content">
+                <h1 id="paquete-http-en-go-guía-completa">Paquete <code class="language-plaintext highlighter-rouge">http</code> en Go: Guía Completa</h1>
+
+<p>El paquete <code class="language-plaintext highlighter-rouge">net/http</code> proporciona una implementación HTTP para clientes y servidores web en Go. Este documento ofrece una visión detallada de sus características más importantes.</p>
+
+<h2 id="1-servidor-http-básico">1. Servidor HTTP Básico</h2>
+
+<h3 id="11-iniciar-un-servidor">1.1 Iniciar un Servidor</h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="p">(</span>
+    <span class="s">"fmt"</span>
+    <span class="s">"log"</span>
+    <span class="s">"net/http"</span>
+<span class="p">)</span>
+
+<span class="k">func</span> <span class="n">holaHandler</span><span class="p">(</span><span class="n">w</span> <span class="n">http</span><span class="o">.</span><span class="n">ResponseWriter</span><span class="p">,</span> <span class="n">r</span> <span class="o">*</span><span class="n">http</span><span class="o">.</span><span class="n">Request</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Fprintf</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="s">"¡Hola, mundo!"</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">http</span><span class="o">.</span><span class="n">HandleFunc</span><span class="p">(</span><span class="s">"/hola"</span><span class="p">,</span> <span class="n">holaHandler</span><span class="p">)</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">Fatal</span><span class="p">(</span><span class="n">http</span><span class="o">.</span><span class="n">ListenAndServe</span><span class="p">(</span><span class="s">":8080"</span><span class="p">,</span> <span class="no">nil</span><span class="p">))</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="12-servidor-con-configuración-personalizada">1.2 Servidor con Configuración Personalizada</h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">mux</span> <span class="o">:=</span> <span class="n">http</span><span class="o">.</span><span class="n">NewServeMux</span><span class="p">()</span>
+    <span class="n">mux</span><span class="o">.</span><span class="n">HandleFunc</span><span class="p">(</span><span class="s">"/api/usuarios"</span><span class="p">,</span> <span class="n">usuariosHandler</span><span class="p">)</span>
+    
+    <span class="n">server</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="n">http</span><span class="o">.</span><span class="n">Server</span><span class="p">{</span>
+        <span class="n">Addr</span><span class="o">:</span>         <span class="s">":8080"</span><span class="p">,</span>
+        <span class="n">Handler</span><span class="o">:</span>      <span class="n">mux</span><span class="p">,</span>
+        <span class="n">ReadTimeout</span><span class="o">:</span>  <span class="m">5</span> <span class="o">*</span> <span class="n">time</span><span class="o">.</span><span class="n">Second</span><span class="p">,</span>
+        <span class="n">WriteTimeout</span><span class="o">:</span> <span class="m">10</span> <span class="o">*</span> <span class="n">time</span><span class="o">.</span><span class="n">Second</span><span class="p">,</span>
+        <span class="n">IdleTimeout</span><span class="o">:</span>  <span class="m">120</span> <span class="o">*</span> <span class="n">time</span><span class="o">.</span><span class="n">Second</span><span class="p">,</span>
+    <span class="p">}</span>
+    
+    <span class="n">log</span><span class="o">.</span><span class="n">Fatal</span><span class="p">(</span><span class="n">server</span><span class="o">.</span><span class="n">ListenAndServe</span><span class="p">())</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="2-enrutamiento">2. Enrutamiento</h2>
+
+<h3 id="21-mux-básico">2.1 Mux Básico</h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">mux</span> <span class="o">:=</span> <span class="n">http</span><span class="o">.</span><span class="n">NewServeMux</span><span class="p">()</span>
+    
+    <span class="n">mux</span><span class="o">.</span><span class="n">HandleFunc</span><span class="p">(</span><span class="s">"/"</span><span class="p">,</span> <span class="n">homeHandler</span><span class="p">)</span>
+    <span class="n">mux</span><span class="o">.</span><span class="n">HandleFunc</span><span class="p">(</span><span class="s">"/api/"</span><span class="p">,</span> <span class="n">apiHandler</span><span class="p">)</span>
+    <span class="n">mux</span><span class="o">.</span><span class="n">HandleFunc</span><span class="p">(</span><span class="s">"/api/productos/"</span><span class="p">,</span> <span class="n">productosHandler</span><span class="p">)</span>
+    
+    <span class="n">log</span><span class="o">.</span><span class="n">Fatal</span><span class="p">(</span><span class="n">http</span><span class="o">.</span><span class="n">ListenAndServe</span><span class="p">(</span><span class="s">":8080"</span><span class="p">,</span> <span class="n">mux</span><span class="p">))</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="22-manejador-personalizado">2.2 Manejador Personalizado</h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">type</span> <span class="n">usuarioHandler</span> <span class="k">struct</span> <span class="p">{</span>
+    <span class="n">db</span> <span class="o">*</span><span class="n">sql</span><span class="o">.</span><span class="n">DB</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="p">(</span><span class="n">h</span> <span class="o">*</span><span class="n">usuarioHandler</span><span class="p">)</span> <span class="n">ServeHTTP</span><span class="p">(</span><span class="n">w</span> <span class="n">http</span><span class="o">.</span><span class="n">ResponseWriter</span><span class="p">,</span> <span class="n">r</span> <span class="o">*</span><span class="n">http</span><span class="o">.</span><span class="n">Request</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">switch</span> <span class="n">r</span><span class="o">.</span><span class="n">Method</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="s">"GET"</span><span class="o">:</span>
+        <span class="n">h</span><span class="o">.</span><span class="n">listar</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span>
+    <span class="k">case</span> <span class="s">"POST"</span><span class="o">:</span>
+        <span class="n">h</span><span class="o">.</span><span class="n">crear</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span>
+    <span class="k">default</span><span class="o">:</span>
+        <span class="n">http</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="s">"Método no permitido"</span><span class="p">,</span> <span class="n">http</span><span class="o">.</span><span class="n">StatusMethodNotAllowed</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">db</span><span class="p">,</span> <span class="n">_</span> <span class="o">:=</span> <span class="n">sql</span><span class="o">.</span><span class="n">Open</span><span class="p">(</span><span class="s">"postgres"</span><span class="p">,</span> <span class="s">"..."</span><span class="p">)</span>
+    <span class="n">mux</span> <span class="o">:=</span> <span class="n">http</span><span class="o">.</span><span class="n">NewServeMux</span><span class="p">()</span>
+    <span class="n">mux</span><span class="o">.</span><span class="n">Handle</span><span class="p">(</span><span class="s">"/usuarios/"</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">usuarioHandler</span><span class="p">{</span><span class="n">db</span><span class="o">:</span> <span class="n">db</span><span class="p">})</span>
+    
+    <span class="n">http</span><span class="o">.</span><span class="n">ListenAndServe</span><span class="p">(</span><span class="s">":8080"</span><span class="p">,</span> <span class="n">mux</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="3-manejo-de-solicitudes">3. Manejo de Solicitudes</h2>
+
+<h3 id="31-análisis-de-parámetros">3.1 Análisis de Parámetros</h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">buscarHandler</span><span class="p">(</span><span class="n">w</span> <span class="n">http</span><span class="o">.</span><span class="n">ResponseWriter</span><span class="p">,</span> <span class="n">r</span> <span class="o">*</span><span class="n">http</span><span class="o">.</span><span class="n">Request</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c">// Parámetros de consulta URL</span>
+    <span class="n">query</span> <span class="o">:=</span> <span class="n">r</span><span class="o">.</span><span class="n">URL</span><span class="o">.</span><span class="n">Query</span><span class="p">()</span>
+    <span class="n">termino</span> <span class="o">:=</span> <span class="n">query</span><span class="o">.</span><span class="n">Get</span><span class="p">(</span><span class="s">"q"</span><span class="p">)</span>
+    <span class="n">limite</span><span class="p">,</span> <span class="n">_</span> <span class="o">:=</span> <span class="n">strconv</span><span class="o">.</span><span class="n">Atoi</span><span class="p">(</span><span class="n">query</span><span class="o">.</span><span class="n">Get</span><span class="p">(</span><span class="s">"limite"</span><span class="p">))</span>
+    
+    <span class="c">// Parámetros de ruta</span>
+    <span class="n">id</span> <span class="o">:=</span> <span class="n">strings</span><span class="o">.</span><span class="n">TrimPrefix</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">URL</span><span class="o">.</span><span class="n">Path</span><span class="p">,</span> <span class="s">"/productos/"</span><span class="p">)</span>
+    
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Fprintf</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="s">"Búsqueda: %s, límite: %d, ID: %s"</span><span class="p">,</span> <span class="n">termino</span><span class="p">,</span> <span class="n">limite</span><span class="p">,</span> <span class="n">id</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="32-lectura-del-cuerpo">3.2 Lectura del Cuerpo</h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">crearUsuarioHandler</span><span class="p">(</span><span class="n">w</span> <span class="n">http</span><span class="o">.</span><span class="n">ResponseWriter</span><span class="p">,</span> <span class="n">r</span> <span class="o">*</span><span class="n">http</span><span class="o">.</span><span class="n">Request</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">Method</span> <span class="o">!=</span> <span class="s">"POST"</span> <span class="p">{</span>
+        <span class="n">http</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="s">"Método no permitido"</span><span class="p">,</span> <span class="n">http</span><span class="o">.</span><span class="n">StatusMethodNotAllowed</span><span class="p">)</span>
+        <span class="k">return</span>
+    <span class="p">}</span>
+    
+    <span class="c">// Limitar tamaño del body</span>
+    <span class="n">r</span><span class="o">.</span><span class="n">Body</span> <span class="o">=</span> <span class="n">http</span><span class="o">.</span><span class="n">MaxBytesReader</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">Body</span><span class="p">,</span> <span class="m">1</span><span class="o">&lt;&lt;</span><span class="m">20</span><span class="p">)</span> <span class="c">// 1MB</span>
+    
+    <span class="k">var</span> <span class="n">usuario</span> <span class="k">struct</span> <span class="p">{</span>
+        <span class="n">Nombre</span> <span class="kt">string</span> <span class="s">`json:"nombre"`</span>
+        <span class="n">Email</span>  <span class="kt">string</span> <span class="s">`json:"email"`</span>
+    <span class="p">}</span>
+    
+    <span class="n">decoder</span> <span class="o">:=</span> <span class="n">json</span><span class="o">.</span><span class="n">NewDecoder</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">Body</span><span class="p">)</span>
+    <span class="n">decoder</span><span class="o">.</span><span class="n">DisallowUnknownFields</span><span class="p">()</span>
+    
+    <span class="k">if</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">decoder</span><span class="o">.</span><span class="n">Decode</span><span class="p">(</span><span class="o">&amp;</span><span class="n">usuario</span><span class="p">);</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="n">http</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="s">"JSON inválido: "</span><span class="o">+</span><span class="n">err</span><span class="o">.</span><span class="n">Error</span><span class="p">(),</span> <span class="n">http</span><span class="o">.</span><span class="n">StatusBadRequest</span><span class="p">)</span>
+        <span class="k">return</span>
+    <span class="p">}</span>
+    
+    <span class="c">// Validar campos</span>
+    <span class="k">if</span> <span class="n">usuario</span><span class="o">.</span><span class="n">Nombre</span> <span class="o">==</span> <span class="s">""</span> <span class="o">||</span> <span class="n">usuario</span><span class="o">.</span><span class="n">Email</span> <span class="o">==</span> <span class="s">""</span> <span class="p">{</span>
+        <span class="n">http</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="s">"Campos requeridos"</span><span class="p">,</span> <span class="n">http</span><span class="o">.</span><span class="n">StatusBadRequest</span><span class="p">)</span>
+        <span class="k">return</span>
+    <span class="p">}</span>
+    
+    <span class="c">// Procesar...</span>
+    <span class="n">w</span><span class="o">.</span><span class="n">WriteHeader</span><span class="p">(</span><span class="n">http</span><span class="o">.</span><span class="n">StatusCreated</span><span class="p">)</span>
+    <span class="n">json</span><span class="o">.</span><span class="n">NewEncoder</span><span class="p">(</span><span class="n">w</span><span class="p">)</span><span class="o">.</span><span class="n">Encode</span><span class="p">(</span><span class="k">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">string</span><span class="p">{</span><span class="s">"status"</span><span class="o">:</span> <span class="s">"creado"</span><span class="p">})</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="4-middleware">4. Middleware</h2>
+
+<h3 id="41-logging-middleware">4.1 Logging Middleware</h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">loggingMiddleware</span><span class="p">(</span><span class="n">next</span> <span class="n">http</span><span class="o">.</span><span class="n">Handler</span><span class="p">)</span> <span class="n">http</span><span class="o">.</span><span class="n">Handler</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">http</span><span class="o">.</span><span class="n">HandlerFunc</span><span class="p">(</span><span class="k">func</span><span class="p">(</span><span class="n">w</span> <span class="n">http</span><span class="o">.</span><span class="n">ResponseWriter</span><span class="p">,</span> <span class="n">r</span> <span class="o">*</span><span class="n">http</span><span class="o">.</span><span class="n">Request</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">inicio</span> <span class="o">:=</span> <span class="n">time</span><span class="o">.</span><span class="n">Now</span><span class="p">()</span>
+        
+        <span class="c">// Envolver ResponseWriter para capturar código de estado</span>
+        <span class="n">ww</span> <span class="o">:=</span> <span class="n">newWrappedResponseWriter</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
+        
+        <span class="c">// Llamar al siguiente handler</span>
+        <span class="n">next</span><span class="o">.</span><span class="n">ServeHTTP</span><span class="p">(</span><span class="n">ww</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span>
+        
+        <span class="c">// Loggear después</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span>
+            <span class="s">"%s %s %d %s %s"</span><span class="p">,</span>
+            <span class="n">r</span><span class="o">.</span><span class="n">Method</span><span class="p">,</span>
+            <span class="n">r</span><span class="o">.</span><span class="n">URL</span><span class="o">.</span><span class="n">Path</span><span class="p">,</span>
+            <span class="n">ww</span><span class="o">.</span><span class="n">status</span><span class="p">,</span>
+            <span class="n">time</span><span class="o">.</span><span class="n">Since</span><span class="p">(</span><span class="n">inicio</span><span class="p">),</span>
+            <span class="n">r</span><span class="o">.</span><span class="n">RemoteAddr</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="p">})</span>
+<span class="p">}</span>
+
+<span class="c">// Uso:</span>
+<span class="n">mux</span> <span class="o">:=</span> <span class="n">http</span><span class="o">.</span><span class="n">NewServeMux</span><span class="p">()</span>
+<span class="n">mux</span><span class="o">.</span><span class="n">HandleFunc</span><span class="p">(</span><span class="s">"/api"</span><span class="p">,</span> <span class="n">apiHandler</span><span class="p">)</span>
+<span class="n">loggedMux</span> <span class="o">:=</span> <span class="n">loggingMiddleware</span><span class="p">(</span><span class="n">mux</span><span class="p">)</span>
+<span class="n">http</span><span class="o">.</span><span class="n">ListenAndServe</span><span class="p">(</span><span class="s">":8080"</span><span class="p">,</span> <span class="n">loggedMux</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="42-encadenamiento-de-middleware">4.2 Encadenamiento de Middleware</h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">chain</span><span class="p">(</span><span class="n">h</span> <span class="n">http</span><span class="o">.</span><span class="n">Handler</span><span class="p">,</span> <span class="n">middlewares</span> <span class="o">...</span><span class="k">func</span><span class="p">(</span><span class="n">http</span><span class="o">.</span><span class="n">Handler</span><span class="p">)</span> <span class="n">http</span><span class="o">.</span><span class="n">Handler</span><span class="p">)</span> <span class="n">http</span><span class="o">.</span><span class="n">Handler</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">m</span> <span class="o">:=</span> <span class="k">range</span> <span class="n">middlewares</span> <span class="p">{</span>
+        <span class="n">h</span> <span class="o">=</span> <span class="n">m</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">h</span>
+<span class="p">}</span>
+
+<span class="c">// Uso</span>
+<span class="n">handler</span> <span class="o">:=</span> <span class="n">chain</span><span class="p">(</span>
+    <span class="n">mux</span><span class="p">,</span>
+    <span class="n">loggingMiddleware</span><span class="p">,</span>
+    <span class="n">authMiddleware</span><span class="p">,</span>
+    <span class="n">corsMiddleware</span><span class="p">,</span>
+<span class="p">)</span>
+</code></pre></div></div>
+
+<h2 id="5-cliente-http">5. Cliente HTTP</h2>
+
+<h3 id="51-cliente-simple">5.1 Cliente Simple</h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">obtenerDatos</span><span class="p">()</span> <span class="p">([]</span><span class="kt">byte</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">resp</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">http</span><span class="o">.</span><span class="n">Get</span><span class="p">(</span><span class="s">"https://api.ejemplo.com/datos"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="no">nil</span><span class="p">,</span> <span class="n">err</span>
+    <span class="p">}</span>
+    <span class="k">defer</span> <span class="n">resp</span><span class="o">.</span><span class="n">Body</span><span class="o">.</span><span class="n">Close</span><span class="p">()</span>
+    
+    <span class="k">if</span> <span class="n">resp</span><span class="o">.</span><span class="n">StatusCode</span> <span class="o">!=</span> <span class="n">http</span><span class="o">.</span><span class="n">StatusOK</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="no">nil</span><span class="p">,</span> <span class="n">fmt</span><span class="o">.</span><span class="n">Errorf</span><span class="p">(</span><span class="s">"API error: %s"</span><span class="p">,</span> <span class="n">resp</span><span class="o">.</span><span class="n">Status</span><span class="p">)</span>
+    <span class="p">}</span>
+    
+    <span class="k">return</span> <span class="n">io</span><span class="o">.</span><span class="n">ReadAll</span><span class="p">(</span><span class="n">resp</span><span class="o">.</span><span class="n">Body</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="52-cliente-personalizado">5.2 Cliente Personalizado</h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">clientePersonalizado</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">cliente</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="n">http</span><span class="o">.</span><span class="n">Client</span><span class="p">{</span>
+        <span class="n">Timeout</span><span class="o">:</span> <span class="m">10</span> <span class="o">*</span> <span class="n">time</span><span class="o">.</span><span class="n">Second</span><span class="p">,</span>
+        <span class="n">Transport</span><span class="o">:</span> <span class="o">&amp;</span><span class="n">http</span><span class="o">.</span><span class="n">Transport</span><span class="p">{</span>
+            <span class="n">MaxIdleConns</span><span class="o">:</span>        <span class="m">100</span><span class="p">,</span>
+            <span class="n">MaxIdleConnsPerHost</span><span class="o">:</span> <span class="m">20</span><span class="p">,</span>
+            <span class="n">IdleConnTimeout</span><span class="o">:</span>     <span class="m">90</span> <span class="o">*</span> <span class="n">time</span><span class="o">.</span><span class="n">Second</span><span class="p">,</span>
+        <span class="p">},</span>
+    <span class="p">}</span>
+    
+    <span class="n">req</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">http</span><span class="o">.</span><span class="n">NewRequest</span><span class="p">(</span><span class="s">"GET"</span><span class="p">,</span> <span class="s">"https://api.ejemplo.com"</span><span class="p">,</span> <span class="no">nil</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">Fatal</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>
+    <span class="p">}</span>
+    
+    <span class="n">req</span><span class="o">.</span><span class="n">Header</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="s">"Authorization"</span><span class="p">,</span> <span class="s">"Bearer token123"</span><span class="p">)</span>
+    <span class="n">req</span><span class="o">.</span><span class="n">Header</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="s">"Content-Type"</span><span class="p">,</span> <span class="s">"application/json"</span><span class="p">)</span>
+    
+    <span class="n">resp</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">cliente</span><span class="o">.</span><span class="n">Do</span><span class="p">(</span><span class="n">req</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">Fatal</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="k">defer</span> <span class="n">resp</span><span class="o">.</span><span class="n">Body</span><span class="o">.</span><span class="n">Close</span><span class="p">()</span>
+    
+    <span class="c">// Procesar respuesta...</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="6-mejores-prácticas">6. Mejores Prácticas</h2>
+
+<h3 id="61-manejo-seguro-de-errores">6.1 Manejo Seguro de Errores</h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">apiHandler</span><span class="p">(</span><span class="n">w</span> <span class="n">http</span><span class="o">.</span><span class="n">ResponseWriter</span><span class="p">,</span> <span class="n">r</span> <span class="o">*</span><span class="n">http</span><span class="o">.</span><span class="n">Request</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">usuario</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">obtenerUsuario</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">Context</span><span class="p">(),</span> <span class="m">123</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="k">switch</span> <span class="p">{</span>
+        <span class="k">case</span> <span class="n">errors</span><span class="o">.</span><span class="n">Is</span><span class="p">(</span><span class="n">err</span><span class="p">,</span> <span class="n">sql</span><span class="o">.</span><span class="n">ErrNoRows</span><span class="p">)</span><span class="o">:</span>
+            <span class="n">http</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="s">"Usuario no encontrado"</span><span class="p">,</span> <span class="n">http</span><span class="o">.</span><span class="n">StatusNotFound</span><span class="p">)</span>
+        <span class="k">case</span> <span class="n">errors</span><span class="o">.</span><span class="n">Is</span><span class="p">(</span><span class="n">err</span><span class="p">,</span> <span class="n">context</span><span class="o">.</span><span class="n">DeadlineExceeded</span><span class="p">)</span><span class="o">:</span>
+            <span class="n">http</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="s">"Timeout de base de datos"</span><span class="p">,</span> <span class="n">http</span><span class="o">.</span><span class="n">StatusGatewayTimeout</span><span class="p">)</span>
+        <span class="k">default</span><span class="o">:</span>
+            <span class="c">// No exponer detalles del error interno</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Error interno: %v"</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span>
+            <span class="n">http</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="s">"Error del servidor"</span><span class="p">,</span> <span class="n">http</span><span class="o">.</span><span class="n">StatusInternalServerError</span><span class="p">)</span>
+        <span class="p">}</span>
+        <span class="k">return</span>
+    <span class="p">}</span>
+    
+    <span class="n">json</span><span class="o">.</span><span class="n">NewEncoder</span><span class="p">(</span><span class="n">w</span><span class="p">)</span><span class="o">.</span><span class="n">Encode</span><span class="p">(</span><span class="n">usuario</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="62-separación-de-responsabilidades">6.2 Separación de Responsabilidades</h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// handlers/usuarios.go</span>
+<span class="k">package</span> <span class="n">handlers</span>
+
+<span class="k">import</span> <span class="p">(</span>
+    <span class="s">"net/http"</span>
+    <span class="s">"miapp/models"</span>
+    <span class="s">"miapp/services"</span>
+<span class="p">)</span>
+
+<span class="k">type</span> <span class="n">UsuarioHandler</span> <span class="k">struct</span> <span class="p">{</span>
+    <span class="n">service</span> <span class="o">*</span><span class="n">services</span><span class="o">.</span><span class="n">UsuarioService</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="n">NewUsuarioHandler</span><span class="p">(</span><span class="n">service</span> <span class="o">*</span><span class="n">services</span><span class="o">.</span><span class="n">UsuarioService</span><span class="p">)</span> <span class="o">*</span><span class="n">UsuarioHandler</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="o">&amp;</span><span class="n">UsuarioHandler</span><span class="p">{</span><span class="n">service</span><span class="o">:</span> <span class="n">service</span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="p">(</span><span class="n">h</span> <span class="o">*</span><span class="n">UsuarioHandler</span><span class="p">)</span> <span class="n">Listar</span><span class="p">(</span><span class="n">w</span> <span class="n">http</span><span class="o">.</span><span class="n">ResponseWriter</span><span class="p">,</span> <span class="n">r</span> <span class="o">*</span><span class="n">http</span><span class="o">.</span><span class="n">Request</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">usuarios</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">h</span><span class="o">.</span><span class="n">service</span><span class="o">.</span><span class="n">ListarTodos</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">Context</span><span class="p">())</span>
+    <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="n">http</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">err</span><span class="o">.</span><span class="n">Error</span><span class="p">(),</span> <span class="n">http</span><span class="o">.</span><span class="n">StatusInternalServerError</span><span class="p">)</span>
+        <span class="k">return</span>
+    <span class="p">}</span>
+    
+    <span class="n">writeJSON</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">usuarios</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c">// Función helper para respuestas JSON</span>
+<span class="k">func</span> <span class="n">writeJSON</span><span class="p">(</span><span class="n">w</span> <span class="n">http</span><span class="o">.</span><span class="n">ResponseWriter</span><span class="p">,</span> <span class="n">data</span> <span class="k">interface</span><span class="p">{})</span> <span class="p">{</span>
+    <span class="n">w</span><span class="o">.</span><span class="n">Header</span><span class="p">()</span><span class="o">.</span><span class="n">Set</span><span class="p">(</span><span class="s">"Content-Type"</span><span class="p">,</span> <span class="s">"application/json"</span><span class="p">)</span>
+    <span class="n">json</span><span class="o">.</span><span class="n">NewEncoder</span><span class="p">(</span><span class="n">w</span><span class="p">)</span><span class="o">.</span><span class="n">Encode</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Esta guía cubre los aspectos más importantes del paquete <code class="language-plaintext highlighter-rouge">net/http</code> de Go, desde la configuración básica de servidores hasta técnicas avanzadas de manejo de solicitudes y respuestas.</p>
+
+            </main>
+        </div>
+        
+        <!-- Componente flotante de GitHub -->
+<div class="github-floating">
+    <a href="https://github.com/" target="_blank" rel="noopener noreferrer" class="github-link" title="Ver en GitHub">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-github">
+            <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+        </svg>
+    </a>
+    
+    
+    <a href="https://github.com//MiguelP-Dev.github.io/blob/main/_pages/paquetes/http.md" target="_blank" rel="noopener noreferrer" class="edit-link" title="Editar esta página">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-2">
+            <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+        </svg>
+    </a>
+    
+</div>
+
+<style>
+    /* Estilos del componente SVG */
+    .github-corner:hover .octo-arm {
+        animation: octocat-wave 560ms ease-in-out;
+    }
+    
+    @keyframes octocat-wave {
+        0%, 100% { transform: rotate(0); }
+        20%, 60% { transform: rotate(-25deg); }
+        40%, 80% { transform: rotate(10deg); }
+    }
+    
+    @media (max-width: 500px) {
+        .github-corner:hover .octo-arm {
+            animation: none;
+        }
+        .github-corner .octo-arm {
+            animation: octocat-wave 560ms ease-in-out;
+        }
+    }
+</style>
+    </div>
+    
+    <script src="/assets/js/scripts.js"></script>
+</body>
+</html>

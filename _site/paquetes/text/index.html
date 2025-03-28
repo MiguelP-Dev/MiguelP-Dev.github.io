@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>text | Miguel's Programing Notes</title>
+    <link rel="stylesheet" href="/assets/css/styles.css">
+</head>
+<body>
+    <div class="app">
+        <nav class="navbar">
+    <div class="nav-container">
+        <a href="/" class="nav-brand">
+            Miguel's Programming Notes
+        </a>
+
+        <div class="nav-sections">
+            
+                
+                
+                
+                <a href="/paquetes/"
+                    class="nav-section active"
+                    data-section="paquetes">
+                    📦 Paquetes
+                </a>
+            
+                
+                
+                
+                <a href="/ejemplos/"
+                    class="nav-section "
+                    data-section="ejemplos">
+                    🧩 Ejemplos
+                </a>
+            
+        </div>
+    </div>
+</nav>
+        
+        <div class="container">
+            <button class="menu-toggle" aria-label="Abrir menú">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            
+            <aside class="sidebar" id="dynamic-sidebar">
+    <div class="sidebar-header">
+        <h3 class="sidebar-title">Miguel's Programming Notes</h3>
+    </div>
+    
+    <div class="sidebar-content">
+        
+            
+                <h3 class="sidebar-title">📦 Paquetes</h3>
+                <nav class="sidebar-nav">
+                    
+                        <a href="/paquetes/fmt/"
+                            class="sidebar-item "
+                            data-item="fmt">
+                            fmt
+                        </a>
+                    
+                        <a href="/paquetes/net/"
+                            class="sidebar-item "
+                            data-item="net-http">
+                            net/http
+                        </a>
+                    
+                        <a href="/paquetes/encoding/"
+                            class="sidebar-item "
+                            data-item="encoding">
+                            encoding
+                        </a>
+                    
+                </nav>
+            
+        
+            
+        
+    </div>
+</aside>
+            
+            <main class="content">
+                <h1 id="paquete-text-en-go">Paquete <code class="language-plaintext highlighter-rouge">text</code> en Go</h1>
+
+<p>El paquete <code class="language-plaintext highlighter-rouge">text</code> en Go ofrece herramientas especializadas para manipulación avanzada de texto. Esta guía ampliada explora sus subpaquetes principales con ejemplos prácticos, mejores prácticas y técnicas avanzadas.</p>
+
+<hr />
+
+<h2 id="subpaquete-texttemplate">Subpaquete <code class="language-plaintext highlighter-rouge">text/template</code></h2>
+
+<p>Generación dinámica de texto mediante plantillas.</p>
+
+<h3 id="funciones-clave">Funciones Clave</h3>
+
+<ol>
+  <li>
+    <p><strong><code class="language-plaintext highlighter-rouge">template.New</code> + <code class="language-plaintext highlighter-rouge">Parse</code></strong></p>
+
+    <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">tmpl</span> <span class="o">:=</span> <span class="n">template</span><span class="o">.</span><span class="n">Must</span><span class="p">(</span><span class="n">template</span><span class="o">.</span><span class="n">New</span><span class="p">(</span><span class="s">"saludo"</span><span class="p">)</span><span class="o">.</span><span class="n">Parse</span><span class="p">(</span><span class="s">"Hola, {{.Nombre}}!"</span><span class="p">))</span>  
+<span class="n">tmpl</span><span class="o">.</span><span class="n">Execute</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">Stdout</span><span class="p">,</span> <span class="k">struct</span><span class="p">{</span> <span class="n">Nombre</span> <span class="kt">string</span> <span class="p">}{</span><span class="n">Nombre</span><span class="o">:</span> <span class="s">"Ana"</span><span class="p">})</span>  
+<span class="c">// Output: Hola, Ana!  </span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p><strong>Plantillas con Lógica</strong></p>
+
+    <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">const</span> <span class="n">tpl</span> <span class="o">=</span> <span class="s">`  
+{{range .Productos}}  
+- {{.Nombre}} (Stock: {{.Stock}})  
+  {{if lt .Stock 10}}(¡Últimas unidades!){{end}}  
+{{end}}`</span>  
+
+<span class="n">data</span> <span class="o">:=</span> <span class="k">struct</span> <span class="p">{</span>  
+    <span class="n">Productos</span> <span class="p">[]</span><span class="k">struct</span><span class="p">{</span> <span class="n">Nombre</span> <span class="kt">string</span><span class="p">;</span> <span class="n">Stock</span> <span class="kt">int</span> <span class="p">}</span>  
+<span class="p">}{</span>  
+    <span class="p">[]</span><span class="k">struct</span><span class="p">{</span> <span class="n">Nombre</span> <span class="kt">string</span><span class="p">;</span> <span class="n">Stock</span> <span class="kt">int</span> <span class="p">}{</span>  
+        <span class="p">{</span><span class="s">"Laptop"</span><span class="p">,</span> <span class="m">5</span><span class="p">},</span>  
+        <span class="p">{</span><span class="s">"Mouse"</span><span class="p">,</span> <span class="m">25</span><span class="p">},</span>  
+    <span class="p">},</span>  
+<span class="p">}</span>  
+
+<span class="n">template</span><span class="o">.</span><span class="n">Must</span><span class="p">(</span><span class="n">template</span><span class="o">.</span><span class="n">New</span><span class="p">(</span><span class="s">""</span><span class="p">)</span><span class="o">.</span><span class="n">Parse</span><span class="p">(</span><span class="n">tpl</span><span class="p">))</span><span class="o">.</span><span class="n">Execute</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">Stdout</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>  
+<span class="c">/* Output:  
+   - Laptop (Stock: 5)  
+     (¡Últimas unidades!)  
+   - Mouse (Stock: 25)  
+*/</span>  
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p><strong>Funciones Personalizadas</strong></p>
+
+    <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">funcMap</span> <span class="o">:=</span> <span class="n">template</span><span class="o">.</span><span class="n">FuncMap</span><span class="p">{</span>  
+    <span class="s">"mayusculas"</span><span class="o">:</span> <span class="n">strings</span><span class="o">.</span><span class="n">ToUpper</span><span class="p">,</span>  
+<span class="p">}</span>  
+
+<span class="n">tmpl</span> <span class="o">:=</span> <span class="n">template</span><span class="o">.</span><span class="n">Must</span><span class="p">(</span>  
+    <span class="n">template</span><span class="o">.</span><span class="n">New</span><span class="p">(</span><span class="s">""</span><span class="p">)</span><span class="o">.</span><span class="n">Funcs</span><span class="p">(</span><span class="n">funcMap</span><span class="p">)</span><span class="o">.</span><span class="n">Parse</span><span class="p">(</span><span class="s">"{{. | mayusculas}}"</span><span class="p">),</span>  
+<span class="p">)</span>  
+<span class="n">tmpl</span><span class="o">.</span><span class="n">Execute</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">Stdout</span><span class="p">,</span> <span class="s">"hola"</span><span class="p">)</span> <span class="c">// HOLA  </span>
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<p><strong>Mejores Prácticas</strong>:</p>
+
+<ul>
+  <li>Usar <code class="language-plaintext highlighter-rouge">html/template</code> para contenido web (escapado automático).</li>
+  <li>Validar plantillas en tiempo de compilación con <code class="language-plaintext highlighter-rouge">template.Must</code>.</li>
+</ul>
+
+<hr />
+
+<h2 id="subpaquete-textscanner">Subpaquete <code class="language-plaintext highlighter-rouge">text/scanner</code></h2>
+
+<p>Análisis léxico de texto.</p>
+
+<h3 id="casos-de-uso-avanzados">Casos de Uso Avanzados</h3>
+
+<ol>
+  <li>
+    <p><strong>Tokenización Personalizada</strong></p>
+
+    <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">var</span> <span class="n">s</span> <span class="n">scanner</span><span class="o">.</span><span class="n">Scanner</span>  
+<span class="n">s</span><span class="o">.</span><span class="n">Init</span><span class="p">(</span><span class="n">strings</span><span class="o">.</span><span class="n">NewReader</span><span class="p">(</span><span class="s">"3 + 4 * (5 - 2)"</span><span class="p">))</span>  
+<span class="n">s</span><span class="o">.</span><span class="n">Mode</span> <span class="o">^=</span> <span class="n">scanner</span><span class="o">.</span><span class="n">SkipComments</span> <span class="c">// No ignorar comentarios  </span>
+
+<span class="k">for</span> <span class="n">tok</span> <span class="o">:=</span> <span class="n">s</span><span class="o">.</span><span class="n">Scan</span><span class="p">();</span> <span class="n">tok</span> <span class="o">!=</span> <span class="n">scanner</span><span class="o">.</span><span class="n">EOF</span><span class="p">;</span> <span class="n">tok</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">Scan</span><span class="p">()</span> <span class="p">{</span>  
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"%s</span><span class="se">\t</span><span class="s">%s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">s</span><span class="o">.</span><span class="n">TokenText</span><span class="p">(),</span> <span class="n">scanner</span><span class="o">.</span><span class="n">TokenString</span><span class="p">(</span><span class="n">tok</span><span class="p">))</span>  
+<span class="p">}</span>  
+<span class="c">/* Output:  
+   3    Int  
+   +    +  
+   4    Int  
+   *    *  
+   (    (  
+   5    Int  
+   -    -  
+   2    Int  
+   )    )  
+*/</span>  
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p><strong>Escaneo de Identificadores</strong></p>
+
+    <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">s</span><span class="o">.</span><span class="n">IsIdentRune</span> <span class="o">=</span> <span class="k">func</span><span class="p">(</span><span class="n">ch</span> <span class="kt">rune</span><span class="p">,</span> <span class="n">i</span> <span class="kt">int</span><span class="p">)</span> <span class="kt">bool</span> <span class="p">{</span>  
+    <span class="k">return</span> <span class="n">unicode</span><span class="o">.</span><span class="n">IsLetter</span><span class="p">(</span><span class="n">ch</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="n">i</span> <span class="o">&gt;</span> <span class="m">0</span> <span class="o">&amp;&amp;</span> <span class="n">unicode</span><span class="o">.</span><span class="n">IsDigit</span><span class="p">(</span><span class="n">ch</span><span class="p">))</span>  
+<span class="p">}</span>  
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<p><strong>Advertencia</strong>: El scanner no maneja Unicode completo por defecto.</p>
+
+<hr />
+
+<h2 id="subpaquete-texttabwriter">Subpaquete <code class="language-plaintext highlighter-rouge">text/tabwriter</code></h2>
+
+<p>Formateo tabular profesional.</p>
+
+<h3 id="alineación-avanzada">Alineación Avanzada</h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">w</span> <span class="o">:=</span> <span class="n">tabwriter</span><span class="o">.</span><span class="n">NewWriter</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">Stdout</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">2</span><span class="p">,</span> <span class="sc">' '</span><span class="p">,</span> <span class="n">tabwriter</span><span class="o">.</span><span class="n">AlignRight</span><span class="p">)</span>  
+<span class="n">fmt</span><span class="o">.</span><span class="n">Fprintln</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="s">"Item</span><span class="se">\t</span><span class="s">Precio</span><span class="se">\t</span><span class="s">Stock"</span><span class="p">)</span>  
+<span class="n">fmt</span><span class="o">.</span><span class="n">Fprintln</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="s">"Laptop</span><span class="se">\t</span><span class="s">$1,200.50</span><span class="se">\t</span><span class="s">5"</span><span class="p">)</span>  
+<span class="n">fmt</span><span class="o">.</span><span class="n">Fprintln</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="s">"Monitor</span><span class="se">\t</span><span class="s">$350.00</span><span class="se">\t</span><span class="s">15"</span><span class="p">)</span>  
+<span class="n">w</span><span class="o">.</span><span class="n">Flush</span><span class="p">()</span>  
+<span class="c">/* Output:  
+     Item    Precio    Stock  
+   Laptop  $1,200.50       5  
+   Monitor    $350.00      15  
+*/</span>  
+</code></pre></div></div>
+
+<p><strong>Flags Útiles</strong>:</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">tabwriter.Debug</code>: Muestra caracteres de alineación.</li>
+  <li><code class="language-plaintext highlighter-rouge">tabwriter.FilterHTML</code>: Filtra tags HTML.</li>
+</ul>
+
+<hr />
+
+<h2 id="subpaquete-textunicode">Subpaquete <code class="language-plaintext highlighter-rouge">text/unicode</code></h2>
+
+<p>Manejo de propiedades Unicode.</p>
+
+<h3 id="ejemplos-prácticos">Ejemplos Prácticos</h3>
+
+<ol>
+  <li>
+    <p><strong>Validación de Emojis</strong></p>
+
+    <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">esEmoji</span> <span class="o">:=</span> <span class="k">func</span><span class="p">(</span><span class="n">r</span> <span class="kt">rune</span><span class="p">)</span> <span class="kt">bool</span> <span class="p">{</span>  
+    <span class="k">return</span> <span class="n">unicode</span><span class="o">.</span><span class="n">In</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">unicode</span><span class="o">.</span><span class="n">So</span><span class="p">,</span> <span class="n">unicode</span><span class="o">.</span><span class="n">Symbol</span><span class="p">)</span>  
+<span class="p">}</span>  
+<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">esEmoji</span><span class="p">(</span><span class="sc">'😊'</span><span class="p">))</span> <span class="c">// true  </span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p><strong>Normalización de Texto</strong></p>
+
+    <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="s">"golang.org/x/text/unicode/norm"</span>  
+
+<span class="n">s</span> <span class="o">:=</span> <span class="n">norm</span><span class="o">.</span><span class="n">NFC</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="s">"café"</span><span class="p">)</span> <span class="c">// Forma Normalizada Canónica  </span>
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<hr />
+
+<h2 id="integración-entre-subpaquetes">Integración entre Subpaquetes</h2>
+
+<h3 id="generar-reporte-estructurado">Generar Reporte Estructurado</h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// 1. Parsear datos con scanner  </span>
+<span class="c">// 2. Procesar con lógica de negocio  </span>
+<span class="c">// 3. Formatear salida con template y tabwriter  </span>
+
+<span class="n">w</span> <span class="o">:=</span> <span class="n">tabwriter</span><span class="o">.</span><span class="n">NewWriter</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">Stdout</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">2</span><span class="p">,</span> <span class="sc">' '</span><span class="p">,</span> <span class="m">0</span><span class="p">)</span>  
+<span class="n">tmpl</span> <span class="o">:=</span> <span class="n">template</span><span class="o">.</span><span class="n">Must</span><span class="p">(</span><span class="n">template</span><span class="o">.</span><span class="n">New</span><span class="p">(</span><span class="s">"reporte"</span><span class="p">)</span><span class="o">.</span><span class="n">Parse</span><span class="p">(</span><span class="s">`  
+{{- range .}}  
+{{.Nombre}}\t{{.Edad}}\t{{.Pais}}  
+{{end}}`</span><span class="p">))</span>  
+
+<span class="n">tmpl</span><span class="o">.</span><span class="n">Execute</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="p">[]</span><span class="k">struct</span><span class="p">{</span> <span class="n">Nombre</span><span class="p">,</span> <span class="n">Pais</span> <span class="kt">string</span><span class="p">;</span> <span class="n">Edad</span> <span class="kt">int</span> <span class="p">}{</span>  
+    <span class="p">{</span><span class="s">"Ana"</span><span class="p">,</span> <span class="s">"México"</span><span class="p">,</span> <span class="m">30</span><span class="p">},</span>  
+    <span class="p">{</span><span class="s">"Bob"</span><span class="p">,</span> <span class="s">"EEUU"</span><span class="p">,</span> <span class="m">25</span><span class="p">},</span>  
+<span class="p">})</span>  
+<span class="n">w</span><span class="o">.</span><span class="n">Flush</span><span class="p">()</span>  
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="errores-comunes">Errores Comunes</h2>
+
+<h3 id="1-inyección-en-plantillas">1. Inyección en Plantillas</h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// ❌ Peligroso con datos no confiables  </span>
+<span class="n">tmpl</span><span class="o">.</span><span class="n">Parse</span><span class="p">(</span><span class="s">"Hola, {{.}}"</span><span class="p">)</span> <span class="c">// Si . es "&lt;script&gt;", genera XSS  </span>
+
+<span class="c">// ✅ Seguro con html/template  </span>
+<span class="n">htmlTemplate</span><span class="o">.</span><span class="n">Parse</span><span class="p">(</span><span class="s">"Hola, {{.}}"</span><span class="p">)</span> <span class="c">// Escapa automáticamente  </span>
+</code></pre></div></div>
+
+<h3 id="2-tabuladores-mal-configurados">2. Tabuladores Mal Configurados</h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// ❌ Columnas desalineadas  </span>
+<span class="n">writer</span> <span class="o">:=</span> <span class="n">tabwriter</span><span class="o">.</span><span class="n">NewWriter</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">Stdout</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">1</span><span class="p">,</span> <span class="sc">' '</span><span class="p">,</span> <span class="m">0</span><span class="p">)</span>  
+
+<span class="c">// ✅ Configuración óptima  </span>
+<span class="n">writer</span> <span class="o">:=</span> <span class="n">tabwriter</span><span class="o">.</span><span class="n">NewWriter</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">Stdout</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">2</span><span class="p">,</span> <span class="sc">' '</span><span class="p">,</span> <span class="n">tabwriter</span><span class="o">.</span><span class="n">AlignRight</span><span class="p">)</span>  
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="rendimiento-y-optimización">Rendimiento y Optimización</h2>
+
+<ol>
+  <li>
+    <p><strong>Reutilizar Writers</strong>:</p>
+
+    <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">var</span> <span class="n">buf</span> <span class="n">bytes</span><span class="o">.</span><span class="n">Buffer</span>  
+<span class="n">writer</span> <span class="o">:=</span> <span class="n">tabwriter</span><span class="o">.</span><span class="n">NewWriter</span><span class="p">(</span><span class="o">&amp;</span><span class="n">buf</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">2</span><span class="p">,</span> <span class="sc">' '</span><span class="p">,</span> <span class="m">0</span><span class="p">)</span>  
+<span class="c">// Reutilizar para múltiples operaciones  </span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p><strong>Precompilar Plantillas</strong>:</p>
+
+    <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">var</span> <span class="n">reporteTmpl</span> <span class="o">=</span> <span class="n">template</span><span class="o">.</span><span class="n">Must</span><span class="p">(</span><span class="n">template</span><span class="o">.</span><span class="n">New</span><span class="p">(</span><span class="s">""</span><span class="p">)</span><span class="o">.</span><span class="n">Parse</span><span class="p">(</span><span class="n">tplString</span><span class="p">))</span>  
+<span class="c">// Usar en múltiples goroutines  </span>
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<hr />
+
+<h2 id="conclusión">Conclusión</h2>
+
+<p>El paquete <code class="language-plaintext highlighter-rouge">text</code> en Go es un conjunto de herramientas indispensable para:</p>
+
+<ul>
+  <li>Generar documentos dinámicos (<code class="language-plaintext highlighter-rouge">template</code>)</li>
+  <li>Procesar lenguajes estructurados (<code class="language-plaintext highlighter-rouge">scanner</code>)</li>
+  <li>Crear salidas tabulares profesionales (<code class="language-plaintext highlighter-rouge">tabwriter</code>)</li>
+  <li>Manejar estándares Unicode (<code class="language-plaintext highlighter-rouge">unicode</code>)</li>
+</ul>
+
+<p>Al dominar estas herramientas, podrás construir aplicaciones que manejen texto complejo de manera eficiente y segura.</p>
+
+            </main>
+        </div>
+        
+        <!-- Componente flotante de GitHub -->
+<div class="github-floating">
+    <a href="https://github.com/" target="_blank" rel="noopener noreferrer" class="github-link" title="Ver en GitHub">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-github">
+            <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+        </svg>
+    </a>
+    
+    
+    <a href="https://github.com//MiguelP-Dev.github.io/blob/main/_pages/paquetes/text.md" target="_blank" rel="noopener noreferrer" class="edit-link" title="Editar esta página">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-2">
+            <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+        </svg>
+    </a>
+    
+</div>
+
+<style>
+    /* Estilos del componente SVG */
+    .github-corner:hover .octo-arm {
+        animation: octocat-wave 560ms ease-in-out;
+    }
+    
+    @keyframes octocat-wave {
+        0%, 100% { transform: rotate(0); }
+        20%, 60% { transform: rotate(-25deg); }
+        40%, 80% { transform: rotate(10deg); }
+    }
+    
+    @media (max-width: 500px) {
+        .github-corner:hover .octo-arm {
+            animation: none;
+        }
+        .github-corner .octo-arm {
+            animation: octocat-wave 560ms ease-in-out;
+        }
+    }
+</style>
+    </div>
+    
+    <script src="/assets/js/scripts.js"></script>
+</body>
+</html>

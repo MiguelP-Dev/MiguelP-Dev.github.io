@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>debug | Miguel's Programing Notes</title>
+    <link rel="stylesheet" href="/assets/css/styles.css">
+</head>
+<body>
+    <div class="app">
+        <nav class="navbar">
+    <div class="nav-container">
+        <a href="/" class="nav-brand">
+            Miguel's Programming Notes
+        </a>
+
+        <div class="nav-sections">
+            
+                
+                
+                
+                <a href="/paquetes/"
+                    class="nav-section active"
+                    data-section="paquetes">
+                    📦 Paquetes
+                </a>
+            
+                
+                
+                
+                <a href="/ejemplos/"
+                    class="nav-section "
+                    data-section="ejemplos">
+                    🧩 Ejemplos
+                </a>
+            
+        </div>
+    </div>
+</nav>
+        
+        <div class="container">
+            <button class="menu-toggle" aria-label="Abrir menú">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            
+            <aside class="sidebar" id="dynamic-sidebar">
+    <div class="sidebar-header">
+        <h3 class="sidebar-title">Miguel's Programming Notes</h3>
+    </div>
+    
+    <div class="sidebar-content">
+        
+            
+                <h3 class="sidebar-title">📦 Paquetes</h3>
+                <nav class="sidebar-nav">
+                    
+                        <a href="/paquetes/fmt/"
+                            class="sidebar-item "
+                            data-item="fmt">
+                            fmt
+                        </a>
+                    
+                        <a href="/paquetes/net/"
+                            class="sidebar-item "
+                            data-item="net-http">
+                            net/http
+                        </a>
+                    
+                        <a href="/paquetes/encoding/"
+                            class="sidebar-item "
+                            data-item="encoding">
+                            encoding
+                        </a>
+                    
+                </nav>
+            
+        
+            
+        
+    </div>
+</aside>
+            
+            <main class="content">
+                <h1 id="paquete-runtimedebug-en-go">Paquete runtime/debug en Go</h1>
+
+<p>El paquete <code class="language-plaintext highlighter-rouge">runtime/debug</code> proporciona funcionalidades avanzadas para depurar y controlar el comportamiento del runtime de Go. Este documento explora en detalle sus características y casos de uso prácticos.</p>
+
+<h2 id="1-funciones-de-stack-trace">1. Funciones de Stack Trace</h2>
+
+<h3 id="11-impresión-de-stack-trace">1.1 Impresión de Stack Trace</h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// filepath: ejemplos/debug/stack_trace.go</span>
+<span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="p">(</span>
+    <span class="s">"runtime/debug"</span>
+    <span class="s">"fmt"</span>
+    <span class="s">"os"</span>
+<span class="p">)</span>
+
+<span class="k">func</span> <span class="n">funcionC</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">debug</span><span class="o">.</span><span class="n">PrintStack</span><span class="p">()</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="n">funcionB</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">funcionC</span><span class="p">()</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="n">funcionA</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">funcionB</span><span class="p">()</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c">// Ejemplo básico de PrintStack</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"=== PrintStack ==="</span><span class="p">)</span>
+    <span class="n">funcionA</span><span class="p">()</span>
+
+    <span class="c">// Ejemplo de Stack con formato personalizado</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">=== Stack personalizado ==="</span><span class="p">)</span>
+    <span class="n">stack</span> <span class="o">:=</span> <span class="n">debug</span><span class="o">.</span><span class="n">Stack</span><span class="p">()</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">Stdout</span><span class="o">.</span><span class="n">Write</span><span class="p">(</span><span class="n">stack</span><span class="p">)</span>
+
+    <span class="c">// Ejemplo con información adicional</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">=== Stack con metadata ==="</span><span class="p">)</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Goroutine actual: %d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">debug</span><span class="o">.</span><span class="n">Stack</span><span class="p">())</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="12-captura-de-stack-en-panic">1.2 Captura de Stack en Panic</h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// filepath: ejemplos/debug/panic_handler.go</span>
+<span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="p">(</span>
+    <span class="s">"runtime/debug"</span>
+    <span class="s">"fmt"</span>
+    <span class="s">"log"</span>
+    <span class="s">"os"</span>
+<span class="p">)</span>
+
+<span class="k">func</span> <span class="n">recuperadorPanic</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="n">r</span> <span class="o">:=</span> <span class="nb">recover</span><span class="p">();</span> <span class="n">r</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="c">// Crear archivo de log</span>
+        <span class="n">f</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">os</span><span class="o">.</span><span class="n">Create</span><span class="p">(</span><span class="s">"crash.log"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">Fatal</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>
+        <span class="p">}</span>
+        <span class="k">defer</span> <span class="n">f</span><span class="o">.</span><span class="n">Close</span><span class="p">()</span>
+
+        <span class="c">// Escribir información del panic</span>
+        <span class="n">fmt</span><span class="o">.</span><span class="n">Fprintf</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="s">"Panic: %v</span><span class="se">\n\n</span><span class="s">"</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span>
+        <span class="n">fmt</span><span class="o">.</span><span class="n">Fprintf</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="s">"Stack Trace:</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">Write</span><span class="p">(</span><span class="n">debug</span><span class="o">.</span><span class="n">Stack</span><span class="p">())</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="n">funcionProblematica</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">defer</span> <span class="n">recuperadorPanic</span><span class="p">()</span>
+    
+    <span class="c">// Simular un panic</span>
+    <span class="nb">panic</span><span class="p">(</span><span class="s">"¡Algo salió mal!"</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="2-gestión-de-memoria">2. Gestión de Memoria</h2>
+
+<h3 id="21-monitor-de-uso-de-memoria">2.1 Monitor de Uso de Memoria</h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// filepath: ejemplos/debug/memory_monitor.go</span>
+<span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="p">(</span>
+    <span class="s">"runtime/debug"</span>
+    <span class="s">"fmt"</span>
+    <span class="s">"time"</span>
+<span class="p">)</span>
+
+<span class="k">type</span> <span class="n">MemoryStats</span> <span class="k">struct</span> <span class="p">{</span>
+    <span class="n">Alloc</span>      <span class="kt">uint64</span>
+    <span class="n">TotalAlloc</span> <span class="kt">uint64</span>
+    <span class="n">Sys</span>        <span class="kt">uint64</span>
+    <span class="n">NumGC</span>      <span class="kt">uint32</span>
+    <span class="n">PauseTotal</span> <span class="n">time</span><span class="o">.</span><span class="n">Duration</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="n">monitorearMemoria</span><span class="p">(</span><span class="n">intervalo</span> <span class="n">time</span><span class="o">.</span><span class="n">Duration</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">ticker</span> <span class="o">:=</span> <span class="n">time</span><span class="o">.</span><span class="n">NewTicker</span><span class="p">(</span><span class="n">intervalo</span><span class="p">)</span>
+    <span class="k">defer</span> <span class="n">ticker</span><span class="o">.</span><span class="n">Stop</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="k">range</span> <span class="n">ticker</span><span class="o">.</span><span class="n">C</span> <span class="p">{</span>
+        <span class="k">var</span> <span class="n">stats</span> <span class="n">debug</span><span class="o">.</span><span class="n">GCStats</span>
+        <span class="n">debug</span><span class="o">.</span><span class="n">ReadGCStats</span><span class="p">(</span><span class="o">&amp;</span><span class="n">stats</span><span class="p">)</span>
+
+        <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">=== Estadísticas de Memoria ===</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
+        <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Última GC: %v</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">stats</span><span class="o">.</span><span class="n">LastGC</span><span class="p">)</span>
+        <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Num GC: %d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">stats</span><span class="o">.</span><span class="n">NumGC</span><span class="p">)</span>
+        <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Pausa Total GC: %v</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">stats</span><span class="o">.</span><span class="n">PauseTotal</span><span class="p">)</span>
+        <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Pausas GC: %v</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">stats</span><span class="o">.</span><span class="n">Pause</span><span class="p">)</span>
+        <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"PauseEnd: %v</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">stats</span><span class="o">.</span><span class="n">PauseEnd</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="22-optimizador-de-memoria">2.2 Optimizador de Memoria</h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// filepath: ejemplos/debug/memory_optimizer.go</span>
+<span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="p">(</span>
+    <span class="s">"runtime/debug"</span>
+    <span class="s">"fmt"</span>
+    <span class="s">"time"</span>
+<span class="p">)</span>
+
+<span class="k">type</span> <span class="n">MemoryOptimizer</span> <span class="k">struct</span> <span class="p">{</span>
+    <span class="n">gcPercent</span>      <span class="kt">int</span>
+    <span class="n">maxStackSize</span>   <span class="kt">int</span>
+    <span class="n">cleanupEnabled</span> <span class="kt">bool</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="n">NewMemoryOptimizer</span><span class="p">()</span> <span class="o">*</span><span class="n">MemoryOptimizer</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="o">&amp;</span><span class="n">MemoryOptimizer</span><span class="p">{</span>
+        <span class="n">gcPercent</span><span class="o">:</span>      <span class="m">100</span><span class="p">,</span>
+        <span class="n">maxStackSize</span><span class="o">:</span>   <span class="m">1</span> <span class="o">&lt;&lt;</span> <span class="m">20</span><span class="p">,</span> <span class="c">// 1MB</span>
+        <span class="n">cleanupEnabled</span><span class="o">:</span> <span class="no">true</span><span class="p">,</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="p">(</span><span class="n">mo</span> <span class="o">*</span><span class="n">MemoryOptimizer</span><span class="p">)</span> <span class="n">Optimize</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c">// Configurar GC</span>
+    <span class="n">oldGCPercent</span> <span class="o">:=</span> <span class="n">debug</span><span class="o">.</span><span class="n">SetGCPercent</span><span class="p">(</span><span class="n">mo</span><span class="o">.</span><span class="n">gcPercent</span><span class="p">)</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"GC Percent cambiado de %d a %d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">oldGCPercent</span><span class="p">,</span> <span class="n">mo</span><span class="o">.</span><span class="n">gcPercent</span><span class="p">)</span>
+
+    <span class="c">// Configurar tamaño máximo de stack</span>
+    <span class="n">oldStackSize</span> <span class="o">:=</span> <span class="n">debug</span><span class="o">.</span><span class="n">SetMaxStack</span><span class="p">(</span><span class="n">mo</span><span class="o">.</span><span class="n">maxStackSize</span><span class="p">)</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Max Stack Size cambiado de %d a %d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">oldStackSize</span><span class="p">,</span> <span class="n">mo</span><span class="o">.</span><span class="n">maxStackSize</span><span class="p">)</span>
+
+    <span class="c">// Programar limpieza periódica</span>
+    <span class="k">if</span> <span class="n">mo</span><span class="o">.</span><span class="n">cleanupEnabled</span> <span class="p">{</span>
+        <span class="k">go</span> <span class="n">mo</span><span class="o">.</span><span class="n">scheduleCleanup</span><span class="p">()</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="p">(</span><span class="n">mo</span> <span class="o">*</span><span class="n">MemoryOptimizer</span><span class="p">)</span> <span class="n">scheduleCleanup</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">ticker</span> <span class="o">:=</span> <span class="n">time</span><span class="o">.</span><span class="n">NewTicker</span><span class="p">(</span><span class="m">5</span> <span class="o">*</span> <span class="n">time</span><span class="o">.</span><span class="n">Minute</span><span class="p">)</span>
+    <span class="k">defer</span> <span class="n">ticker</span><span class="o">.</span><span class="n">Stop</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="k">range</span> <span class="n">ticker</span><span class="o">.</span><span class="n">C</span> <span class="p">{</span>
+        <span class="n">debug</span><span class="o">.</span><span class="n">FreeOSMemory</span><span class="p">()</span>
+        <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Limpieza de memoria realizada"</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="3-configuración-avanzada">3. Configuración Avanzada</h2>
+
+<h3 id="31-gestor-de-threads">3.1 Gestor de Threads</h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// filepath: ejemplos/debug/thread_manager.go</span>
+<span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="p">(</span>
+    <span class="s">"runtime/debug"</span>
+    <span class="s">"fmt"</span>
+    <span class="s">"sync"</span>
+<span class="p">)</span>
+
+<span class="k">type</span> <span class="n">ThreadManager</span> <span class="k">struct</span> <span class="p">{</span>
+    <span class="n">maxThreads</span> <span class="kt">int</span>
+    <span class="n">mu</span>         <span class="n">sync</span><span class="o">.</span><span class="n">Mutex</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="n">NewThreadManager</span><span class="p">(</span><span class="n">maxThreads</span> <span class="kt">int</span><span class="p">)</span> <span class="o">*</span><span class="n">ThreadManager</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="o">&amp;</span><span class="n">ThreadManager</span><span class="p">{</span>
+        <span class="n">maxThreads</span><span class="o">:</span> <span class="n">maxThreads</span><span class="p">,</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="p">(</span><span class="n">tm</span> <span class="o">*</span><span class="n">ThreadManager</span><span class="p">)</span> <span class="n">Configure</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">tm</span><span class="o">.</span><span class="n">mu</span><span class="o">.</span><span class="n">Lock</span><span class="p">()</span>
+    <span class="k">defer</span> <span class="n">tm</span><span class="o">.</span><span class="n">mu</span><span class="o">.</span><span class="n">Unlock</span><span class="p">()</span>
+
+    <span class="n">oldMax</span> <span class="o">:=</span> <span class="n">debug</span><span class="o">.</span><span class="n">SetMaxThreads</span><span class="p">(</span><span class="n">tm</span><span class="o">.</span><span class="n">maxThreads</span><span class="p">)</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Número máximo de threads cambiado de %d a %d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">oldMax</span><span class="p">,</span> <span class="n">tm</span><span class="o">.</span><span class="n">maxThreads</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="p">(</span><span class="n">tm</span> <span class="o">*</span><span class="n">ThreadManager</span><span class="p">)</span> <span class="n">RunWithThreadLimit</span><span class="p">(</span><span class="n">tasks</span> <span class="p">[]</span><span class="k">func</span><span class="p">())</span> <span class="p">{</span>
+    <span class="k">var</span> <span class="n">wg</span> <span class="n">sync</span><span class="o">.</span><span class="n">WaitGroup</span>
+    <span class="n">semaphore</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="k">chan</span> <span class="k">struct</span><span class="p">{},</span> <span class="n">tm</span><span class="o">.</span><span class="n">maxThreads</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">task</span> <span class="o">:=</span> <span class="k">range</span> <span class="n">tasks</span> <span class="p">{</span>
+        <span class="n">wg</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="m">1</span><span class="p">)</span>
+        <span class="k">go</span> <span class="k">func</span><span class="p">(</span><span class="n">t</span> <span class="k">func</span><span class="p">())</span> <span class="p">{</span>
+            <span class="k">defer</span> <span class="n">wg</span><span class="o">.</span><span class="n">Done</span><span class="p">()</span>
+            <span class="n">semaphore</span> <span class="o">&lt;-</span> <span class="k">struct</span><span class="p">{}{}</span>
+            <span class="k">defer</span> <span class="k">func</span><span class="p">()</span> <span class="p">{</span> <span class="o">&lt;-</span><span class="n">semaphore</span> <span class="p">}()</span>
+            <span class="n">t</span><span class="p">()</span>
+        <span class="p">}(</span><span class="n">task</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="n">wg</span><span class="o">.</span><span class="n">Wait</span><span class="p">()</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="4-utilidades-de-depuración">4. Utilidades de Depuración</h2>
+
+<h3 id="41-logger-personalizado">4.1 Logger Personalizado</h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// filepath: ejemplos/debug/custom_logger.go</span>
+<span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="p">(</span>
+    <span class="s">"runtime/debug"</span>
+    <span class="s">"fmt"</span>
+    <span class="s">"time"</span>
+    <span class="s">"os"</span>
+    <span class="s">"path/filepath"</span>
+<span class="p">)</span>
+
+<span class="k">type</span> <span class="n">DebugLogger</span> <span class="k">struct</span> <span class="p">{</span>
+    <span class="n">logDir</span> <span class="kt">string</span>
+    <span class="n">prefix</span> <span class="kt">string</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="n">NewDebugLogger</span><span class="p">(</span><span class="n">logDir</span><span class="p">,</span> <span class="n">prefix</span> <span class="kt">string</span><span class="p">)</span> <span class="p">(</span><span class="o">*</span><span class="n">DebugLogger</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">os</span><span class="o">.</span><span class="n">MkdirAll</span><span class="p">(</span><span class="n">logDir</span><span class="p">,</span> <span class="m">0755</span><span class="p">);</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="no">nil</span><span class="p">,</span> <span class="n">err</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="o">&amp;</span><span class="n">DebugLogger</span><span class="p">{</span>
+        <span class="n">logDir</span><span class="o">:</span> <span class="n">logDir</span><span class="p">,</span>
+        <span class="n">prefix</span><span class="o">:</span> <span class="n">prefix</span><span class="p">,</span>
+    <span class="p">},</span> <span class="no">nil</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="p">(</span><span class="n">dl</span> <span class="o">*</span><span class="n">DebugLogger</span><span class="p">)</span> <span class="n">LogWithStack</span><span class="p">(</span><span class="n">message</span> <span class="kt">string</span><span class="p">)</span> <span class="kt">error</span> <span class="p">{</span>
+    <span class="n">filename</span> <span class="o">:=</span> <span class="n">filepath</span><span class="o">.</span><span class="n">Join</span><span class="p">(</span><span class="n">dl</span><span class="o">.</span><span class="n">logDir</span><span class="p">,</span> 
+        <span class="n">fmt</span><span class="o">.</span><span class="n">Sprintf</span><span class="p">(</span><span class="s">"%s_%s.log"</span><span class="p">,</span> <span class="n">dl</span><span class="o">.</span><span class="n">prefix</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">Now</span><span class="p">()</span><span class="o">.</span><span class="n">Format</span><span class="p">(</span><span class="s">"20060102_150405"</span><span class="p">)))</span>
+
+    <span class="n">f</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">os</span><span class="o">.</span><span class="n">Create</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">err</span>
+    <span class="p">}</span>
+    <span class="k">defer</span> <span class="n">f</span><span class="o">.</span><span class="n">Close</span><span class="p">()</span>
+
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Fprintf</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="s">"=== %s ===</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">message</span><span class="p">)</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Fprintf</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="s">"Timestamp: %s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">Now</span><span class="p">()</span><span class="o">.</span><span class="n">Format</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">RFC3339</span><span class="p">))</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Fprintf</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="s">"</span><span class="se">\n</span><span class="s">Stack Trace:</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">Write</span><span class="p">(</span><span class="n">debug</span><span class="o">.</span><span class="n">Stack</span><span class="p">())</span>
+
+    <span class="k">return</span> <span class="no">nil</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="5-mejores-prácticas">5. Mejores Prácticas</h2>
+
+<ol>
+  <li><strong>Gestión de Memoria</strong>
+    <ul>
+      <li>Monitorear el uso de memoria regularmente</li>
+      <li>Ajustar parámetros de GC según necesidades</li>
+      <li>Implementar limpieza periódica</li>
+    </ul>
+  </li>
+  <li><strong>Debug en Producción</strong>
+    <ul>
+      <li>Capturar y almacenar stack traces</li>
+      <li>Implementar recuperación de panics</li>
+      <li>Mantener logs detallados</li>
+    </ul>
+  </li>
+  <li><strong>Optimización</strong>
+    <ul>
+      <li>Ajustar límites de threads</li>
+      <li>Configurar tamaños de stack apropiados</li>
+      <li>Monitorear estadísticas de GC</li>
+    </ul>
+  </li>
+</ol>
+
+<h2 id="6-referencias">6. Referencias</h2>
+
+<ul>
+  <li><a href="https://golang.org/pkg/runtime/debug/">Documentación oficial de runtime/debug</a></li>
+  <li><a href="https://golang.org/doc/effective_go.html">Effective Go - Runtime y Depuración</a></li>
+  <li><a href="https://povilasv.me/go-memory-management/">Go Memory Management</a></li>
+</ul>
+
+            </main>
+        </div>
+        
+        <!-- Componente flotante de GitHub -->
+<div class="github-floating">
+    <a href="https://github.com/" target="_blank" rel="noopener noreferrer" class="github-link" title="Ver en GitHub">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-github">
+            <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+        </svg>
+    </a>
+    
+    
+    <a href="https://github.com//MiguelP-Dev.github.io/blob/main/_pages/paquetes/debug.md" target="_blank" rel="noopener noreferrer" class="edit-link" title="Editar esta página">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-2">
+            <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+        </svg>
+    </a>
+    
+</div>
+
+<style>
+    /* Estilos del componente SVG */
+    .github-corner:hover .octo-arm {
+        animation: octocat-wave 560ms ease-in-out;
+    }
+    
+    @keyframes octocat-wave {
+        0%, 100% { transform: rotate(0); }
+        20%, 60% { transform: rotate(-25deg); }
+        40%, 80% { transform: rotate(10deg); }
+    }
+    
+    @media (max-width: 500px) {
+        .github-corner:hover .octo-arm {
+            animation: none;
+        }
+        .github-corner .octo-arm {
+            animation: octocat-wave 560ms ease-in-out;
+        }
+    }
+</style>
+    </div>
+    
+    <script src="/assets/js/scripts.js"></script>
+</body>
+</html>

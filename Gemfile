@@ -1,11 +1,23 @@
 source "https://rubygems.org"
 
-gem "github-pages", group: :jekyll_plugins
+# Versión específica de Jekyll
+gem "jekyll", "~> 4.3.2"
+
+# Tema
+gem "minima", "~> 2.5"
+
+# Dependencias estándar de Ruby que serán removidas en Ruby 3.4.0
+gem "csv"
+gem "base64"
+gem "erb"
+
+# Plugins principales
 gem "jekyll-include-cache"
 gem "jekyll-paginate"
 gem "jekyll-sitemap"
 gem "jekyll-gist"
 gem "jekyll-github-metadata"
+gem "webrick" # Necesario para Ruby 3.0+
 
 group :jekyll_plugins do
   gem "jekyll-feed"

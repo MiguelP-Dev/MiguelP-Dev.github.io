@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>compress | Miguel's Programing Notes</title>
+    <link rel="stylesheet" href="/assets/css/styles.css">
+</head>
+<body>
+    <div class="app">
+        <nav class="navbar">
+    <div class="nav-container">
+        <a href="/" class="nav-brand">
+            Miguel's Programming Notes
+        </a>
+
+        <div class="nav-sections">
+            
+                
+                
+                
+                <a href="/paquetes/"
+                    class="nav-section active"
+                    data-section="paquetes">
+                    📦 Paquetes
+                </a>
+            
+                
+                
+                
+                <a href="/ejemplos/"
+                    class="nav-section "
+                    data-section="ejemplos">
+                    🧩 Ejemplos
+                </a>
+            
+        </div>
+    </div>
+</nav>
+        
+        <div class="container">
+            <button class="menu-toggle" aria-label="Abrir menú">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            
+            <aside class="sidebar" id="dynamic-sidebar">
+    <div class="sidebar-header">
+        <h3 class="sidebar-title">Miguel's Programming Notes</h3>
+    </div>
+    
+    <div class="sidebar-content">
+        
+            
+                <h3 class="sidebar-title">📦 Paquetes</h3>
+                <nav class="sidebar-nav">
+                    
+                        <a href="/paquetes/fmt/"
+                            class="sidebar-item "
+                            data-item="fmt">
+                            fmt
+                        </a>
+                    
+                        <a href="/paquetes/net/"
+                            class="sidebar-item "
+                            data-item="net-http">
+                            net/http
+                        </a>
+                    
+                        <a href="/paquetes/encoding/"
+                            class="sidebar-item "
+                            data-item="encoding">
+                            encoding
+                        </a>
+                    
+                </nav>
+            
+        
+            
+        
+    </div>
+</aside>
+            
+            <main class="content">
+                <h1 id="paquete-compress-en-go">Paquete compress en Go</h1>
+
+<p>El paquete <code class="language-plaintext highlighter-rouge">compress</code> en Go proporciona varios subpaquetes para trabajar con diferentes algoritmos de compresión y formatos de archivo comprimido. Este documento explora en detalle cada subpaquete con ejemplos prácticos.</p>
+
+<h2 id="1-compressbzip2">1. compress/bzip2</h2>
+
+<h3 id="11-lectura-de-archivos-bzip2">1.1 Lectura de Archivos bzip2</h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">ejemploLecturaBzip2</span><span class="p">()</span> <span class="kt">error</span> <span class="p">{</span>
+    <span class="c">// Abrir archivo bzip2</span>
+    <span class="n">archivo</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">os</span><span class="o">.</span><span class="n">Open</span><span class="p">(</span><span class="s">"datos.bz2"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">fmt</span><span class="o">.</span><span class="n">Errorf</span><span class="p">(</span><span class="s">"error abriendo archivo: %w"</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="k">defer</span> <span class="n">archivo</span><span class="o">.</span><span class="n">Close</span><span class="p">()</span>
+
+    <span class="c">// Crear lector bzip2</span>
+    <span class="n">reader</span> <span class="o">:=</span> <span class="n">bzip2</span><span class="o">.</span><span class="n">NewReader</span><span class="p">(</span><span class="n">archivo</span><span class="p">)</span>
+
+    <span class="c">// Leer contenido descomprimido</span>
+    <span class="n">contenido</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">io</span><span class="o">.</span><span class="n">ReadAll</span><span class="p">(</span><span class="n">reader</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">fmt</span><span class="o">.</span><span class="n">Errorf</span><span class="p">(</span><span class="s">"error leyendo contenido: %w"</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Contenido descomprimido: %s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">contenido</span><span class="p">)</span>
+    <span class="k">return</span> <span class="no">nil</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="12-procesamiento-por-bloques">1.2 Procesamiento por Bloques</h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">procesarBzip2PorBloques</span><span class="p">(</span><span class="n">filename</span> <span class="kt">string</span><span class="p">,</span> <span class="n">tamañoBloque</span> <span class="kt">int</span><span class="p">)</span> <span class="kt">error</span> <span class="p">{</span>
+    <span class="n">archivo</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">os</span><span class="o">.</span><span class="n">Open</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">err</span>
+    <span class="p">}</span>
+    <span class="k">defer</span> <span class="n">archivo</span><span class="o">.</span><span class="n">Close</span><span class="p">()</span>
+
+    <span class="n">reader</span> <span class="o">:=</span> <span class="n">bzip2</span><span class="o">.</span><span class="n">NewReader</span><span class="p">(</span><span class="n">archivo</span><span class="p">)</span>
+    <span class="n">buffer</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">byte</span><span class="p">,</span> <span class="n">tamañoBloque</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="p">{</span>
+        <span class="n">n</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">reader</span><span class="o">.</span><span class="n">Read</span><span class="p">(</span><span class="n">buffer</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">err</span> <span class="o">==</span> <span class="n">io</span><span class="o">.</span><span class="n">EOF</span> <span class="p">{</span>
+            <span class="k">break</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="n">err</span>
+        <span class="p">}</span>
+
+        <span class="c">// Procesar el bloque leído</span>
+        <span class="n">procesarBloque</span><span class="p">(</span><span class="n">buffer</span><span class="p">[</span><span class="o">:</span><span class="n">n</span><span class="p">])</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="no">nil</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="n">procesarBloque</span><span class="p">(</span><span class="n">datos</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c">// Implementar procesamiento específico</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="2-compressflate">2. compress/flate</h2>
+
+<h3 id="21-compresión-básica">2.1 Compresión Básica</h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">comprimirDatos</span><span class="p">(</span><span class="n">datos</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">)</span> <span class="p">([]</span><span class="kt">byte</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">var</span> <span class="n">buf</span> <span class="n">bytes</span><span class="o">.</span><span class="n">Buffer</span>
+    
+    <span class="c">// Crear escritor con compresión</span>
+    <span class="n">writer</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">flate</span><span class="o">.</span><span class="n">NewWriter</span><span class="p">(</span><span class="o">&amp;</span><span class="n">buf</span><span class="p">,</span> <span class="n">flate</span><span class="o">.</span><span class="n">BestCompression</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="no">nil</span><span class="p">,</span> <span class="n">err</span>
+    <span class="p">}</span>
+    
+    <span class="c">// Escribir datos</span>
+    <span class="k">if</span> <span class="n">_</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">writer</span><span class="o">.</span><span class="n">Write</span><span class="p">(</span><span class="n">datos</span><span class="p">);</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="no">nil</span><span class="p">,</span> <span class="n">err</span>
+    <span class="p">}</span>
+    
+    <span class="c">// Cerrar para asegurar que todos los datos se escriban</span>
+    <span class="k">if</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">writer</span><span class="o">.</span><span class="n">Close</span><span class="p">();</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="no">nil</span><span class="p">,</span> <span class="n">err</span>
+    <span class="p">}</span>
+    
+    <span class="k">return</span> <span class="n">buf</span><span class="o">.</span><span class="n">Bytes</span><span class="p">(),</span> <span class="no">nil</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="22-descompresión-con-diccionario">2.2 Descompresión con Diccionario</h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">descomprimirConDiccionario</span><span class="p">(</span><span class="n">datos</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="n">diccionario</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">)</span> <span class="p">([]</span><span class="kt">byte</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c">// Crear reader con diccionario</span>
+    <span class="n">reader</span> <span class="o">:=</span> <span class="n">flate</span><span class="o">.</span><span class="n">NewReaderDict</span><span class="p">(</span><span class="n">bytes</span><span class="o">.</span><span class="n">NewReader</span><span class="p">(</span><span class="n">datos</span><span class="p">),</span> <span class="n">diccionario</span><span class="p">)</span>
+    <span class="k">defer</span> <span class="n">reader</span><span class="o">.</span><span class="n">Close</span><span class="p">()</span>
+    
+    <span class="c">// Leer datos descomprimidos</span>
+    <span class="k">return</span> <span class="n">io</span><span class="o">.</span><span class="n">ReadAll</span><span class="p">(</span><span class="n">reader</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="3-compressgzip">3. compress/gzip</h2>
+
+<h3 id="31-compresión-de-archivos">3.1 Compresión de Archivos</h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">comprimirArchivo</span><span class="p">(</span><span class="n">entrada</span><span class="p">,</span> <span class="n">salida</span> <span class="kt">string</span><span class="p">)</span> <span class="kt">error</span> <span class="p">{</span>
+    <span class="c">// Abrir archivo de entrada</span>
+    <span class="n">in</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">os</span><span class="o">.</span><span class="n">Open</span><span class="p">(</span><span class="n">entrada</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">err</span>
+    <span class="p">}</span>
+    <span class="k">defer</span> <span class="n">in</span><span class="o">.</span><span class="n">Close</span><span class="p">()</span>
+
+    <span class="c">// Crear archivo de salida</span>
+    <span class="n">out</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">os</span><span class="o">.</span><span class="n">Create</span><span class="p">(</span><span class="n">salida</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">err</span>
+    <span class="p">}</span>
+    <span class="k">defer</span> <span class="n">out</span><span class="o">.</span><span class="n">Close</span><span class="p">()</span>
+
+    <span class="c">// Crear escritor gzip</span>
+    <span class="n">gw</span> <span class="o">:=</span> <span class="n">gzip</span><span class="o">.</span><span class="n">NewWriter</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+    <span class="k">defer</span> <span class="n">gw</span><span class="o">.</span><span class="n">Close</span><span class="p">()</span>
+
+    <span class="c">// Configurar metadatos</span>
+    <span class="n">gw</span><span class="o">.</span><span class="n">Name</span> <span class="o">=</span> <span class="n">filepath</span><span class="o">.</span><span class="n">Base</span><span class="p">(</span><span class="n">entrada</span><span class="p">)</span>
+    <span class="n">gw</span><span class="o">.</span><span class="n">ModTime</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">Now</span><span class="p">()</span>
+    <span class="n">gw</span><span class="o">.</span><span class="n">Comment</span> <span class="o">=</span> <span class="s">"Comprimido con Go"</span>
+
+    <span class="c">// Copiar datos</span>
+    <span class="k">if</span> <span class="n">_</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">io</span><span class="o">.</span><span class="n">Copy</span><span class="p">(</span><span class="n">gw</span><span class="p">,</span> <span class="n">in</span><span class="p">);</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">err</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="no">nil</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="32-lectura-de-archivos-gzip-con-metadata">3.2 Lectura de Archivos Gzip con Metadata</h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">leerArchivoGzip</span><span class="p">(</span><span class="n">filename</span> <span class="kt">string</span><span class="p">)</span> <span class="kt">error</span> <span class="p">{</span>
+    <span class="c">// Abrir archivo</span>
+    <span class="n">file</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">os</span><span class="o">.</span><span class="n">Open</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">err</span>
+    <span class="p">}</span>
+    <span class="k">defer</span> <span class="n">file</span><span class="o">.</span><span class="n">Close</span><span class="p">()</span>
+
+    <span class="c">// Crear lector gzip</span>
+    <span class="n">gr</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">gzip</span><span class="o">.</span><span class="n">NewReader</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">err</span>
+    <span class="p">}</span>
+    <span class="k">defer</span> <span class="n">gr</span><span class="o">.</span><span class="n">Close</span><span class="p">()</span>
+
+    <span class="c">// Mostrar metadata</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Nombre original: %s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">gr</span><span class="o">.</span><span class="n">Name</span><span class="p">)</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Fecha modificación: %v</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">gr</span><span class="o">.</span><span class="n">ModTime</span><span class="p">)</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Comentario: %s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">gr</span><span class="o">.</span><span class="n">Comment</span><span class="p">)</span>
+
+    <span class="c">// Leer contenido</span>
+    <span class="n">contenido</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">io</span><span class="o">.</span><span class="n">ReadAll</span><span class="p">(</span><span class="n">gr</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">err</span>
+    <span class="p">}</span>
+
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Contenido: %s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">contenido</span><span class="p">)</span>
+    <span class="k">return</span> <span class="no">nil</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="4-compresszlib">4. compress/zlib</h2>
+
+<h3 id="41-compresión-en-memoria">4.1 Compresión en Memoria</h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">comprimirZlib</span><span class="p">(</span><span class="n">datos</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="n">nivel</span> <span class="kt">int</span><span class="p">)</span> <span class="p">([]</span><span class="kt">byte</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">var</span> <span class="n">buf</span> <span class="n">bytes</span><span class="o">.</span><span class="n">Buffer</span>
+
+    <span class="c">// Crear escritor con nivel específico</span>
+    <span class="n">writer</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">zlib</span><span class="o">.</span><span class="n">NewWriterLevel</span><span class="p">(</span><span class="o">&amp;</span><span class="n">buf</span><span class="p">,</span> <span class="n">nivel</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="no">nil</span><span class="p">,</span> <span class="n">err</span>
+    <span class="p">}</span>
+
+    <span class="c">// Escribir datos</span>
+    <span class="k">if</span> <span class="n">_</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">writer</span><span class="o">.</span><span class="n">Write</span><span class="p">(</span><span class="n">datos</span><span class="p">);</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="no">nil</span><span class="p">,</span> <span class="n">err</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">writer</span><span class="o">.</span><span class="n">Close</span><span class="p">();</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="no">nil</span><span class="p">,</span> <span class="n">err</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">buf</span><span class="o">.</span><span class="n">Bytes</span><span class="p">(),</span> <span class="no">nil</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="42-compresión-con-progress-bar">4.2 Compresión con Progress Bar</h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">comprimirConProgreso</span><span class="p">(</span><span class="n">entrada</span><span class="p">,</span> <span class="n">salida</span> <span class="kt">string</span><span class="p">)</span> <span class="kt">error</span> <span class="p">{</span>
+    <span class="c">// Abrir archivo de entrada</span>
+    <span class="n">in</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">os</span><span class="o">.</span><span class="n">Open</span><span class="p">(</span><span class="n">entrada</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">err</span>
+    <span class="p">}</span>
+    <span class="k">defer</span> <span class="n">in</span><span class="o">.</span><span class="n">Close</span><span class="p">()</span>
+
+    <span class="c">// Obtener tamaño del archivo</span>
+    <span class="n">info</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">in</span><span class="o">.</span><span class="n">Stat</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">err</span>
+    <span class="p">}</span>
+
+    <span class="c">// Crear archivo de salida</span>
+    <span class="n">out</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">os</span><span class="o">.</span><span class="n">Create</span><span class="p">(</span><span class="n">salida</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">err</span>
+    <span class="p">}</span>
+    <span class="k">defer</span> <span class="n">out</span><span class="o">.</span><span class="n">Close</span><span class="p">()</span>
+
+    <span class="c">// Crear writer zlib</span>
+    <span class="n">zw</span> <span class="o">:=</span> <span class="n">zlib</span><span class="o">.</span><span class="n">NewWriter</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+    <span class="k">defer</span> <span class="n">zw</span><span class="o">.</span><span class="n">Close</span><span class="p">()</span>
+
+    <span class="c">// Crear progress bar</span>
+    <span class="n">bar</span> <span class="o">:=</span> <span class="n">progressbar</span><span class="o">.</span><span class="n">DefaultBytes</span><span class="p">(</span>
+        <span class="n">info</span><span class="o">.</span><span class="n">Size</span><span class="p">(),</span>
+        <span class="s">"Comprimiendo"</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="c">// Copiar datos con progreso</span>
+    <span class="k">if</span> <span class="n">_</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">io</span><span class="o">.</span><span class="n">Copy</span><span class="p">(</span><span class="n">io</span><span class="o">.</span><span class="n">MultiWriter</span><span class="p">(</span><span class="n">zw</span><span class="p">,</span> <span class="n">bar</span><span class="p">),</span> <span class="n">in</span><span class="p">);</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">err</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="no">nil</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="5-utilidades-y-helpers">5. Utilidades y Helpers</h2>
+
+<h3 id="51-detector-de-formato">5.1 Detector de Formato</h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">detectarFormatoCompresion</span><span class="p">(</span><span class="n">datos</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">)</span> <span class="kt">string</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">datos</span><span class="p">)</span> <span class="o">&lt;</span> <span class="m">4</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="s">"desconocido"</span>
+    <span class="p">}</span>
+
+    <span class="c">// Detectar formato basado en magic numbers</span>
+    <span class="k">switch</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="n">bytes</span><span class="o">.</span><span class="n">HasPrefix</span><span class="p">(</span><span class="n">datos</span><span class="p">,</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">{</span><span class="m">0x1f</span><span class="p">,</span> <span class="m">0x8b</span><span class="p">})</span><span class="o">:</span>
+        <span class="k">return</span> <span class="s">"gzip"</span>
+    <span class="k">case</span> <span class="n">bytes</span><span class="o">.</span><span class="n">HasPrefix</span><span class="p">(</span><span class="n">datos</span><span class="p">,</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">{</span><span class="m">0x42</span><span class="p">,</span> <span class="m">0x5a</span><span class="p">,</span> <span class="m">0x68</span><span class="p">})</span><span class="o">:</span>
+        <span class="k">return</span> <span class="s">"bzip2"</span>
+    <span class="k">case</span> <span class="n">bytes</span><span class="o">.</span><span class="n">HasPrefix</span><span class="p">(</span><span class="n">datos</span><span class="p">,</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">{</span><span class="m">0x78</span><span class="p">,</span> <span class="m">0x01</span><span class="p">})</span><span class="o">:</span>
+        <span class="k">return</span> <span class="s">"zlib"</span>
+    <span class="k">default</span><span class="o">:</span>
+        <span class="k">return</span> <span class="s">"desconocido"</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="52-compresor-universal">5.2 Compresor Universal</h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">type</span> <span class="n">CompresorConfig</span> <span class="k">struct</span> <span class="p">{</span>
+    <span class="n">Formato</span>    <span class="kt">string</span>
+    <span class="n">Nivel</span>      <span class="kt">int</span>
+    <span class="n">Dictionary</span> <span class="p">[]</span><span class="kt">byte</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="n">ComprimirDatos</span><span class="p">(</span><span class="n">datos</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="n">config</span> <span class="n">CompresorConfig</span><span class="p">)</span> <span class="p">([]</span><span class="kt">byte</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">var</span> <span class="n">buf</span> <span class="n">bytes</span><span class="o">.</span><span class="n">Buffer</span>
+
+    <span class="k">switch</span> <span class="n">config</span><span class="o">.</span><span class="n">Formato</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="s">"gzip"</span><span class="o">:</span>
+        <span class="n">w</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">gzip</span><span class="o">.</span><span class="n">NewWriterLevel</span><span class="p">(</span><span class="o">&amp;</span><span class="n">buf</span><span class="p">,</span> <span class="n">config</span><span class="o">.</span><span class="n">Nivel</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="no">nil</span><span class="p">,</span> <span class="n">err</span>
+        <span class="p">}</span>
+        <span class="k">defer</span> <span class="n">w</span><span class="o">.</span><span class="n">Close</span><span class="p">()</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">err</span> <span class="o">=</span> <span class="n">w</span><span class="o">.</span><span class="n">Write</span><span class="p">(</span><span class="n">datos</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">buf</span><span class="o">.</span><span class="n">Bytes</span><span class="p">(),</span> <span class="n">err</span>
+
+    <span class="k">case</span> <span class="s">"zlib"</span><span class="o">:</span>
+        <span class="n">w</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">zlib</span><span class="o">.</span><span class="n">NewWriterLevel</span><span class="p">(</span><span class="o">&amp;</span><span class="n">buf</span><span class="p">,</span> <span class="n">config</span><span class="o">.</span><span class="n">Nivel</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="no">nil</span><span class="p">,</span> <span class="n">err</span>
+        <span class="p">}</span>
+        <span class="k">defer</span> <span class="n">w</span><span class="o">.</span><span class="n">Close</span><span class="p">()</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">err</span> <span class="o">=</span> <span class="n">w</span><span class="o">.</span><span class="n">Write</span><span class="p">(</span><span class="n">datos</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">buf</span><span class="o">.</span><span class="n">Bytes</span><span class="p">(),</span> <span class="n">err</span>
+
+    <span class="c">// Agregar más formatos según sea necesario</span>
+    
+    <span class="k">default</span><span class="o">:</span>
+        <span class="k">return</span> <span class="no">nil</span><span class="p">,</span> <span class="n">fmt</span><span class="o">.</span><span class="n">Errorf</span><span class="p">(</span><span class="s">"formato no soportado: %s"</span><span class="p">,</span> <span class="n">config</span><span class="o">.</span><span class="n">Formato</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="6-mejores-prácticas">6. Mejores Prácticas</h2>
+
+<ol>
+  <li><strong>Manejo de Recursos</strong>
+    <ul>
+      <li>Siempre cerrar readers y writers</li>
+      <li>Usar <code class="language-plaintext highlighter-rouge">defer</code> para garantizar el cierre</li>
+      <li>Manejar errores apropiadamente</li>
+    </ul>
+  </li>
+  <li><strong>Optimización</strong>
+    <ul>
+      <li>Elegir el nivel de compresión adecuado</li>
+      <li>Usar buffers de tamaño apropiado</li>
+      <li>Considerar el uso de goroutines para compresión paralela</li>
+    </ul>
+  </li>
+  <li><strong>Seguridad</strong>
+    <ul>
+      <li>Validar tamaños de entrada</li>
+      <li>Establecer límites de memoria</li>
+      <li>Verificar integridad de datos comprimidos</li>
+    </ul>
+  </li>
+</ol>
+
+<h2 id="7-referencias">7. Referencias</h2>
+
+<ul>
+  <li><a href="https://golang.org/pkg/compress/">Documentación oficial de compress</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc1952">Especificación GZIP</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc1950">Especificación ZLIB</a></li>
+</ul>
+
+            </main>
+        </div>
+        
+        <!-- Componente flotante de GitHub -->
+<div class="github-floating">
+    <a href="https://github.com/" target="_blank" rel="noopener noreferrer" class="github-link" title="Ver en GitHub">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-github">
+            <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+        </svg>
+    </a>
+    
+    
+    <a href="https://github.com//MiguelP-Dev.github.io/blob/main/_pages/paquetes/compress.md" target="_blank" rel="noopener noreferrer" class="edit-link" title="Editar esta página">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-2">
+            <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+        </svg>
+    </a>
+    
+</div>
+
+<style>
+    /* Estilos del componente SVG */
+    .github-corner:hover .octo-arm {
+        animation: octocat-wave 560ms ease-in-out;
+    }
+    
+    @keyframes octocat-wave {
+        0%, 100% { transform: rotate(0); }
+        20%, 60% { transform: rotate(-25deg); }
+        40%, 80% { transform: rotate(10deg); }
+    }
+    
+    @media (max-width: 500px) {
+        .github-corner:hover .octo-arm {
+            animation: none;
+        }
+        .github-corner .octo-arm {
+            animation: octocat-wave 560ms ease-in-out;
+        }
+    }
+</style>
+    </div>
+    
+    <script src="/assets/js/scripts.js"></script>
+</body>
+</html>

@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>expvar | Miguel's Programing Notes</title>
+    <link rel="stylesheet" href="/assets/css/styles.css">
+</head>
+<body>
+    <div class="app">
+        <nav class="navbar">
+    <div class="nav-container">
+        <a href="/" class="nav-brand">
+            Miguel's Programming Notes
+        </a>
+
+        <div class="nav-sections">
+            
+                
+                
+                
+                <a href="/paquetes/"
+                    class="nav-section active"
+                    data-section="paquetes">
+                    📦 Paquetes
+                </a>
+            
+                
+                
+                
+                <a href="/ejemplos/"
+                    class="nav-section "
+                    data-section="ejemplos">
+                    🧩 Ejemplos
+                </a>
+            
+        </div>
+    </div>
+</nav>
+        
+        <div class="container">
+            <button class="menu-toggle" aria-label="Abrir menú">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            
+            <aside class="sidebar" id="dynamic-sidebar">
+    <div class="sidebar-header">
+        <h3 class="sidebar-title">Miguel's Programming Notes</h3>
+    </div>
+    
+    <div class="sidebar-content">
+        
+            
+                <h3 class="sidebar-title">📦 Paquetes</h3>
+                <nav class="sidebar-nav">
+                    
+                        <a href="/paquetes/fmt/"
+                            class="sidebar-item "
+                            data-item="fmt">
+                            fmt
+                        </a>
+                    
+                        <a href="/paquetes/net/"
+                            class="sidebar-item "
+                            data-item="net-http">
+                            net/http
+                        </a>
+                    
+                        <a href="/paquetes/encoding/"
+                            class="sidebar-item "
+                            data-item="encoding">
+                            encoding
+                        </a>
+                    
+                </nav>
+            
+        
+            
+        
+    </div>
+</aside>
+            
+            <main class="content">
+                <h1 id="paquete-expvar-en-go">Paquete expvar en Go</h1>
+
+<p>El paquete <code class="language-plaintext highlighter-rouge">expvar</code> proporciona una interfaz estandarizada para publicar variables en tiempo de ejecución que pueden ser accedidas mediante HTTP. Este documento explora sus características y usos prácticos.</p>
+
+<h2 id="1-conceptos-básicos">1. Conceptos Básicos</h2>
+
+<h3 id="11-variables-exportadas">1.1 Variables Exportadas</h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// filepath: ejemplos/expvar/basic.go</span>
+<span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="p">(</span>
+    <span class="s">"expvar"</span>
+    <span class="s">"fmt"</span>
+    <span class="s">"net/http"</span>
+<span class="p">)</span>
+
+<span class="c">// Declaración de variables exportadas</span>
+<span class="k">var</span> <span class="p">(</span>
+    <span class="n">solicitudes</span> <span class="o">=</span> <span class="n">expvar</span><span class="o">.</span><span class="n">NewInt</span><span class="p">(</span><span class="s">"solicitudes_totales"</span><span class="p">)</span>
+    <span class="n">errores</span>     <span class="o">=</span> <span class="n">expvar</span><span class="o">.</span><span class="n">NewInt</span><span class="p">(</span><span class="s">"errores_totales"</span><span class="p">)</span>
+    <span class="n">latencia</span>    <span class="o">=</span> <span class="n">expvar</span><span class="o">.</span><span class="n">NewFloat</span><span class="p">(</span><span class="s">"latencia_promedio"</span><span class="p">)</span>
+    <span class="n">últimaIP</span>    <span class="o">=</span> <span class="n">expvar</span><span class="o">.</span><span class="n">NewString</span><span class="p">(</span><span class="s">"ultima_ip"</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c">// Incrementar contador de solicitudes</span>
+    <span class="n">solicitudes</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="m">1</span><span class="p">)</span>
+    
+    <span class="c">// Establecer valor de latencia</span>
+    <span class="n">latencia</span><span class="o">.</span><span class="n">Set</span><span class="p">(</span><span class="m">0.127</span><span class="p">)</span>
+    
+    <span class="c">// Actualizar última IP</span>
+    <span class="n">últimaIP</span><span class="o">.</span><span class="n">Set</span><span class="p">(</span><span class="s">"192.168.1.1"</span><span class="p">)</span>
+    
+    <span class="c">// Iniciar servidor HTTP en puerto 8080</span>
+    <span class="n">http</span><span class="o">.</span><span class="n">ListenAndServe</span><span class="p">(</span><span class="s">":8080"</span><span class="p">,</span> <span class="no">nil</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="12-mapas-personalizados">1.2 Mapas Personalizados</h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// filepath: ejemplos/expvar/maps.go</span>
+<span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="p">(</span>
+    <span class="s">"expvar"</span>
+    <span class="s">"time"</span>
+<span class="p">)</span>
+
+<span class="k">var</span> <span class="p">(</span>
+    <span class="n">stats</span> <span class="o">=</span> <span class="n">expvar</span><span class="o">.</span><span class="n">NewMap</span><span class="p">(</span><span class="s">"estadisticas"</span><span class="p">)</span>
+    <span class="n">users</span> <span class="o">=</span> <span class="n">expvar</span><span class="o">.</span><span class="n">NewMap</span><span class="p">(</span><span class="s">"usuarios_activos"</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="k">func</span> <span class="n">inicializarEstadísticas</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c">// Inicializar contadores en el mapa</span>
+    <span class="n">stats</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="s">"solicitudes"</span><span class="p">,</span> <span class="m">0</span><span class="p">)</span>
+    <span class="n">stats</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="s">"errores"</span><span class="p">,</span> <span class="m">0</span><span class="p">)</span>
+    <span class="n">stats</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="s">"bytes_enviados"</span><span class="p">,</span> <span class="m">0</span><span class="p">)</span>
+    
+    <span class="c">// Actualizar usuarios activos</span>
+    <span class="n">users</span><span class="o">.</span><span class="n">Set</span><span class="p">(</span><span class="s">"admin"</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">expvar</span><span class="o">.</span><span class="n">Int</span><span class="p">{})</span>
+    <span class="n">users</span><span class="o">.</span><span class="n">Set</span><span class="p">(</span><span class="s">"invitado"</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">expvar</span><span class="o">.</span><span class="n">Int</span><span class="p">{})</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="2-casos-de-uso-avanzados">2. Casos de Uso Avanzados</h2>
+
+<h3 id="21-monitor-de-rendimiento">2.1 Monitor de Rendimiento</h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// filepath: ejemplos/expvar/monitor.go</span>
+<span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="p">(</span>
+    <span class="s">"expvar"</span>
+    <span class="s">"runtime"</span>
+    <span class="s">"time"</span>
+<span class="p">)</span>
+
+<span class="k">type</span> <span class="n">Métricas</span> <span class="k">struct</span> <span class="p">{</span>
+    <span class="n">goroutines</span> <span class="o">*</span><span class="n">expvar</span><span class="o">.</span><span class="n">Int</span>
+    <span class="n">memoria</span>    <span class="o">*</span><span class="n">expvar</span><span class="o">.</span><span class="n">Map</span>
+    <span class="n">gc</span>         <span class="o">*</span><span class="n">expvar</span><span class="o">.</span><span class="n">Map</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="n">NuevoMonitor</span><span class="p">()</span> <span class="o">*</span><span class="n">Métricas</span> <span class="p">{</span>
+    <span class="n">m</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="n">Métricas</span><span class="p">{</span>
+        <span class="n">goroutines</span><span class="o">:</span> <span class="n">expvar</span><span class="o">.</span><span class="n">NewInt</span><span class="p">(</span><span class="s">"goroutines"</span><span class="p">),</span>
+        <span class="n">memoria</span><span class="o">:</span>    <span class="n">expvar</span><span class="o">.</span><span class="n">NewMap</span><span class="p">(</span><span class="s">"memoria"</span><span class="p">),</span>
+        <span class="n">gc</span><span class="o">:</span>         <span class="n">expvar</span><span class="o">.</span><span class="n">NewMap</span><span class="p">(</span><span class="s">"gc"</span><span class="p">),</span>
+    <span class="p">}</span>
+
+    <span class="c">// Inicializar métricas de memoria</span>
+    <span class="n">m</span><span class="o">.</span><span class="n">memoria</span><span class="o">.</span><span class="n">Set</span><span class="p">(</span><span class="s">"heap_alloc"</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">expvar</span><span class="o">.</span><span class="n">Int</span><span class="p">{})</span>
+    <span class="n">m</span><span class="o">.</span><span class="n">memoria</span><span class="o">.</span><span class="n">Set</span><span class="p">(</span><span class="s">"heap_sys"</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">expvar</span><span class="o">.</span><span class="n">Int</span><span class="p">{})</span>
+    <span class="n">m</span><span class="o">.</span><span class="n">memoria</span><span class="o">.</span><span class="n">Set</span><span class="p">(</span><span class="s">"heap_idle"</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">expvar</span><span class="o">.</span><span class="n">Int</span><span class="p">{})</span>
+    
+    <span class="c">// Inicializar métricas de GC</span>
+    <span class="n">m</span><span class="o">.</span><span class="n">gc</span><span class="o">.</span><span class="n">Set</span><span class="p">(</span><span class="s">"num_gc"</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">expvar</span><span class="o">.</span><span class="n">Int</span><span class="p">{})</span>
+    <span class="n">m</span><span class="o">.</span><span class="n">gc</span><span class="o">.</span><span class="n">Set</span><span class="p">(</span><span class="s">"pause_total"</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">expvar</span><span class="o">.</span><span class="n">Int</span><span class="p">{})</span>
+    
+    <span class="k">return</span> <span class="n">m</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="p">(</span><span class="n">m</span> <span class="o">*</span><span class="n">Métricas</span><span class="p">)</span> <span class="n">Actualizar</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c">// Actualizar número de goroutines</span>
+    <span class="n">m</span><span class="o">.</span><span class="n">goroutines</span><span class="o">.</span><span class="n">Set</span><span class="p">(</span><span class="kt">int64</span><span class="p">(</span><span class="n">runtime</span><span class="o">.</span><span class="n">NumGoroutine</span><span class="p">()))</span>
+    
+    <span class="c">// Obtener estadísticas de memoria</span>
+    <span class="k">var</span> <span class="n">memStats</span> <span class="n">runtime</span><span class="o">.</span><span class="n">MemStats</span>
+    <span class="n">runtime</span><span class="o">.</span><span class="n">ReadMemStats</span><span class="p">(</span><span class="o">&amp;</span><span class="n">memStats</span><span class="p">)</span>
+    
+    <span class="c">// Actualizar métricas de memoria</span>
+    <span class="n">m</span><span class="o">.</span><span class="n">memoria</span><span class="o">.</span><span class="n">Get</span><span class="p">(</span><span class="s">"heap_alloc"</span><span class="p">)</span><span class="o">.</span><span class="p">(</span><span class="o">*</span><span class="n">expvar</span><span class="o">.</span><span class="n">Int</span><span class="p">)</span><span class="o">.</span><span class="n">Set</span><span class="p">(</span><span class="kt">int64</span><span class="p">(</span><span class="n">memStats</span><span class="o">.</span><span class="n">HeapAlloc</span><span class="p">))</span>
+    <span class="n">m</span><span class="o">.</span><span class="n">memoria</span><span class="o">.</span><span class="n">Get</span><span class="p">(</span><span class="s">"heap_sys"</span><span class="p">)</span><span class="o">.</span><span class="p">(</span><span class="o">*</span><span class="n">expvar</span><span class="o">.</span><span class="n">Int</span><span class="p">)</span><span class="o">.</span><span class="n">Set</span><span class="p">(</span><span class="kt">int64</span><span class="p">(</span><span class="n">memStats</span><span class="o">.</span><span class="n">HeapSys</span><span class="p">))</span>
+    <span class="n">m</span><span class="o">.</span><span class="n">memoria</span><span class="o">.</span><span class="n">Get</span><span class="p">(</span><span class="s">"heap_idle"</span><span class="p">)</span><span class="o">.</span><span class="p">(</span><span class="o">*</span><span class="n">expvar</span><span class="o">.</span><span class="n">Int</span><span class="p">)</span><span class="o">.</span><span class="n">Set</span><span class="p">(</span><span class="kt">int64</span><span class="p">(</span><span class="n">memStats</span><span class="o">.</span><span class="n">HeapIdle</span><span class="p">))</span>
+    
+    <span class="c">// Actualizar métricas de GC</span>
+    <span class="n">m</span><span class="o">.</span><span class="n">gc</span><span class="o">.</span><span class="n">Get</span><span class="p">(</span><span class="s">"num_gc"</span><span class="p">)</span><span class="o">.</span><span class="p">(</span><span class="o">*</span><span class="n">expvar</span><span class="o">.</span><span class="n">Int</span><span class="p">)</span><span class="o">.</span><span class="n">Set</span><span class="p">(</span><span class="kt">int64</span><span class="p">(</span><span class="n">memStats</span><span class="o">.</span><span class="n">NumGC</span><span class="p">))</span>
+    <span class="n">m</span><span class="o">.</span><span class="n">gc</span><span class="o">.</span><span class="n">Get</span><span class="p">(</span><span class="s">"pause_total"</span><span class="p">)</span><span class="o">.</span><span class="p">(</span><span class="o">*</span><span class="n">expvar</span><span class="o">.</span><span class="n">Int</span><span class="p">)</span><span class="o">.</span><span class="n">Set</span><span class="p">(</span><span class="kt">int64</span><span class="p">(</span><span class="n">memStats</span><span class="o">.</span><span class="n">PauseTotalNs</span><span class="p">))</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="22-middleware-http-con-métricas">2.2 Middleware HTTP con Métricas</h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// filepath: ejemplos/expvar/middleware.go</span>
+<span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="p">(</span>
+    <span class="s">"expvar"</span>
+    <span class="s">"net/http"</span>
+    <span class="s">"time"</span>
+<span class="p">)</span>
+
+<span class="k">func</span> <span class="n">métricasMiddleware</span><span class="p">(</span><span class="n">next</span> <span class="n">http</span><span class="o">.</span><span class="n">Handler</span><span class="p">)</span> <span class="n">http</span><span class="o">.</span><span class="n">Handler</span> <span class="p">{</span>
+    <span class="c">// Contadores para el middleware</span>
+    <span class="n">solicitudesTotal</span> <span class="o">:=</span> <span class="n">expvar</span><span class="o">.</span><span class="n">NewMap</span><span class="p">(</span><span class="s">"http_metricas"</span><span class="p">)</span>
+    <span class="n">solicitudesTotal</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="s">"total"</span><span class="p">,</span> <span class="m">0</span><span class="p">)</span>
+    <span class="n">solicitudesTotal</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="s">"exito"</span><span class="p">,</span> <span class="m">0</span><span class="p">)</span>
+    <span class="n">solicitudesTotal</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="s">"error"</span><span class="p">,</span> <span class="m">0</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">http</span><span class="o">.</span><span class="n">HandlerFunc</span><span class="p">(</span><span class="k">func</span><span class="p">(</span><span class="n">w</span> <span class="n">http</span><span class="o">.</span><span class="n">ResponseWriter</span><span class="p">,</span> <span class="n">r</span> <span class="o">*</span><span class="n">http</span><span class="o">.</span><span class="n">Request</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">inicio</span> <span class="o">:=</span> <span class="n">time</span><span class="o">.</span><span class="n">Now</span><span class="p">()</span>
+        
+        <span class="c">// Registrar métricas antes de la solicitud</span>
+        <span class="n">solicitudesTotal</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="s">"total"</span><span class="p">,</span> <span class="m">1</span><span class="p">)</span>
+        
+        <span class="c">// Envolver ResponseWriter para capturar el código de estado</span>
+        <span class="n">wrapped</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="n">responseWriter</span><span class="p">{</span><span class="n">ResponseWriter</span><span class="o">:</span> <span class="n">w</span><span class="p">}</span>
+        
+        <span class="c">// Ejecutar el handler</span>
+        <span class="n">next</span><span class="o">.</span><span class="n">ServeHTTP</span><span class="p">(</span><span class="n">wrapped</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span>
+        
+        <span class="c">// Registrar métricas después de la solicitud</span>
+        <span class="k">if</span> <span class="n">wrapped</span><span class="o">.</span><span class="n">status</span> <span class="o">&lt;</span> <span class="m">400</span> <span class="p">{</span>
+            <span class="n">solicitudesTotal</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="s">"exito"</span><span class="p">,</span> <span class="m">1</span><span class="p">)</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="n">solicitudesTotal</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="s">"error"</span><span class="p">,</span> <span class="m">1</span><span class="p">)</span>
+        <span class="p">}</span>
+        
+        <span class="c">// Registrar latencia</span>
+        <span class="n">latencia</span> <span class="o">:=</span> <span class="n">time</span><span class="o">.</span><span class="n">Since</span><span class="p">(</span><span class="n">inicio</span><span class="p">)</span><span class="o">.</span><span class="n">Milliseconds</span><span class="p">()</span>
+        <span class="n">solicitudesTotal</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="s">"latencia_total_ms"</span><span class="p">,</span> <span class="n">latencia</span><span class="p">)</span>
+    <span class="p">})</span>
+<span class="p">}</span>
+
+<span class="k">type</span> <span class="n">responseWriter</span> <span class="k">struct</span> <span class="p">{</span>
+    <span class="n">http</span><span class="o">.</span><span class="n">ResponseWriter</span>
+    <span class="n">status</span> <span class="kt">int</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="p">(</span><span class="n">rw</span> <span class="o">*</span><span class="n">responseWriter</span><span class="p">)</span> <span class="n">WriteHeader</span><span class="p">(</span><span class="n">code</span> <span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">rw</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">code</span>
+    <span class="n">rw</span><span class="o">.</span><span class="n">ResponseWriter</span><span class="o">.</span><span class="n">WriteHeader</span><span class="p">(</span><span class="n">code</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="3-publicadores-personalizados">3. Publicadores Personalizados</h2>
+
+<h3 id="31-implementación-de-var">3.1 Implementación de Var</h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// filepath: ejemplos/expvar/custom.go</span>
+<span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="p">(</span>
+    <span class="s">"expvar"</span>
+    <span class="s">"sync"</span>
+<span class="p">)</span>
+
+<span class="c">// CacheStats implementa la interfaz expvar.Var</span>
+<span class="k">type</span> <span class="n">CacheStats</span> <span class="k">struct</span> <span class="p">{</span>
+    <span class="n">mu</span>      <span class="n">sync</span><span class="o">.</span><span class="n">RWMutex</span>
+    <span class="n">hits</span>    <span class="kt">int64</span>
+    <span class="n">misses</span>  <span class="kt">int64</span>
+    <span class="n">ratio</span>   <span class="kt">float64</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="p">(</span><span class="n">c</span> <span class="o">*</span><span class="n">CacheStats</span><span class="p">)</span> <span class="n">String</span><span class="p">()</span> <span class="kt">string</span> <span class="p">{</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">mu</span><span class="o">.</span><span class="n">RLock</span><span class="p">()</span>
+    <span class="k">defer</span> <span class="n">c</span><span class="o">.</span><span class="n">mu</span><span class="o">.</span><span class="n">RUnlock</span><span class="p">()</span>
+    
+    <span class="k">return</span> <span class="n">fmt</span><span class="o">.</span><span class="n">Sprintf</span><span class="p">(</span><span class="s">`{"hits":%d,"misses":%d,"ratio":%f}`</span><span class="p">,</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">hits</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">misses</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">ratio</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="p">(</span><span class="n">c</span> <span class="o">*</span><span class="n">CacheStats</span><span class="p">)</span> <span class="n">Add</span><span class="p">(</span><span class="n">hit</span> <span class="kt">bool</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">mu</span><span class="o">.</span><span class="n">Lock</span><span class="p">()</span>
+    <span class="k">defer</span> <span class="n">c</span><span class="o">.</span><span class="n">mu</span><span class="o">.</span><span class="n">Unlock</span><span class="p">()</span>
+    
+    <span class="k">if</span> <span class="n">hit</span> <span class="p">{</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">hits</span><span class="o">++</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">misses</span><span class="o">++</span>
+    <span class="p">}</span>
+    
+    <span class="n">total</span> <span class="o">:=</span> <span class="kt">float64</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">hits</span> <span class="o">+</span> <span class="n">c</span><span class="o">.</span><span class="n">misses</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">total</span> <span class="o">&gt;</span> <span class="m">0</span> <span class="p">{</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">ratio</span> <span class="o">=</span> <span class="kt">float64</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">hits</span><span class="p">)</span> <span class="o">/</span> <span class="n">total</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="4-mejores-prácticas">4. Mejores Prácticas</h2>
+
+<ol>
+  <li><strong>Rendimiento</strong>
+    <ul>
+      <li>Utilizar tipos atómicos para contadores simples</li>
+      <li>Evitar bloqueos innecesarios en operaciones de lectura</li>
+      <li>Considerar el impacto de la recolección frecuente de métricas</li>
+    </ul>
+  </li>
+  <li><strong>Seguridad</strong>
+    <ul>
+      <li>Proteger el endpoint <code class="language-plaintext highlighter-rouge">/debug/vars</code></li>
+      <li>Limitar la información expuesta</li>
+      <li>Implementar autenticación cuando sea necesario</li>
+    </ul>
+  </li>
+  <li><strong>Organización</strong>
+    <ul>
+      <li>Agrupar métricas relacionadas en mapas</li>
+      <li>Usar nombres descriptivos y consistentes</li>
+      <li>Documentar el significado de cada métrica</li>
+    </ul>
+  </li>
+</ol>
+
+<h2 id="5-referencias">5. Referencias</h2>
+
+<ul>
+  <li><a href="https://golang.org/pkg/expvar/">Documentación oficial de expvar</a></li>
+  <li><a href="https://blog.golang.org/pprof">Go blog: Profiling Go Programs</a></li>
+</ul>
+
+            </main>
+        </div>
+        
+        <!-- Componente flotante de GitHub -->
+<div class="github-floating">
+    <a href="https://github.com/" target="_blank" rel="noopener noreferrer" class="github-link" title="Ver en GitHub">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-github">
+            <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+        </svg>
+    </a>
+    
+    
+    <a href="https://github.com//MiguelP-Dev.github.io/blob/main/_pages/paquetes/expvar.md" target="_blank" rel="noopener noreferrer" class="edit-link" title="Editar esta página">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-2">
+            <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+        </svg>
+    </a>
+    
+</div>
+
+<style>
+    /* Estilos del componente SVG */
+    .github-corner:hover .octo-arm {
+        animation: octocat-wave 560ms ease-in-out;
+    }
+    
+    @keyframes octocat-wave {
+        0%, 100% { transform: rotate(0); }
+        20%, 60% { transform: rotate(-25deg); }
+        40%, 80% { transform: rotate(10deg); }
+    }
+    
+    @media (max-width: 500px) {
+        .github-corner:hover .octo-arm {
+            animation: none;
+        }
+        .github-corner .octo-arm {
+            animation: octocat-wave 560ms ease-in-out;
+        }
+    }
+</style>
+    </div>
+    
+    <script src="/assets/js/scripts.js"></script>
+</body>
+</html>

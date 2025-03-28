@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>testing | Miguel's Programing Notes</title>
+    <link rel="stylesheet" href="/assets/css/styles.css">
+</head>
+<body>
+    <div class="app">
+        <nav class="navbar">
+    <div class="nav-container">
+        <a href="/" class="nav-brand">
+            Miguel's Programming Notes
+        </a>
+
+        <div class="nav-sections">
+            
+                
+                
+                
+                <a href="/paquetes/"
+                    class="nav-section active"
+                    data-section="paquetes">
+                    📦 Paquetes
+                </a>
+            
+                
+                
+                
+                <a href="/ejemplos/"
+                    class="nav-section "
+                    data-section="ejemplos">
+                    🧩 Ejemplos
+                </a>
+            
+        </div>
+    </div>
+</nav>
+        
+        <div class="container">
+            <button class="menu-toggle" aria-label="Abrir menú">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            
+            <aside class="sidebar" id="dynamic-sidebar">
+    <div class="sidebar-header">
+        <h3 class="sidebar-title">Miguel's Programming Notes</h3>
+    </div>
+    
+    <div class="sidebar-content">
+        
+            
+                <h3 class="sidebar-title">📦 Paquetes</h3>
+                <nav class="sidebar-nav">
+                    
+                        <a href="/paquetes/fmt/"
+                            class="sidebar-item "
+                            data-item="fmt">
+                            fmt
+                        </a>
+                    
+                        <a href="/paquetes/net/"
+                            class="sidebar-item "
+                            data-item="net-http">
+                            net/http
+                        </a>
+                    
+                        <a href="/paquetes/encoding/"
+                            class="sidebar-item "
+                            data-item="encoding">
+                            encoding
+                        </a>
+                    
+                </nav>
+            
+        
+            
+        
+    </div>
+</aside>
+            
+            <main class="content">
+                <h1 id="paquete-testing-en-go">Paquete <code class="language-plaintext highlighter-rouge">testing</code> en Go</h1>
+
+<p>El paquete <code class="language-plaintext highlighter-rouge">testing</code> es esencial para crear pruebas robustas en Go. Esta guía ampliada cubre desde fundamentos hasta técnicas avanzadas, incluyendo mejores prácticas y ejemplos del mundo real.</p>
+
+<hr />
+
+<h2 id="componentes-principales">Componentes Principales</h2>
+
+<h3 id="1-pruebas-unitarias-testingt">1. <strong>Pruebas Unitarias (<code class="language-plaintext highlighter-rouge">testing.T</code>)</strong></h3>
+
+<p><strong>Métodos Clave</strong>:</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">Error()/Errorf()</code>: Reportar fallos sin detener la prueba.</li>
+  <li><code class="language-plaintext highlighter-rouge">Fatal()/Fatalf()</code>: Detener la prueba inmediatamente.</li>
+  <li><code class="language-plaintext highlighter-rouge">Run()</code>: Ejecutar subtests.</li>
+  <li><code class="language-plaintext highlighter-rouge">Parallel()</code>: Ejecutar pruebas en paralelo.</li>
+  <li><code class="language-plaintext highlighter-rouge">Helper()</code>: Marcar función como helper.</li>
+</ul>
+
+<p><strong>Ejemplo de Tabla de Pruebas</strong>:</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">TestSuma</span><span class="p">(</span><span class="n">t</span> <span class="o">*</span><span class="n">testing</span><span class="o">.</span><span class="n">T</span><span class="p">)</span> <span class="p">{</span>  
+    <span class="n">casos</span> <span class="o">:=</span> <span class="p">[]</span><span class="k">struct</span> <span class="p">{</span>  
+        <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">esperado</span> <span class="kt">int</span>  
+    <span class="p">}{</span>  
+        <span class="p">{</span><span class="m">2</span><span class="p">,</span> <span class="m">3</span><span class="p">,</span> <span class="m">5</span><span class="p">},</span>  
+        <span class="p">{</span><span class="m">0</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">0</span><span class="p">},</span>  
+        <span class="p">{</span><span class="o">-</span><span class="m">1</span><span class="p">,</span> <span class="m">1</span><span class="p">,</span> <span class="m">0</span><span class="p">},</span>  
+        <span class="p">{</span><span class="m">100</span><span class="p">,</span> <span class="m">200</span><span class="p">,</span> <span class="m">300</span><span class="p">},</span>  
+    <span class="p">}</span>  
+
+    <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">c</span> <span class="o">:=</span> <span class="k">range</span> <span class="n">casos</span> <span class="p">{</span>  
+        <span class="n">t</span><span class="o">.</span><span class="n">Run</span><span class="p">(</span><span class="n">fmt</span><span class="o">.</span><span class="n">Sprintf</span><span class="p">(</span><span class="s">"%d+%d"</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">a</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">b</span><span class="p">),</span> <span class="k">func</span><span class="p">(</span><span class="n">t</span> <span class="o">*</span><span class="n">testing</span><span class="o">.</span><span class="n">T</span><span class="p">)</span> <span class="p">{</span>  
+            <span class="n">resultado</span> <span class="o">:=</span> <span class="n">Suma</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">a</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">b</span><span class="p">)</span>  
+            <span class="k">if</span> <span class="n">resultado</span> <span class="o">!=</span> <span class="n">c</span><span class="o">.</span><span class="n">esperado</span> <span class="p">{</span>  
+                <span class="n">t</span><span class="o">.</span><span class="n">Errorf</span><span class="p">(</span><span class="s">"Esperado %d, obtenido %d"</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">esperado</span><span class="p">,</span> <span class="n">resultado</span><span class="p">)</span>  
+            <span class="p">}</span>  
+        <span class="p">})</span>  
+    <span class="p">}</span>  
+<span class="p">}</span>  
+</code></pre></div></div>
+
+<p><strong>Mejores Prácticas</strong>:</p>
+
+<ul>
+  <li>Usar subtests para organizar casos.</li>
+  <li>Proporcionar nombres descriptivos en <code class="language-plaintext highlighter-rouge">t.Run()</code>.</li>
+</ul>
+
+<hr />
+
+<h3 id="2-benchmarks-testingb">2. <strong>Benchmarks (<code class="language-plaintext highlighter-rouge">testing.B</code>)</strong></h3>
+
+<p><strong>Métodos Clave</strong>:</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">ResetTimer()</code>: Ignorar tiempo de inicialización.</li>
+  <li><code class="language-plaintext highlighter-rouge">ReportAllocs()</code>: Monitorear asignaciones de memoria.</li>
+</ul>
+
+<p><strong>Ejemplo Comparativo</strong>:</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">BenchmarkSuma</span><span class="p">(</span><span class="n">b</span> <span class="o">*</span><span class="n">testing</span><span class="o">.</span><span class="n">B</span><span class="p">)</span> <span class="p">{</span>  
+    <span class="n">b</span><span class="o">.</span><span class="n">ReportAllocs</span><span class="p">()</span>  
+    <span class="k">for</span> <span class="n">i</span> <span class="o">:=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">b</span><span class="o">.</span><span class="n">N</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span> <span class="p">{</span>  
+        <span class="n">Suma</span><span class="p">(</span><span class="m">10</span><span class="p">,</span> <span class="m">20</span><span class="p">)</span>  
+    <span class="p">}</span>  
+<span class="p">}</span>  
+
+<span class="k">func</span> <span class="n">BenchmarkSumaOptimizada</span><span class="p">(</span><span class="n">b</span> <span class="o">*</span><span class="n">testing</span><span class="o">.</span><span class="n">B</span><span class="p">)</span> <span class="p">{</span>  
+    <span class="n">b</span><span class="o">.</span><span class="n">ResetTimer</span><span class="p">()</span>  
+    <span class="k">for</span> <span class="n">i</span> <span class="o">:=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">b</span><span class="o">.</span><span class="n">N</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span> <span class="p">{</span>  
+        <span class="n">SumaOptimizada</span><span class="p">(</span><span class="m">10</span><span class="p">,</span> <span class="m">20</span><span class="p">)</span>  
+    <span class="p">}</span>  
+<span class="p">}</span>  
+</code></pre></div></div>
+
+<p><strong>Interpretación de Resultados</strong>:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>go <span class="nb">test</span> <span class="nt">-bench</span> <span class="nb">.</span> <span class="nt">-benchmem</span>  
+<span class="c"># Output:  </span>
+<span class="c"># BenchmarkSuma-8            1000000000   0.250 ns/op   0 B/op   0 allocs/op  </span>
+</code></pre></div></div>
+
+<hr />
+
+<h3 id="3-ejemplos-example">3. <strong>Ejemplos (<code class="language-plaintext highlighter-rouge">Example</code>)</strong></h3>
+
+<p><strong>Convenciones</strong>:</p>
+
+<ul>
+  <li>Nombre de función: <code class="language-plaintext highlighter-rouge">ExampleFuncion()</code>.</li>
+  <li>Salida esperada: <code class="language-plaintext highlighter-rouge">// Output: resultado</code>.</li>
+</ul>
+
+<p><strong>Ejemplo con Documentación</strong>:</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">ExampleSuma</span><span class="p">()</span> <span class="p">{</span>  
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">Suma</span><span class="p">(</span><span class="m">3</span><span class="p">,</span> <span class="m">4</span><span class="p">))</span>  
+    <span class="c">// Output: 7  </span>
+<span class="p">}</span>  
+</code></pre></div></div>
+
+<hr />
+
+<h3 id="4-configuración-global-testingm">4. <strong>Configuración Global (<code class="language-plaintext highlighter-rouge">testing.M</code>)</strong></h3>
+
+<p><strong>Uso para Setup/Teardown</strong>:</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">TestMain</span><span class="p">(</span><span class="n">m</span> <span class="o">*</span><span class="n">testing</span><span class="o">.</span><span class="n">M</span><span class="p">)</span> <span class="p">{</span>  
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Inicializando base de datos..."</span><span class="p">)</span>  
+    <span class="n">db</span> <span class="o">=</span> <span class="n">setupDB</span><span class="p">()</span>  
+    <span class="n">codigo</span> <span class="o">:=</span> <span class="n">m</span><span class="o">.</span><span class="n">Run</span><span class="p">()</span>  
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Limpiando recursos..."</span><span class="p">)</span>  
+    <span class="n">db</span><span class="o">.</span><span class="n">Close</span><span class="p">()</span>  
+    <span class="n">os</span><span class="o">.</span><span class="n">Exit</span><span class="p">(</span><span class="n">codigo</span><span class="p">)</span>  
+<span class="p">}</span>  
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="funcionalidades-avanzadas">Funcionalidades Avanzadas</h2>
+
+<h3 id="1-pruebas-en-paralelo">1. <strong>Pruebas en Paralelo</strong></h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">TestDescargas</span><span class="p">(</span><span class="n">t</span> <span class="o">*</span><span class="n">testing</span><span class="o">.</span><span class="n">T</span><span class="p">)</span> <span class="p">{</span>  
+    <span class="n">t</span><span class="o">.</span><span class="n">Parallel</span><span class="p">()</span>  
+    <span class="c">// Pruebas de descargas simultáneas  </span>
+<span class="p">}</span>  
+
+<span class="k">func</span> <span class="n">TestSubida</span><span class="p">(</span><span class="n">t</span> <span class="o">*</span><span class="n">testing</span><span class="o">.</span><span class="n">T</span><span class="p">)</span> <span class="p">{</span>  
+    <span class="n">t</span><span class="o">.</span><span class="n">Parallel</span><span class="p">()</span>  
+    <span class="c">// Pruebas de subida  </span>
+<span class="p">}</span>  
+</code></pre></div></div>
+
+<h3 id="2-coverage-y-perfilado">2. <strong>Coverage y Perfilado</strong></h3>
+
+<p><strong>Generar Reporte de Cobertura</strong>:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>go <span class="nb">test</span> <span class="nt">-coverprofile</span><span class="o">=</span>coverage.out  
+go tool cover <span class="nt">-html</span><span class="o">=</span>coverage.out  
+</code></pre></div></div>
+
+<p><strong>Perfilado de CPU</strong>:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>go <span class="nb">test</span> <span class="nt">-cpuprofile</span><span class="o">=</span>cpu.out  
+go tool pprof cpu.out  
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="mejores-prácticas">Mejores Prácticas</h2>
+
+<h3 id="1-diseño-de-pruebas">1. <strong>Diseño de Pruebas</strong></h3>
+
+<ul>
+  <li>
+    <p><strong>Pruebas Deterministas</strong>: Evitar dependencias de estado global.</p>
+  </li>
+  <li><strong>Aislamiento</strong>: Cada test debe ser independiente.</li>
+  <li><strong>Nombres Descriptivos</strong>: <code class="language-plaintext highlighter-rouge">TestParsearFecha_FormatoInvalido</code>.</li>
+</ul>
+
+<h3 id="2-manejo-de-errores">2. <strong>Manejo de Errores</strong></h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">TestLeerArchivo</span><span class="p">(</span><span class="n">t</span> <span class="o">*</span><span class="n">testing</span><span class="o">.</span><span class="n">T</span><span class="p">)</span> <span class="p">{</span>  
+    <span class="n">data</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">os</span><span class="o">.</span><span class="n">ReadFile</span><span class="p">(</span><span class="s">"testdata/input.txt"</span><span class="p">)</span>  
+    <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>  
+        <span class="n">t</span><span class="o">.</span><span class="n">Fatalf</span><span class="p">(</span><span class="s">"No se pudo leer archivo: %v"</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span>  
+    <span class="p">}</span>  
+    <span class="c">// ...  </span>
+<span class="p">}</span>  
+</code></pre></div></div>
+
+<h3 id="3-mocking-con-interfaces">3. <strong>Mocking con Interfaces</strong></h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">type</span> <span class="n">DB</span> <span class="k">interface</span> <span class="p">{</span>  
+    <span class="n">ObtenerUsuario</span><span class="p">(</span><span class="n">id</span> <span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="o">*</span><span class="n">Usuario</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span>  
+<span class="p">}</span>  
+
+<span class="k">func</span> <span class="n">TestServicio</span><span class="p">(</span><span class="n">t</span> <span class="o">*</span><span class="n">testing</span><span class="o">.</span><span class="n">T</span><span class="p">)</span> <span class="p">{</span>  
+    <span class="n">mockDB</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="n">MockDB</span><span class="p">{</span>  
+        <span class="n">usuarios</span><span class="o">:</span> <span class="k">map</span><span class="p">[</span><span class="kt">int</span><span class="p">]</span><span class="o">*</span><span class="n">Usuario</span><span class="p">{</span><span class="m">1</span><span class="o">:</span> <span class="p">{</span><span class="s">"Admin"</span><span class="p">}},</span>  
+    <span class="p">}</span>  
+    <span class="n">servicio</span> <span class="o">:=</span> <span class="n">NuevoServicio</span><span class="p">(</span><span class="n">mockDB</span><span class="p">)</span>  
+    <span class="c">// ...  </span>
+<span class="p">}</span>  
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="errores-comunes">Errores Comunes</h2>
+
+<h3 id="1-dependencia-de-orden">1. <strong>Dependencia de Orden</strong></h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// ❌ Incorrecto: Tests dependen de ejecución previa  </span>
+<span class="k">var</span> <span class="n">contador</span> <span class="kt">int</span>  
+
+<span class="k">func</span> <span class="n">TestA</span><span class="p">(</span><span class="n">t</span> <span class="o">*</span><span class="n">testing</span><span class="o">.</span><span class="n">T</span><span class="p">)</span> <span class="p">{</span> <span class="n">contador</span><span class="o">++</span> <span class="p">}</span>  
+<span class="k">func</span> <span class="n">TestB</span><span class="p">(</span><span class="n">t</span> <span class="o">*</span><span class="n">testing</span><span class="o">.</span><span class="n">T</span><span class="p">)</span> <span class="p">{</span> <span class="n">contador</span><span class="o">++</span> <span class="p">}</span>  
+</code></pre></div></div>
+
+<h3 id="2-ignorar-errores">2. <strong>Ignorar Errores</strong></h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// ❌ Incorrecto  </span>
+<span class="n">resultado</span><span class="p">,</span> <span class="n">_</span> <span class="o">:=</span> <span class="n">FuncionRiesgosa</span><span class="p">()</span>  
+<span class="c">// ✅ Correcto  </span>
+<span class="n">resultado</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">FuncionRiesgosa</span><span class="p">()</span>  
+<span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>  
+    <span class="n">t</span><span class="o">.</span><span class="n">Fatal</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>  
+<span class="p">}</span>  
+</code></pre></div></div>
+
+<h3 id="3-pruebas-lentas">3. <strong>Pruebas Lentas</strong></h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">TestAPI</span><span class="p">(</span><span class="n">t</span> <span class="o">*</span><span class="n">testing</span><span class="o">.</span><span class="n">T</span><span class="p">)</span> <span class="p">{</span>  
+    <span class="k">if</span> <span class="n">testing</span><span class="o">.</span><span class="n">Short</span><span class="p">()</span> <span class="p">{</span>  
+        <span class="n">t</span><span class="o">.</span><span class="n">Skip</span><span class="p">(</span><span class="s">"Skip en modo corto"</span><span class="p">)</span>  
+    <span class="p">}</span>  
+    <span class="c">// Llamada HTTP real  </span>
+<span class="p">}</span>  
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="integración-con-herramientas-externas">Integración con Herramientas Externas</h2>
+
+<h3 id="1-testify-para-aserciones">1. <strong>Testify para Aserciones</strong></h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">(</span>  
+    <span class="s">"github.com/stretchr/testify/assert"</span>  
+<span class="p">)</span>  
+
+<span class="k">func</span> <span class="n">TestDivision</span><span class="p">(</span><span class="n">t</span> <span class="o">*</span><span class="n">testing</span><span class="o">.</span><span class="n">T</span><span class="p">)</span> <span class="p">{</span>  
+    <span class="n">resultado</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">Dividir</span><span class="p">(</span><span class="m">10</span><span class="p">,</span> <span class="m">2</span><span class="p">)</span>  
+    <span class="n">assert</span><span class="o">.</span><span class="n">NoError</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span>  
+    <span class="n">assert</span><span class="o">.</span><span class="n">Equal</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="m">5</span><span class="p">,</span> <span class="n">resultado</span><span class="p">)</span>  
+<span class="p">}</span>  
+</code></pre></div></div>
+
+<h3 id="2-httptest-para-apis-http">2. <strong>httptest para APIs HTTP</strong></h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">TestHandler</span><span class="p">(</span><span class="n">t</span> <span class="o">*</span><span class="n">testing</span><span class="o">.</span><span class="n">T</span><span class="p">)</span> <span class="p">{</span>  
+    <span class="n">req</span> <span class="o">:=</span> <span class="n">httptest</span><span class="o">.</span><span class="n">NewRequest</span><span class="p">(</span><span class="s">"GET"</span><span class="p">,</span> <span class="s">"/"</span><span class="p">,</span> <span class="no">nil</span><span class="p">)</span>  
+    <span class="n">w</span> <span class="o">:=</span> <span class="n">httptest</span><span class="o">.</span><span class="n">NewRecorder</span><span class="p">()</span>  
+    <span class="n">MiHandler</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">req</span><span class="p">)</span>  
+    <span class="n">assert</span><span class="o">.</span><span class="n">Equal</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">http</span><span class="o">.</span><span class="n">StatusOK</span><span class="p">,</span> <span class="n">w</span><span class="o">.</span><span class="n">Code</span><span class="p">)</span>  
+<span class="p">}</span>  
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="comandos-útiles">Comandos Útiles</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Comando</th>
+      <th>Descripción</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">go test -v</code></td>
+      <td>Modo verbose</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">go test -run TestNombre</code></td>
+      <td>Ejecutar prueba específica</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">go test -race</code></td>
+      <td>Detectar race conditions</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">go test -shuffle=on</code></td>
+      <td>Ejecutar tests en orden aleatorio</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<h2 id="conclusión">Conclusión</h2>
+
+<p>El paquete <code class="language-plaintext highlighter-rouge">testing</code> en Go ofrece un conjunto poderoso de herramientas para garantizar la calidad del código. Al dominar sus características y seguir buenas prácticas, podrás construir sistemas confiables y mantenibles. Combina pruebas unitarias, benchmarks y ejemplos para cubrir todos los aspectos de tu aplicación.</p>
+
+            </main>
+        </div>
+        
+        <!-- Componente flotante de GitHub -->
+<div class="github-floating">
+    <a href="https://github.com/" target="_blank" rel="noopener noreferrer" class="github-link" title="Ver en GitHub">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-github">
+            <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+        </svg>
+    </a>
+    
+    
+    <a href="https://github.com//MiguelP-Dev.github.io/blob/main/_pages/paquetes/testing.md" target="_blank" rel="noopener noreferrer" class="edit-link" title="Editar esta página">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-2">
+            <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+        </svg>
+    </a>
+    
+</div>
+
+<style>
+    /* Estilos del componente SVG */
+    .github-corner:hover .octo-arm {
+        animation: octocat-wave 560ms ease-in-out;
+    }
+    
+    @keyframes octocat-wave {
+        0%, 100% { transform: rotate(0); }
+        20%, 60% { transform: rotate(-25deg); }
+        40%, 80% { transform: rotate(10deg); }
+    }
+    
+    @media (max-width: 500px) {
+        .github-corner:hover .octo-arm {
+            animation: none;
+        }
+        .github-corner .octo-arm {
+            animation: octocat-wave 560ms ease-in-out;
+        }
+    }
+</style>
+    </div>
+    
+    <script src="/assets/js/scripts.js"></script>
+</body>
+</html>

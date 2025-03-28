@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>image | Miguel's Programing Notes</title>
+    <link rel="stylesheet" href="/assets/css/styles.css">
+</head>
+<body>
+    <div class="app">
+        <nav class="navbar">
+    <div class="nav-container">
+        <a href="/" class="nav-brand">
+            Miguel's Programming Notes
+        </a>
+
+        <div class="nav-sections">
+            
+                
+                
+                
+                <a href="/paquetes/"
+                    class="nav-section active"
+                    data-section="paquetes">
+                    📦 Paquetes
+                </a>
+            
+                
+                
+                
+                <a href="/ejemplos/"
+                    class="nav-section "
+                    data-section="ejemplos">
+                    🧩 Ejemplos
+                </a>
+            
+        </div>
+    </div>
+</nav>
+        
+        <div class="container">
+            <button class="menu-toggle" aria-label="Abrir menú">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            
+            <aside class="sidebar" id="dynamic-sidebar">
+    <div class="sidebar-header">
+        <h3 class="sidebar-title">Miguel's Programming Notes</h3>
+    </div>
+    
+    <div class="sidebar-content">
+        
+            
+                <h3 class="sidebar-title">📦 Paquetes</h3>
+                <nav class="sidebar-nav">
+                    
+                        <a href="/paquetes/fmt/"
+                            class="sidebar-item "
+                            data-item="fmt">
+                            fmt
+                        </a>
+                    
+                        <a href="/paquetes/net/"
+                            class="sidebar-item "
+                            data-item="net-http">
+                            net/http
+                        </a>
+                    
+                        <a href="/paquetes/encoding/"
+                            class="sidebar-item "
+                            data-item="encoding">
+                            encoding
+                        </a>
+                    
+                </nav>
+            
+        
+            
+        
+    </div>
+</aside>
+            
+            <main class="content">
+                <h1 id="paquete-image-en-go-guía-completa-para-manipulación-de-imágenes">Paquete <code class="language-plaintext highlighter-rouge">image</code> en Go: Guía Completa para Manipulación de Imágenes</h1>
+
+<p>El paquete <code class="language-plaintext highlighter-rouge">image</code> en Go proporciona herramientas fundamentales para crear, manipular y procesar imágenes rasterizadas. Esta guía ampliada incluye ejemplos prácticos avanzados, comparativas de formatos y técnicas de optimización.</p>
+
+<hr />
+
+<h2 id="1-tipos-de-imágenes-y-casos-de-uso">1. Tipos de Imágenes y Casos de Uso</h2>
+
+<h3 id="tabla-comparativa-de-formatos">Tabla Comparativa de Formatos</h3>
+<p>| Tipo de Imagen       | Profundidad | Transparencia | Uso Típico                 | Almacenamiento por Pixel |
+|———————-|————-|—————|—————————-|————————–|
+| <code class="language-plaintext highlighter-rouge">image.RGBA</code>         | 8 bits/canal | Sí (alpha)    | Gráficos generales         | 4 bytes (R, G, B, A)     |
+| <code class="language-plaintext highlighter-rouge">image.NRGBA</code>        | 8 bits/canal | Premultiplicado | Web y formatos compatibles | 4 bytes                  |
+| <code class="language-plaintext highlighter-rouge">image.RGBA64</code>       | 16 bits/canal| Sí            | Imágenes HDR               | 8 bytes                  |
+| <code class="language-plaintext highlighter-rouge">image.Gray</code>         | 8 bits       | No            | Escala de grises           | 1 byte                   |
+| <code class="language-plaintext highlighter-rouge">image.Paletted</code>     | 8 bits índice| Limitada      | GIFs y gráficos retro      | 1 byte + paleta          |</p>
+
+<hr />
+
+<h2 id="2-creación-de-imágenes-avanzadas">2. Creación de Imágenes Avanzadas</h2>
+
+<h3 id="21-generación-de-gradiente-radial">2.1 Generación de Gradiente Radial</h3>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="p">(</span>
+    <span class="s">"image"</span>
+    <span class="s">"image/color"</span>
+    <span class="s">"image/png"</span>
+    <span class="s">"math"</span>
+    <span class="s">"os"</span>
+<span class="p">)</span>
+
+<span class="k">func</span> <span class="n">createGradient</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span> <span class="kt">int</span><span class="p">)</span> <span class="o">*</span><span class="n">image</span><span class="o">.</span><span class="n">RGBA</span> <span class="p">{</span>
+    <span class="n">img</span> <span class="o">:=</span> <span class="n">image</span><span class="o">.</span><span class="n">NewRGBA</span><span class="p">(</span><span class="n">image</span><span class="o">.</span><span class="n">Rect</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">))</span>
+    <span class="n">centerX</span> <span class="o">:=</span> <span class="kt">float64</span><span class="p">(</span><span class="n">width</span><span class="p">)</span><span class="o">/</span><span class="m">2</span>
+    <span class="n">centerY</span> <span class="o">:=</span> <span class="kt">float64</span><span class="p">(</span><span class="n">height</span><span class="p">)</span><span class="o">/</span><span class="m">2</span>
+    <span class="n">maxDist</span> <span class="o">:=</span> <span class="n">math</span><span class="o">.</span><span class="n">Sqrt</span><span class="p">(</span><span class="n">centerX</span><span class="o">*</span><span class="n">centerX</span> <span class="o">+</span> <span class="n">centerY</span><span class="o">*</span><span class="n">centerY</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">y</span> <span class="o">:=</span> <span class="m">0</span><span class="p">;</span> <span class="n">y</span> <span class="o">&lt;</span> <span class="n">height</span><span class="p">;</span> <span class="n">y</span><span class="o">++</span> <span class="p">{</span>
+        <span class="k">for</span> <span class="n">x</span> <span class="o">:=</span> <span class="m">0</span><span class="p">;</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="n">width</span><span class="p">;</span> <span class="n">x</span><span class="o">++</span> <span class="p">{</span>
+            <span class="n">dx</span> <span class="o">:=</span> <span class="kt">float64</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="n">centerX</span>
+            <span class="n">dy</span> <span class="o">:=</span> <span class="kt">float64</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">-</span> <span class="n">centerY</span>
+            <span class="n">dist</span> <span class="o">:=</span> <span class="n">math</span><span class="o">.</span><span class="n">Sqrt</span><span class="p">(</span><span class="n">dx</span><span class="o">*</span><span class="n">dx</span> <span class="o">+</span> <span class="n">dy</span><span class="o">*</span><span class="n">dy</span><span class="p">)</span><span class="o">/</span><span class="n">maxDist</span>
+            
+            <span class="n">c</span> <span class="o">:=</span> <span class="n">color</span><span class="o">.</span><span class="n">RGBA</span><span class="p">{</span>
+                <span class="n">R</span><span class="o">:</span> <span class="kt">uint8</span><span class="p">(</span><span class="m">255</span> <span class="o">*</span> <span class="p">(</span><span class="m">1</span> <span class="o">-</span> <span class="n">dist</span><span class="p">)),</span>
+                <span class="n">G</span><span class="o">:</span> <span class="kt">uint8</span><span class="p">(</span><span class="m">255</span> <span class="o">*</span> <span class="n">dist</span><span class="p">),</span>
+                <span class="n">B</span><span class="o">:</span> <span class="kt">uint8</span><span class="p">(</span><span class="m">128</span><span class="p">),</span>
+                <span class="n">A</span><span class="o">:</span> <span class="m">255</span><span class="p">,</span>
+            <span class="p">}</span>
+            <span class="n">img</span><span class="o">.</span><span class="n">Set</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">img</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">gradient</span> <span class="o">:=</span> <span class="n">createGradient</span><span class="p">(</span><span class="m">400</span><span class="p">,</span> <span class="m">400</span><span class="p">)</span>
+    <span class="n">f</span><span class="p">,</span> <span class="n">_</span> <span class="o">:=</span> <span class="n">os</span><span class="o">.</span><span class="n">Create</span><span class="p">(</span><span class="s">"gradient.png"</span><span class="p">)</span>
+    <span class="n">png</span><span class="o">.</span><span class="n">Encode</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">gradient</span><span class="p">)</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">Close</span><span class="p">()</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="22-conversión-a-escala-de-grises">2.2 Conversión a Escala de Grises</h3>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">convertToGray</span><span class="p">(</span><span class="n">src</span> <span class="n">image</span><span class="o">.</span><span class="n">Image</span><span class="p">)</span> <span class="o">*</span><span class="n">image</span><span class="o">.</span><span class="n">Gray</span> <span class="p">{</span>
+    <span class="n">bounds</span> <span class="o">:=</span> <span class="n">src</span><span class="o">.</span><span class="n">Bounds</span><span class="p">()</span>
+    <span class="n">gray</span> <span class="o">:=</span> <span class="n">image</span><span class="o">.</span><span class="n">NewGray</span><span class="p">(</span><span class="n">bounds</span><span class="p">)</span>
+    
+    <span class="k">for</span> <span class="n">y</span> <span class="o">:=</span> <span class="n">bounds</span><span class="o">.</span><span class="n">Min</span><span class="o">.</span><span class="n">Y</span><span class="p">;</span> <span class="n">y</span> <span class="o">&lt;</span> <span class="n">bounds</span><span class="o">.</span><span class="n">Max</span><span class="o">.</span><span class="n">Y</span><span class="p">;</span> <span class="n">y</span><span class="o">++</span> <span class="p">{</span>
+        <span class="k">for</span> <span class="n">x</span> <span class="o">:=</span> <span class="n">bounds</span><span class="o">.</span><span class="n">Min</span><span class="o">.</span><span class="n">X</span><span class="p">;</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="n">bounds</span><span class="o">.</span><span class="n">Max</span><span class="o">.</span><span class="n">X</span><span class="p">;</span> <span class="n">x</span><span class="o">++</span> <span class="p">{</span>
+            <span class="n">original</span> <span class="o">:=</span> <span class="n">src</span><span class="o">.</span><span class="n">At</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+            <span class="n">gray</span><span class="o">.</span><span class="n">Set</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">color</span><span class="o">.</span><span class="n">GrayModel</span><span class="o">.</span><span class="n">Convert</span><span class="p">(</span><span class="n">original</span><span class="p">))</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">gray</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="3-manipulación-de-imágenes">3. Manipulación de Imágenes</h2>
+
+<h3 id="31-aplicación-de-filtro-de-desenfoque">3.1 Aplicación de Filtro de Desenfoque</h3>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">applyBlur</span><span class="p">(</span><span class="n">src</span> <span class="o">*</span><span class="n">image</span><span class="o">.</span><span class="n">RGBA</span><span class="p">,</span> <span class="n">radius</span> <span class="kt">int</span><span class="p">)</span> <span class="o">*</span><span class="n">image</span><span class="o">.</span><span class="n">RGBA</span> <span class="p">{</span>
+    <span class="n">bounds</span> <span class="o">:=</span> <span class="n">src</span><span class="o">.</span><span class="n">Bounds</span><span class="p">()</span>
+    <span class="n">dst</span> <span class="o">:=</span> <span class="n">image</span><span class="o">.</span><span class="n">NewRGBA</span><span class="p">(</span><span class="n">bounds</span><span class="p">)</span>
+    <span class="n">kernel</span> <span class="o">:=</span> <span class="n">createGaussianKernel</span><span class="p">(</span><span class="n">radius</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">y</span> <span class="o">:=</span> <span class="n">bounds</span><span class="o">.</span><span class="n">Min</span><span class="o">.</span><span class="n">Y</span><span class="p">;</span> <span class="n">y</span> <span class="o">&lt;</span> <span class="n">bounds</span><span class="o">.</span><span class="n">Max</span><span class="o">.</span><span class="n">Y</span><span class="p">;</span> <span class="n">y</span><span class="o">++</span> <span class="p">{</span>
+        <span class="k">for</span> <span class="n">x</span> <span class="o">:=</span> <span class="n">bounds</span><span class="o">.</span><span class="n">Min</span><span class="o">.</span><span class="n">X</span><span class="p">;</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="n">bounds</span><span class="o">.</span><span class="n">Max</span><span class="o">.</span><span class="n">X</span><span class="p">;</span> <span class="n">x</span><span class="o">++</span> <span class="p">{</span>
+            <span class="k">var</span> <span class="n">r</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">a</span> <span class="kt">float64</span>
+            <span class="n">weightSum</span> <span class="o">:=</span> <span class="m">0.0</span>
+            
+            <span class="k">for</span> <span class="n">ky</span> <span class="o">:=</span> <span class="o">-</span><span class="n">radius</span><span class="p">;</span> <span class="n">ky</span> <span class="o">&lt;=</span> <span class="n">radius</span><span class="p">;</span> <span class="n">ky</span><span class="o">++</span> <span class="p">{</span>
+                <span class="k">for</span> <span class="n">kx</span> <span class="o">:=</span> <span class="o">-</span><span class="n">radius</span><span class="p">;</span> <span class="n">kx</span> <span class="o">&lt;=</span> <span class="n">radius</span><span class="p">;</span> <span class="n">kx</span><span class="o">++</span> <span class="p">{</span>
+                    <span class="n">xx</span> <span class="o">:=</span> <span class="n">clamp</span><span class="p">(</span><span class="n">x</span><span class="o">+</span><span class="n">kx</span><span class="p">,</span> <span class="n">bounds</span><span class="o">.</span><span class="n">Min</span><span class="o">.</span><span class="n">X</span><span class="p">,</span> <span class="n">bounds</span><span class="o">.</span><span class="n">Max</span><span class="o">.</span><span class="n">X</span><span class="o">-</span><span class="m">1</span><span class="p">)</span>
+                    <span class="n">yy</span> <span class="o">:=</span> <span class="n">clamp</span><span class="p">(</span><span class="n">y</span><span class="o">+</span><span class="n">ky</span><span class="p">,</span> <span class="n">bounds</span><span class="o">.</span><span class="n">Min</span><span class="o">.</span><span class="n">Y</span><span class="p">,</span> <span class="n">bounds</span><span class="o">.</span><span class="n">Max</span><span class="o">.</span><span class="n">Y</span><span class="o">-</span><span class="m">1</span><span class="p">)</span>
+                    <span class="n">weight</span> <span class="o">:=</span> <span class="n">kernel</span><span class="p">[</span><span class="n">ky</span><span class="o">+</span><span class="n">radius</span><span class="p">][</span><span class="n">kx</span><span class="o">+</span><span class="n">radius</span><span class="p">]</span>
+                    
+                    <span class="n">c</span> <span class="o">:=</span> <span class="n">src</span><span class="o">.</span><span class="n">At</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span> <span class="n">yy</span><span class="p">)</span><span class="o">.</span><span class="p">(</span><span class="n">color</span><span class="o">.</span><span class="n">RGBA</span><span class="p">)</span>
+                    <span class="n">r</span> <span class="o">+=</span> <span class="kt">float64</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">R</span><span class="p">)</span> <span class="o">*</span> <span class="n">weight</span>
+                    <span class="n">g</span> <span class="o">+=</span> <span class="kt">float64</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">G</span><span class="p">)</span> <span class="o">*</span> <span class="n">weight</span>
+                    <span class="n">b</span> <span class="o">+=</span> <span class="kt">float64</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">B</span><span class="p">)</span> <span class="o">*</span> <span class="n">weight</span>
+                    <span class="n">a</span> <span class="o">+=</span> <span class="kt">float64</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">A</span><span class="p">)</span> <span class="o">*</span> <span class="n">weight</span>
+                    <span class="n">weightSum</span> <span class="o">+=</span> <span class="n">weight</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            
+            <span class="n">dst</span><span class="o">.</span><span class="n">Set</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">color</span><span class="o">.</span><span class="n">RGBA</span><span class="p">{</span>
+                <span class="n">R</span><span class="o">:</span> <span class="kt">uint8</span><span class="p">(</span><span class="n">r</span> <span class="o">/</span> <span class="n">weightSum</span><span class="p">),</span>
+                <span class="n">G</span><span class="o">:</span> <span class="kt">uint8</span><span class="p">(</span><span class="n">g</span> <span class="o">/</span> <span class="n">weightSum</span><span class="p">),</span>
+                <span class="n">B</span><span class="o">:</span> <span class="kt">uint8</span><span class="p">(</span><span class="n">b</span> <span class="o">/</span> <span class="n">weightSum</span><span class="p">),</span>
+                <span class="n">A</span><span class="o">:</span> <span class="kt">uint8</span><span class="p">(</span><span class="n">a</span> <span class="o">/</span> <span class="n">weightSum</span><span class="p">),</span>
+            <span class="p">})</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">dst</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="32-recorte-de-imágenes-con-inset">3.2 Recorte de Imágenes con <code class="language-plaintext highlighter-rouge">Inset</code></h3>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">cropImage</span><span class="p">(</span><span class="n">src</span> <span class="n">image</span><span class="o">.</span><span class="n">Image</span><span class="p">,</span> <span class="n">margin</span> <span class="kt">int</span><span class="p">)</span> <span class="n">image</span><span class="o">.</span><span class="n">Image</span> <span class="p">{</span>
+    <span class="n">bounds</span> <span class="o">:=</span> <span class="n">src</span><span class="o">.</span><span class="n">Bounds</span><span class="p">()</span>
+    <span class="n">cropped</span> <span class="o">:=</span> <span class="n">bounds</span><span class="o">.</span><span class="n">Inset</span><span class="p">(</span><span class="n">margin</span><span class="p">)</span>
+    <span class="n">subImg</span> <span class="o">:=</span> <span class="n">image</span><span class="o">.</span><span class="n">NewRGBA</span><span class="p">(</span><span class="n">cropped</span><span class="p">)</span>
+    
+    <span class="k">for</span> <span class="n">y</span> <span class="o">:=</span> <span class="n">cropped</span><span class="o">.</span><span class="n">Min</span><span class="o">.</span><span class="n">Y</span><span class="p">;</span> <span class="n">y</span> <span class="o">&lt;</span> <span class="n">cropped</span><span class="o">.</span><span class="n">Max</span><span class="o">.</span><span class="n">Y</span><span class="p">;</span> <span class="n">y</span><span class="o">++</span> <span class="p">{</span>
+        <span class="k">for</span> <span class="n">x</span> <span class="o">:=</span> <span class="n">cropped</span><span class="o">.</span><span class="n">Min</span><span class="o">.</span><span class="n">X</span><span class="p">;</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="n">cropped</span><span class="o">.</span><span class="n">Max</span><span class="o">.</span><span class="n">X</span><span class="p">;</span> <span class="n">x</span><span class="o">++</span> <span class="p">{</span>
+            <span class="n">subImg</span><span class="o">.</span><span class="n">Set</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">cropped</span><span class="o">.</span><span class="n">Min</span><span class="o">.</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">-</span> <span class="n">cropped</span><span class="o">.</span><span class="n">Min</span><span class="o">.</span><span class="n">Y</span><span class="p">,</span> <span class="n">src</span><span class="o">.</span><span class="n">At</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">subImg</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="4-animaciones-y-formatos-especiales">4. Animaciones y Formatos Especiales</h2>
+
+<h3 id="41-creación-de-gif-animado">4.1 Creación de GIF Animado</h3>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">createAnimatedGif</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">var</span> <span class="n">frames</span> <span class="p">[]</span><span class="o">*</span><span class="n">image</span><span class="o">.</span><span class="n">Paletted</span>
+    <span class="k">var</span> <span class="n">delays</span> <span class="p">[]</span><span class="kt">int</span>
+    <span class="n">palette</span> <span class="o">:=</span> <span class="n">color</span><span class="o">.</span><span class="n">Palette</span><span class="p">{</span><span class="n">color</span><span class="o">.</span><span class="n">White</span><span class="p">,</span> <span class="n">color</span><span class="o">.</span><span class="n">Black</span><span class="p">}</span>
+
+    <span class="c">// Generar 10 cuadros de animación</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="o">:=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="m">10</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span> <span class="p">{</span>
+        <span class="n">img</span> <span class="o">:=</span> <span class="n">image</span><span class="o">.</span><span class="n">NewPaletted</span><span class="p">(</span><span class="n">image</span><span class="o">.</span><span class="n">Rect</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">100</span><span class="p">,</span> <span class="m">100</span><span class="p">),</span> <span class="n">palette</span><span class="p">)</span>
+        <span class="n">img</span><span class="o">.</span><span class="n">SetColorIndex</span><span class="p">(</span><span class="m">50</span><span class="o">+</span><span class="n">i</span><span class="o">*</span><span class="m">2</span><span class="p">,</span> <span class="m">50</span><span class="p">,</span> <span class="m">1</span><span class="p">)</span>
+        <span class="n">frames</span> <span class="o">=</span> <span class="nb">append</span><span class="p">(</span><span class="n">frames</span><span class="p">,</span> <span class="n">img</span><span class="p">)</span>
+        <span class="n">delays</span> <span class="o">=</span> <span class="nb">append</span><span class="p">(</span><span class="n">delays</span><span class="p">,</span> <span class="m">10</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="n">f</span><span class="p">,</span> <span class="n">_</span> <span class="o">:=</span> <span class="n">os</span><span class="o">.</span><span class="n">Create</span><span class="p">(</span><span class="s">"animation.gif"</span><span class="p">)</span>
+    <span class="n">gif</span><span class="o">.</span><span class="n">EncodeAll</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">gif</span><span class="o">.</span><span class="n">GIF</span><span class="p">{</span>
+        <span class="n">Image</span><span class="o">:</span> <span class="n">frames</span><span class="p">,</span>
+        <span class="n">Delay</span><span class="o">:</span> <span class="n">delays</span><span class="p">,</span>
+    <span class="p">})</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">Close</span><span class="p">()</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="42-codificación-en-jpeg-con-calidad-ajustable">4.2 Codificación en JPEG con Calidad Ajustable</h3>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="s">"image/jpeg"</span>
+
+<span class="k">func</span> <span class="n">saveJpeg</span><span class="p">(</span><span class="n">img</span> <span class="n">image</span><span class="o">.</span><span class="n">Image</span><span class="p">,</span> <span class="n">path</span> <span class="kt">string</span><span class="p">,</span> <span class="n">quality</span> <span class="kt">int</span><span class="p">)</span> <span class="kt">error</span> <span class="p">{</span>
+    <span class="n">f</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">os</span><span class="o">.</span><span class="n">Create</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">err</span>
+    <span class="p">}</span>
+    <span class="k">defer</span> <span class="n">f</span><span class="o">.</span><span class="n">Close</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">jpeg</span><span class="o">.</span><span class="n">Encode</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">img</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">jpeg</span><span class="o">.</span><span class="n">Options</span><span class="p">{</span><span class="n">Quality</span><span class="o">:</span> <span class="n">quality</span><span class="p">})</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="5-mejores-prácticas-y-optimización">5. Mejores Prácticas y Optimización</h2>
+
+<h3 id="51-acceso-eficiente-a-píxeles">5.1 Acceso Eficiente a Píxeles</h3>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// Método óptimo para procesamiento por bloques</span>
+<span class="k">func</span> <span class="n">processImageFast</span><span class="p">(</span><span class="n">img</span> <span class="o">*</span><span class="n">image</span><span class="o">.</span><span class="n">RGBA</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">bounds</span> <span class="o">:=</span> <span class="n">img</span><span class="o">.</span><span class="n">Bounds</span><span class="p">()</span>
+    <span class="n">pix</span> <span class="o">:=</span> <span class="n">img</span><span class="o">.</span><span class="n">Pix</span>  <span class="c">// Acceso directo al slice de píxeles</span>
+    <span class="n">width</span> <span class="o">:=</span> <span class="n">bounds</span><span class="o">.</span><span class="n">Dx</span><span class="p">()</span> <span class="o">*</span> <span class="m">4</span>
+
+    <span class="k">for</span> <span class="n">y</span> <span class="o">:=</span> <span class="m">0</span><span class="p">;</span> <span class="n">y</span> <span class="o">&lt;</span> <span class="n">bounds</span><span class="o">.</span><span class="n">Dy</span><span class="p">();</span> <span class="n">y</span><span class="o">++</span> <span class="p">{</span>
+        <span class="n">row</span> <span class="o">:=</span> <span class="n">pix</span><span class="p">[</span><span class="n">y</span><span class="o">*</span><span class="n">img</span><span class="o">.</span><span class="n">Stride</span> <span class="o">:</span> <span class="n">y</span><span class="o">*</span><span class="n">img</span><span class="o">.</span><span class="n">Stride</span> <span class="o">+</span> <span class="n">width</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">x</span> <span class="o">:=</span> <span class="m">0</span><span class="p">;</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">row</span><span class="p">);</span> <span class="n">x</span> <span class="o">+=</span> <span class="m">4</span> <span class="p">{</span>
+            <span class="c">// Modificar RGBA directamente</span>
+            <span class="n">row</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="o">=</span> <span class="m">255</span> <span class="o">-</span> <span class="n">row</span><span class="p">[</span><span class="n">x</span><span class="p">]</span>     <span class="c">// R</span>
+            <span class="n">row</span><span class="p">[</span><span class="n">x</span><span class="o">+</span><span class="m">1</span><span class="p">]</span> <span class="o">=</span> <span class="m">255</span> <span class="o">-</span> <span class="n">row</span><span class="p">[</span><span class="n">x</span><span class="o">+</span><span class="m">1</span><span class="p">]</span> <span class="c">// G</span>
+            <span class="n">row</span><span class="p">[</span><span class="n">x</span><span class="o">+</span><span class="m">2</span><span class="p">]</span> <span class="o">=</span> <span class="m">255</span> <span class="o">-</span> <span class="n">row</span><span class="p">[</span><span class="n">x</span><span class="o">+</span><span class="m">2</span><span class="p">]</span> <span class="c">// B</span>
+            <span class="c">// Alpha (x+3) permanece igual</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="52-manejo-de-errores-robusto">5.2 Manejo de Errores Robusto</h3>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">loadImage</span><span class="p">(</span><span class="n">path</span> <span class="kt">string</span><span class="p">)</span> <span class="p">(</span><span class="n">image</span><span class="o">.</span><span class="n">Image</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">f</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">os</span><span class="o">.</span><span class="n">Open</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="no">nil</span><span class="p">,</span> <span class="n">fmt</span><span class="o">.</span><span class="n">Errorf</span><span class="p">(</span><span class="s">"error abriendo archivo: %w"</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="k">defer</span> <span class="n">f</span><span class="o">.</span><span class="n">Close</span><span class="p">()</span>
+
+    <span class="n">img</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">image</span><span class="o">.</span><span class="n">Decode</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="no">nil</span><span class="p">,</span> <span class="n">fmt</span><span class="o">.</span><span class="n">Errorf</span><span class="p">(</span><span class="s">"error decodificando imagen: %w"</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">img</span><span class="p">,</span> <span class="no">nil</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="6-integración-con-paquetes-externos">6. Integración con Paquetes Externos</h2>
+
+<h3 id="61-uso-de-webp-con-githubcomchai2010webp">6.1 Uso de WebP con <code class="language-plaintext highlighter-rouge">github.com/chai2010/webp</code></h3>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="s">"github.com/chai2010/webp"</span>
+
+<span class="k">func</span> <span class="n">saveWebP</span><span class="p">(</span><span class="n">img</span> <span class="n">image</span><span class="o">.</span><span class="n">Image</span><span class="p">,</span> <span class="n">path</span> <span class="kt">string</span><span class="p">)</span> <span class="kt">error</span> <span class="p">{</span>
+    <span class="n">f</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">os</span><span class="o">.</span><span class="n">Create</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">err</span>
+    <span class="p">}</span>
+    <span class="k">defer</span> <span class="n">f</span><span class="o">.</span><span class="n">Close</span><span class="p">()</span>
+    
+    <span class="k">return</span> <span class="n">webp</span><span class="o">.</span><span class="n">Encode</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">img</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">webp</span><span class="o">.</span><span class="n">Options</span><span class="p">{</span><span class="n">Lossless</span><span class="o">:</span> <span class="no">true</span><span class="p">})</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="62-procesamiento-con-paralelismo">6.2 Procesamiento con Paralelismo</h3>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">parallelProcess</span><span class="p">(</span><span class="n">img</span> <span class="o">*</span><span class="n">image</span><span class="o">.</span><span class="n">RGBA</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">bounds</span> <span class="o">:=</span> <span class="n">img</span><span class="o">.</span><span class="n">Bounds</span><span class="p">()</span>
+    <span class="n">numWorkers</span> <span class="o">:=</span> <span class="n">runtime</span><span class="o">.</span><span class="n">NumCPU</span><span class="p">()</span>
+    <span class="k">var</span> <span class="n">wg</span> <span class="n">sync</span><span class="o">.</span><span class="n">WaitGroup</span>
+    <span class="n">wg</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="n">numWorkers</span><span class="p">)</span>
+
+    <span class="n">sectionHeight</span> <span class="o">:=</span> <span class="n">bounds</span><span class="o">.</span><span class="n">Dy</span><span class="p">()</span> <span class="o">/</span> <span class="n">numWorkers</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="o">:=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">numWorkers</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span> <span class="p">{</span>
+        <span class="k">go</span> <span class="k">func</span><span class="p">(</span><span class="n">yStart</span><span class="p">,</span> <span class="n">yEnd</span> <span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">defer</span> <span class="n">wg</span><span class="o">.</span><span class="n">Done</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">y</span> <span class="o">:=</span> <span class="n">yStart</span><span class="p">;</span> <span class="n">y</span> <span class="o">&lt;</span> <span class="n">yEnd</span><span class="p">;</span> <span class="n">y</span><span class="o">++</span> <span class="p">{</span>
+                <span class="k">for</span> <span class="n">x</span> <span class="o">:=</span> <span class="n">bounds</span><span class="o">.</span><span class="n">Min</span><span class="o">.</span><span class="n">X</span><span class="p">;</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="n">bounds</span><span class="o">.</span><span class="n">Max</span><span class="o">.</span><span class="n">X</span><span class="p">;</span> <span class="n">x</span><span class="o">++</span> <span class="p">{</span>
+                    <span class="c">// Procesamiento paralelo</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}(</span><span class="n">i</span><span class="o">*</span><span class="n">sectionHeight</span><span class="p">,</span> <span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="m">1</span><span class="p">)</span><span class="o">*</span><span class="n">sectionHeight</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="n">wg</span><span class="o">.</span><span class="n">Wait</span><span class="p">()</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="7-ejemplo-completo-editor-de-imágenes-básico">7. Ejemplo Completo: Editor de Imágenes Básico</h2>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="p">(</span>
+    <span class="s">"image"</span>
+    <span class="s">"image/color"</span>
+    <span class="s">"image/jpeg"</span>
+    <span class="s">"math"</span>
+    <span class="s">"os"</span>
+<span class="p">)</span>
+
+<span class="k">type</span> <span class="n">Filter</span> <span class="k">func</span><span class="p">(</span><span class="o">*</span><span class="n">image</span><span class="o">.</span><span class="n">RGBA</span><span class="p">)</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c">// Cargar imagen</span>
+    <span class="n">img</span><span class="p">,</span> <span class="n">_</span> <span class="o">:=</span> <span class="n">loadImage</span><span class="p">(</span><span class="s">"input.jpg"</span><span class="p">)</span>
+    <span class="n">rgba</span> <span class="o">:=</span> <span class="n">image</span><span class="o">.</span><span class="n">NewRGBA</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">Bounds</span><span class="p">())</span>
+    
+    <span class="c">// Aplicar filtros</span>
+    <span class="n">filters</span> <span class="o">:=</span> <span class="p">[]</span><span class="n">Filter</span><span class="p">{</span>
+        <span class="n">applyContrast</span><span class="p">(</span><span class="m">1.5</span><span class="p">),</span>
+        <span class="n">applyVignette</span><span class="p">(</span><span class="m">0.8</span><span class="p">),</span>
+        <span class="n">applySepia</span><span class="p">(),</span>
+    <span class="p">}</span>
+    
+    <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">filter</span> <span class="o">:=</span> <span class="k">range</span> <span class="n">filters</span> <span class="p">{</span>
+        <span class="n">filter</span><span class="p">(</span><span class="n">rgba</span><span class="p">)</span>
+    <span class="p">}</span>
+    
+    <span class="c">// Guardar resultado</span>
+    <span class="n">saveJpeg</span><span class="p">(</span><span class="n">rgba</span><span class="p">,</span> <span class="s">"output.jpg"</span><span class="p">,</span> <span class="m">90</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="n">applySepia</span><span class="p">()</span> <span class="n">Filter</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">func</span><span class="p">(</span><span class="n">img</span> <span class="o">*</span><span class="n">image</span><span class="o">.</span><span class="n">RGBA</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">bounds</span> <span class="o">:=</span> <span class="n">img</span><span class="o">.</span><span class="n">Bounds</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">y</span> <span class="o">:=</span> <span class="n">bounds</span><span class="o">.</span><span class="n">Min</span><span class="o">.</span><span class="n">Y</span><span class="p">;</span> <span class="n">y</span> <span class="o">&lt;</span> <span class="n">bounds</span><span class="o">.</span><span class="n">Max</span><span class="o">.</span><span class="n">Y</span><span class="p">;</span> <span class="n">y</span><span class="o">++</span> <span class="p">{</span>
+            <span class="k">for</span> <span class="n">x</span> <span class="o">:=</span> <span class="n">bounds</span><span class="o">.</span><span class="n">Min</span><span class="o">.</span><span class="n">X</span><span class="p">;</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="n">bounds</span><span class="o">.</span><span class="n">Max</span><span class="o">.</span><span class="n">X</span><span class="p">;</span> <span class="n">x</span><span class="o">++</span> <span class="p">{</span>
+                <span class="n">c</span> <span class="o">:=</span> <span class="n">img</span><span class="o">.</span><span class="n">RGBAAt</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+                <span class="n">r</span> <span class="o">:=</span> <span class="kt">float64</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">R</span><span class="p">)</span><span class="o">*</span><span class="m">0.393</span> <span class="o">+</span> <span class="kt">float64</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">G</span><span class="p">)</span><span class="o">*</span><span class="m">0.769</span> <span class="o">+</span> <span class="kt">float64</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">B</span><span class="p">)</span><span class="o">*</span><span class="m">0.189</span>
+                <span class="n">g</span> <span class="o">:=</span> <span class="kt">float64</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">R</span><span class="p">)</span><span class="o">*</span><span class="m">0.349</span> <span class="o">+</span> <span class="kt">float64</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">G</span><span class="p">)</span><span class="o">*</span><span class="m">0.686</span> <span class="o">+</span> <span class="kt">float64</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">B</span><span class="p">)</span><span class="o">*</span><span class="m">0.168</span>
+                <span class="n">b</span> <span class="o">:=</span> <span class="kt">float64</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">R</span><span class="p">)</span><span class="o">*</span><span class="m">0.272</span> <span class="o">+</span> <span class="kt">float64</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">G</span><span class="p">)</span><span class="o">*</span><span class="m">0.534</span> <span class="o">+</span> <span class="kt">float64</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">B</span><span class="p">)</span><span class="o">*</span><span class="m">0.131</span>
+                <span class="n">img</span><span class="o">.</span><span class="n">SetRGBA</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">color</span><span class="o">.</span><span class="n">RGBA</span><span class="p">{</span>
+                    <span class="n">R</span><span class="o">:</span> <span class="kt">uint8</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">Min</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="m">255</span><span class="p">)),</span>
+                    <span class="n">G</span><span class="o">:</span> <span class="kt">uint8</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">Min</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="m">255</span><span class="p">)),</span>
+                    <span class="n">B</span><span class="o">:</span> <span class="kt">uint8</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">Min</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="m">255</span><span class="p">)),</span>
+                    <span class="n">A</span><span class="o">:</span> <span class="n">c</span><span class="o">.</span><span class="n">A</span><span class="p">,</span>
+                <span class="p">})</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<hr />
+
+<p>Esta guía ampliada proporciona técnicas avanzadas para el manejo de imágenes en Go, incluyendo procesamiento de píxeles, optimización de rendimiento y formatos especiales. Los ejemplos muestran aplicaciones prácticas desde filtros básicos hasta animaciones, siguiendo mejores prácticas de programación y eficiencia.</p>
+
+            </main>
+        </div>
+        
+        <!-- Componente flotante de GitHub -->
+<div class="github-floating">
+    <a href="https://github.com/" target="_blank" rel="noopener noreferrer" class="github-link" title="Ver en GitHub">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-github">
+            <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+        </svg>
+    </a>
+    
+    
+    <a href="https://github.com//MiguelP-Dev.github.io/blob/main/_pages/paquetes/image.md" target="_blank" rel="noopener noreferrer" class="edit-link" title="Editar esta página">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-2">
+            <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+        </svg>
+    </a>
+    
+</div>
+
+<style>
+    /* Estilos del componente SVG */
+    .github-corner:hover .octo-arm {
+        animation: octocat-wave 560ms ease-in-out;
+    }
+    
+    @keyframes octocat-wave {
+        0%, 100% { transform: rotate(0); }
+        20%, 60% { transform: rotate(-25deg); }
+        40%, 80% { transform: rotate(10deg); }
+    }
+    
+    @media (max-width: 500px) {
+        .github-corner:hover .octo-arm {
+            animation: none;
+        }
+        .github-corner .octo-arm {
+            animation: octocat-wave 560ms ease-in-out;
+        }
+    }
+</style>
+    </div>
+    
+    <script src="/assets/js/scripts.js"></script>
+</body>
+</html>

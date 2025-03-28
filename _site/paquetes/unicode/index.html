@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>unicode | Miguel's Programing Notes</title>
+    <link rel="stylesheet" href="/assets/css/styles.css">
+</head>
+<body>
+    <div class="app">
+        <nav class="navbar">
+    <div class="nav-container">
+        <a href="/" class="nav-brand">
+            Miguel's Programming Notes
+        </a>
+
+        <div class="nav-sections">
+            
+                
+                
+                
+                <a href="/paquetes/"
+                    class="nav-section active"
+                    data-section="paquetes">
+                    📦 Paquetes
+                </a>
+            
+                
+                
+                
+                <a href="/ejemplos/"
+                    class="nav-section "
+                    data-section="ejemplos">
+                    🧩 Ejemplos
+                </a>
+            
+        </div>
+    </div>
+</nav>
+        
+        <div class="container">
+            <button class="menu-toggle" aria-label="Abrir menú">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            
+            <aside class="sidebar" id="dynamic-sidebar">
+    <div class="sidebar-header">
+        <h3 class="sidebar-title">Miguel's Programming Notes</h3>
+    </div>
+    
+    <div class="sidebar-content">
+        
+            
+                <h3 class="sidebar-title">📦 Paquetes</h3>
+                <nav class="sidebar-nav">
+                    
+                        <a href="/paquetes/fmt/"
+                            class="sidebar-item "
+                            data-item="fmt">
+                            fmt
+                        </a>
+                    
+                        <a href="/paquetes/net/"
+                            class="sidebar-item "
+                            data-item="net-http">
+                            net/http
+                        </a>
+                    
+                        <a href="/paquetes/encoding/"
+                            class="sidebar-item "
+                            data-item="encoding">
+                            encoding
+                        </a>
+                    
+                </nav>
+            
+        
+            
+        
+    </div>
+</aside>
+            
+            <main class="content">
+                <h1 id="guía-completa-del-paquete-unicode-en-go">Guía Completa del Paquete <code class="language-plaintext highlighter-rouge">unicode</code> en Go</h1>
+
+<p>El paquete <code class="language-plaintext highlighter-rouge">unicode</code> en Go proporciona funcionalidades robustas para manejar caracteres Unicode, facilitando operaciones como clasificación, conversión y manipulación de texto en diferentes idiomas. Esta guía explora en profundidad las funciones disponibles con ejemplos prácticos.</p>
+
+<h2 id="clasificación-de-caracteres">Clasificación de Caracteres</h2>
+
+<h3 id="letras-y-caracteres-alfanuméricos">Letras y Caracteres Alfanuméricos</h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="p">(</span>
+    <span class="s">"fmt"</span>
+    <span class="s">"unicode"</span>
+<span class="p">)</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c">// IsLetter - Verifica si un rune es una letra</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"¿Es 'A' una letra? %t</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">unicode</span><span class="o">.</span><span class="n">IsLetter</span><span class="p">(</span><span class="sc">'A'</span><span class="p">))</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"¿Es 'ñ' una letra? %t</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">unicode</span><span class="o">.</span><span class="n">IsLetter</span><span class="p">(</span><span class="sc">'ñ'</span><span class="p">))</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"¿Es '漢' una letra? %t</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">unicode</span><span class="o">.</span><span class="n">IsLetter</span><span class="p">(</span><span class="sc">'漢'</span><span class="p">))</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"¿Es '5' una letra? %t</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">unicode</span><span class="o">.</span><span class="n">IsLetter</span><span class="p">(</span><span class="sc">'5'</span><span class="p">))</span>
+    
+    <span class="c">// IsDigit - Verifica específicamente si es un dígito decimal (0-9)</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"¿Es '7' un dígito? %t</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">unicode</span><span class="o">.</span><span class="n">IsDigit</span><span class="p">(</span><span class="sc">'7'</span><span class="p">))</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"¿Es '٧' (dígito árabe) un dígito? %t</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">unicode</span><span class="o">.</span><span class="n">IsDigit</span><span class="p">(</span><span class="sc">'٧'</span><span class="p">))</span>
+    
+    <span class="c">// IsNumber - Más amplio que IsDigit, incluye otros tipos de números Unicode</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"¿Es '½' un número? %t</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">unicode</span><span class="o">.</span><span class="n">IsNumber</span><span class="p">(</span><span class="sc">'½'</span><span class="p">))</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"¿Es 'Ⅷ' (numeral romano) un número? %t</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">unicode</span><span class="o">.</span><span class="n">IsNumber</span><span class="p">(</span><span class="sc">'Ⅷ'</span><span class="p">))</span>
+    
+    <span class="c">// Combinando verificaciones para caracteres alfanuméricos</span>
+    <span class="n">esAlfanumerico</span> <span class="o">:=</span> <span class="k">func</span><span class="p">(</span><span class="n">r</span> <span class="kt">rune</span><span class="p">)</span> <span class="kt">bool</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">unicode</span><span class="o">.</span><span class="n">IsLetter</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="o">||</span> <span class="n">unicode</span><span class="o">.</span><span class="n">IsDigit</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+    <span class="p">}</span>
+    
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"¿Es 'A9' alfanumérico? %t y %t</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">esAlfanumerico</span><span class="p">(</span><span class="sc">'A'</span><span class="p">),</span> <span class="n">esAlfanumerico</span><span class="p">(</span><span class="sc">'9'</span><span class="p">))</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="mayúsculas-minúsculas-y-título">Mayúsculas, Minúsculas y Título</h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="p">(</span>
+    <span class="s">"fmt"</span>
+    <span class="s">"unicode"</span>
+<span class="p">)</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c">// IsUpper - Verifica si es mayúscula</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"¿'A' es mayúscula? %t</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">unicode</span><span class="o">.</span><span class="n">IsUpper</span><span class="p">(</span><span class="sc">'A'</span><span class="p">))</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"¿'É' es mayúscula? %t</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">unicode</span><span class="o">.</span><span class="n">IsUpper</span><span class="p">(</span><span class="sc">'É'</span><span class="p">))</span>
+    
+    <span class="c">// IsLower - Verifica si es minúscula</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"¿'a' es minúscula? %t</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">unicode</span><span class="o">.</span><span class="n">IsLower</span><span class="p">(</span><span class="sc">'a'</span><span class="p">))</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"¿'ñ' es minúscula? %t</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">unicode</span><span class="o">.</span><span class="n">IsLower</span><span class="p">(</span><span class="sc">'ñ'</span><span class="p">))</span>
+    
+    <span class="c">// IsTitle - Detecta caracteres específicos que son mayúsculas de título</span>
+    <span class="c">// Algunos caracteres especiales tienen forma de título propia</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"¿'ǅ' (DZ con acento) es un carácter de título? %t</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">unicode</span><span class="o">.</span><span class="n">IsTitle</span><span class="p">(</span><span class="sc">'ǅ'</span><span class="p">))</span>
+    
+    <span class="c">// Ejemplo práctico: verificar si una palabra comienza con mayúscula</span>
+    <span class="n">palabra</span> <span class="o">:=</span> <span class="s">"España"</span>
+    <span class="n">primerRuna</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">rune</span><span class="p">(</span><span class="n">palabra</span><span class="p">)[</span><span class="m">0</span><span class="p">]</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"¿'%s' comienza con mayúscula? %t</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">palabra</span><span class="p">,</span> <span class="n">unicode</span><span class="o">.</span><span class="n">IsUpper</span><span class="p">(</span><span class="n">primerRuna</span><span class="p">))</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="espacios-y-control">Espacios y Control</h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="p">(</span>
+    <span class="s">"fmt"</span>
+    <span class="s">"strings"</span>
+    <span class="s">"unicode"</span>
+<span class="p">)</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c">// IsSpace - Detecta diferentes tipos de espacios en Unicode</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Espacio normal: %t</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">unicode</span><span class="o">.</span><span class="n">IsSpace</span><span class="p">(</span><span class="sc">' '</span><span class="p">))</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Tabulación: %t</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">unicode</span><span class="o">.</span><span class="n">IsSpace</span><span class="p">(</span><span class="sc">'\t'</span><span class="p">))</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Salto de línea: %t</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">unicode</span><span class="o">.</span><span class="n">IsSpace</span><span class="p">(</span><span class="sc">'\n'</span><span class="p">))</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Espacio no rompible: %t</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">unicode</span><span class="o">.</span><span class="n">IsSpace</span><span class="p">(</span><span class="sc">'\u00A0'</span><span class="p">))</span>
+    
+    <span class="c">// IsControl - Detecta caracteres de control</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Nulo '</span><span class="se">\\</span><span class="s">0': %t</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">unicode</span><span class="o">.</span><span class="n">IsControl</span><span class="p">(</span><span class="sc">'\u0000'</span><span class="p">))</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Escape '</span><span class="se">\\</span><span class="s">e': %t</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">unicode</span><span class="o">.</span><span class="n">IsControl</span><span class="p">(</span><span class="sc">'\u001B'</span><span class="p">))</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Delete: %t</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">unicode</span><span class="o">.</span><span class="n">IsControl</span><span class="p">(</span><span class="sc">'\u007F'</span><span class="p">))</span>
+    
+    <span class="c">// Ejemplo práctico: Eliminar espacios y contar palabras</span>
+    <span class="n">texto</span> <span class="o">:=</span> <span class="s">"  Hola  mundo!  ¿Cómo  estás?  "</span>
+    <span class="n">palabras</span> <span class="o">:=</span> <span class="n">strings</span><span class="o">.</span><span class="n">FieldsFunc</span><span class="p">(</span><span class="n">texto</span><span class="p">,</span> <span class="n">unicode</span><span class="o">.</span><span class="n">IsSpace</span><span class="p">)</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Texto: %q</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">texto</span><span class="p">)</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Palabras: %q</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">palabras</span><span class="p">)</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Número de palabras: %d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">palabras</span><span class="p">))</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="símbolos-y-puntuación">Símbolos y Puntuación</h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="p">(</span>
+    <span class="s">"fmt"</span>
+    <span class="s">"unicode"</span>
+<span class="p">)</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c">// IsPunct - Identifica signos de puntuación</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Punto '.': %t</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">unicode</span><span class="o">.</span><span class="n">IsPunct</span><span class="p">(</span><span class="sc">'.'</span><span class="p">))</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Coma ',': %t</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">unicode</span><span class="o">.</span><span class="n">IsPunct</span><span class="p">(</span><span class="sc">','</span><span class="p">))</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Interrogación '?': %t</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">unicode</span><span class="o">.</span><span class="n">IsPunct</span><span class="p">(</span><span class="sc">'?'</span><span class="p">))</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"¿Interrogación de apertura '¿'? %t</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">unicode</span><span class="o">.</span><span class="n">IsPunct</span><span class="p">(</span><span class="sc">'¿'</span><span class="p">))</span>
+    
+    <span class="c">// IsSymbol - Identifica símbolos</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Dólar '$': %t</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">unicode</span><span class="o">.</span><span class="n">IsSymbol</span><span class="p">(</span><span class="sc">'$'</span><span class="p">))</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Porcentaje '%%': %t</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">unicode</span><span class="o">.</span><span class="n">IsSymbol</span><span class="p">(</span><span class="sc">'%'</span><span class="p">))</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Copyright '©': %t</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">unicode</span><span class="o">.</span><span class="n">IsSymbol</span><span class="p">(</span><span class="sc">'©'</span><span class="p">))</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Emoji '😊': %t</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">unicode</span><span class="o">.</span><span class="n">IsSymbol</span><span class="p">(</span><span class="sc">'😊'</span><span class="p">))</span>
+    
+    <span class="c">// Diferencia entre símbolos y puntuación</span>
+    <span class="n">caracteresVarios</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">rune</span><span class="p">{</span><span class="sc">'@'</span><span class="p">,</span> <span class="sc">'#'</span><span class="p">,</span> <span class="sc">'+'</span><span class="p">,</span> <span class="sc">'='</span><span class="p">,</span> <span class="sc">':'</span><span class="p">,</span> <span class="sc">';'</span><span class="p">,</span> <span class="sc">'('</span><span class="p">,</span> <span class="sc">'['</span><span class="p">,</span> <span class="sc">'"'</span><span class="p">}</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">Clasificación de caracteres:"</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">c</span> <span class="o">:=</span> <span class="k">range</span> <span class="n">caracteresVarios</span> <span class="p">{</span>
+        <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"%q es: Puntuación=%t, Símbolo=%t</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> 
+                  <span class="n">c</span><span class="p">,</span> <span class="n">unicode</span><span class="o">.</span><span class="n">IsPunct</span><span class="p">(</span><span class="n">c</span><span class="p">),</span> <span class="n">unicode</span><span class="o">.</span><span class="n">IsSymbol</span><span class="p">(</span><span class="n">c</span><span class="p">))</span>
+    <span class="p">}</span>
+    
+    <span class="c">// IsGraphic y IsPrint - Caracteres con representación visual</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">Tabulación '</span><span class="se">\\</span><span class="s">t' es: Gráfico=%t, Imprimible=%t</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> 
+               <span class="n">unicode</span><span class="o">.</span><span class="n">IsGraphic</span><span class="p">(</span><span class="sc">'\t'</span><span class="p">),</span> <span class="n">unicode</span><span class="o">.</span><span class="n">IsPrint</span><span class="p">(</span><span class="sc">'\t'</span><span class="p">))</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Espacio ' ' es: Gráfico=%t, Imprimible=%t</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> 
+               <span class="n">unicode</span><span class="o">.</span><span class="n">IsGraphic</span><span class="p">(</span><span class="sc">' '</span><span class="p">),</span> <span class="n">unicode</span><span class="o">.</span><span class="n">IsPrint</span><span class="p">(</span><span class="sc">' '</span><span class="p">))</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Letra 'A' es: Gráfico=%t, Imprimible=%t</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> 
+               <span class="n">unicode</span><span class="o">.</span><span class="n">IsGraphic</span><span class="p">(</span><span class="sc">'A'</span><span class="p">),</span> <span class="n">unicode</span><span class="o">.</span><span class="n">IsPrint</span><span class="p">(</span><span class="sc">'A'</span><span class="p">))</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="transformación-de-caracteres">Transformación de Caracteres</h2>
+
+<h3 id="conversión-de-mayúsculasminúsculas">Conversión de Mayúsculas/Minúsculas</h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="p">(</span>
+    <span class="s">"fmt"</span>
+    <span class="s">"strings"</span>
+    <span class="s">"unicode"</span>
+<span class="p">)</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c">// ToUpper - Convertir a mayúsculas</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"'a' → %q</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">unicode</span><span class="o">.</span><span class="n">ToUpper</span><span class="p">(</span><span class="sc">'a'</span><span class="p">))</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"'ñ' → %q</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">unicode</span><span class="o">.</span><span class="n">ToUpper</span><span class="p">(</span><span class="sc">'ñ'</span><span class="p">))</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"'é' → %q</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">unicode</span><span class="o">.</span><span class="n">ToUpper</span><span class="p">(</span><span class="sc">'é'</span><span class="p">))</span>
+    
+    <span class="c">// ToLower - Convertir a minúsculas</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"'A' → %q</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">unicode</span><span class="o">.</span><span class="n">ToLower</span><span class="p">(</span><span class="sc">'A'</span><span class="p">))</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"'Ñ' → %q</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">unicode</span><span class="o">.</span><span class="n">ToLower</span><span class="p">(</span><span class="sc">'Ñ'</span><span class="p">))</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"'É' → %q</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">unicode</span><span class="o">.</span><span class="n">ToLower</span><span class="p">(</span><span class="sc">'É'</span><span class="p">))</span>
+    
+    <span class="c">// ToTitle - Convertir a título (similar a mayúscula pero específico para título)</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"'a' a título → %q</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">unicode</span><span class="o">.</span><span class="n">ToTitle</span><span class="p">(</span><span class="sc">'a'</span><span class="p">))</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"'ñ' a título → %q</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">unicode</span><span class="o">.</span><span class="n">ToTitle</span><span class="p">(</span><span class="sc">'ñ'</span><span class="p">))</span>
+    
+    <span class="c">// SimpleFold - Iterar por el conjunto de equivalencias de plegado</span>
+    <span class="n">c</span> <span class="o">:=</span> <span class="sc">'A'</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Iterando por plegado de %q: "</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="o">:=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="m">3</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span> <span class="p">{</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="n">unicode</span><span class="o">.</span><span class="n">SimpleFold</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+        <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"%q "</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">()</span>
+    
+    <span class="c">// Ejemplo práctico: Convertir strings completos</span>
+    <span class="n">frase</span> <span class="o">:=</span> <span class="s">"¡Hola Mundo!"</span>
+    <span class="n">mayusculas</span> <span class="o">:=</span> <span class="n">strings</span><span class="o">.</span><span class="n">Map</span><span class="p">(</span><span class="n">unicode</span><span class="o">.</span><span class="n">ToUpper</span><span class="p">,</span> <span class="n">frase</span><span class="p">)</span>
+    <span class="n">minusculas</span> <span class="o">:=</span> <span class="n">strings</span><span class="o">.</span><span class="n">Map</span><span class="p">(</span><span class="n">unicode</span><span class="o">.</span><span class="n">ToLower</span><span class="p">,</span> <span class="n">frase</span><span class="p">)</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Original: %s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">frase</span><span class="p">)</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Mayúsculas: %s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">mayusculas</span><span class="p">)</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Minúsculas: %s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">minusculas</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="tablas-unicode-y-rangos">Tablas Unicode y Rangos</h2>
+
+<p>El paquete <code class="language-plaintext highlighter-rouge">unicode</code> define múltiples rangos y tablas que agrupan caracteres por categorías o propiedades.</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="p">(</span>
+    <span class="s">"fmt"</span>
+    <span class="s">"unicode"</span>
+<span class="p">)</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c">// Rangos predefinidos en el paquete unicode</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Rangos Unicode:"</span><span class="p">)</span>
+    
+    <span class="c">// Letras latinas</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"'A' es letra latina: %t</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">unicode</span><span class="o">.</span><span class="n">In</span><span class="p">(</span><span class="sc">'A'</span><span class="p">,</span> <span class="n">unicode</span><span class="o">.</span><span class="n">Latin</span><span class="p">))</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"'α' (alfa griego) es letra latina: %t</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">unicode</span><span class="o">.</span><span class="n">In</span><span class="p">(</span><span class="sc">'α'</span><span class="p">,</span> <span class="n">unicode</span><span class="o">.</span><span class="n">Latin</span><span class="p">))</span>
+    
+    <span class="c">// Letras griegas</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"'α' es letra griega: %t</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">unicode</span><span class="o">.</span><span class="n">In</span><span class="p">(</span><span class="sc">'α'</span><span class="p">,</span> <span class="n">unicode</span><span class="o">.</span><span class="n">Greek</span><span class="p">))</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"'Ω' es letra griega: %t</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">unicode</span><span class="o">.</span><span class="n">In</span><span class="p">(</span><span class="sc">'Ω'</span><span class="p">,</span> <span class="n">unicode</span><span class="o">.</span><span class="n">Greek</span><span class="p">))</span>
+    
+    <span class="c">// Caracteres cirílicos</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"'Я' es letra cirílica: %t</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">unicode</span><span class="o">.</span><span class="n">In</span><span class="p">(</span><span class="sc">'Я'</span><span class="p">,</span> <span class="n">unicode</span><span class="o">.</span><span class="n">Cyrillic</span><span class="p">))</span>
+    
+    <span class="c">// Caracteres asiáticos</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"'漢' es un carácter Han: %t</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">unicode</span><span class="o">.</span><span class="n">In</span><span class="p">(</span><span class="sc">'漢'</span><span class="p">,</span> <span class="n">unicode</span><span class="o">.</span><span class="n">Han</span><span class="p">))</span>
+    
+    <span class="c">// Combinar rangos con funciones de clasificación</span>
+    <span class="n">esLetraLatina</span> <span class="o">:=</span> <span class="k">func</span><span class="p">(</span><span class="n">r</span> <span class="kt">rune</span><span class="p">)</span> <span class="kt">bool</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">unicode</span><span class="o">.</span><span class="n">IsLetter</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">unicode</span><span class="o">.</span><span class="n">In</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">unicode</span><span class="o">.</span><span class="n">Latin</span><span class="p">)</span>
+    <span class="p">}</span>
+    
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"'A' es letra latina: %t</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">esLetraLatina</span><span class="p">(</span><span class="sc">'A'</span><span class="p">))</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"'α' es letra latina: %t</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">esLetraLatina</span><span class="p">(</span><span class="sc">'α'</span><span class="p">))</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="scripts-y-propiedades-unicode">Scripts y Propiedades Unicode</h2>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="p">(</span>
+    <span class="s">"fmt"</span>
+    <span class="s">"unicode"</span>
+<span class="p">)</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c">// Usando tablas de propiedades</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"'A' es parte del script latino: %t</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> 
+               <span class="n">unicode</span><span class="o">.</span><span class="n">Is</span><span class="p">(</span><span class="n">unicode</span><span class="o">.</span><span class="n">Latin</span><span class="p">,</span> <span class="sc">'A'</span><span class="p">))</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"'漢' es parte del script Han: %t</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> 
+               <span class="n">unicode</span><span class="o">.</span><span class="n">Is</span><span class="p">(</span><span class="n">unicode</span><span class="o">.</span><span class="n">Han</span><span class="p">,</span> <span class="sc">'漢'</span><span class="p">))</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"'α' es parte del script griego: %t</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> 
+               <span class="n">unicode</span><span class="o">.</span><span class="n">Is</span><span class="p">(</span><span class="n">unicode</span><span class="o">.</span><span class="n">Greek</span><span class="p">,</span> <span class="sc">'α'</span><span class="p">))</span>
+    
+    <span class="c">// Combinando múltiples scripts</span>
+    <span class="n">caracteresVarios</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">rune</span><span class="p">{</span><span class="sc">'A'</span><span class="p">,</span> <span class="sc">'α'</span><span class="p">,</span> <span class="sc">'漢'</span><span class="p">,</span> <span class="sc">'Я'</span><span class="p">,</span> <span class="sc">'9'</span><span class="p">,</span> <span class="sc">'©'</span><span class="p">}</span>
+    <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">c</span> <span class="o">:=</span> <span class="k">range</span> <span class="n">caracteresVarios</span> <span class="p">{</span>
+        <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"%q pertenece a: "</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">unicode</span><span class="o">.</span><span class="n">Is</span><span class="p">(</span><span class="n">unicode</span><span class="o">.</span><span class="n">Latin</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Latino "</span><span class="p">)</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="n">unicode</span><span class="o">.</span><span class="n">Is</span><span class="p">(</span><span class="n">unicode</span><span class="o">.</span><span class="n">Greek</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Griego "</span><span class="p">)</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="n">unicode</span><span class="o">.</span><span class="n">Is</span><span class="p">(</span><span class="n">unicode</span><span class="o">.</span><span class="n">Han</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Han "</span><span class="p">)</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="n">unicode</span><span class="o">.</span><span class="n">Is</span><span class="p">(</span><span class="n">unicode</span><span class="o">.</span><span class="n">Cyrillic</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Cirílico "</span><span class="p">)</span>
+        <span class="p">}</span>
+        
+        <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">()</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="casos-prácticos">Casos Prácticos</h2>
+
+<h3 id="validación-de-entrada">Validación de Entrada</h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="p">(</span>
+    <span class="s">"fmt"</span>
+    <span class="s">"strings"</span>
+    <span class="s">"unicode"</span>
+<span class="p">)</span>
+
+<span class="c">// Validar un nombre de usuario que solo permite letras, números y guiones bajos</span>
+<span class="k">func</span> <span class="n">esNombreUsuarioValido</span><span class="p">(</span><span class="n">nombre</span> <span class="kt">string</span><span class="p">)</span> <span class="kt">bool</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">nombre</span><span class="p">)</span> <span class="o">&lt;</span> <span class="m">3</span> <span class="o">||</span> <span class="nb">len</span><span class="p">(</span><span class="n">nombre</span><span class="p">)</span> <span class="o">&gt;</span> <span class="m">20</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="no">false</span>
+    <span class="p">}</span>
+    
+    <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">r</span> <span class="o">:=</span> <span class="k">range</span> <span class="n">nombre</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="o">!</span><span class="n">unicode</span><span class="o">.</span><span class="n">IsLetter</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">unicode</span><span class="o">.</span><span class="n">IsDigit</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">r</span> <span class="o">!=</span> <span class="sc">'_'</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="no">false</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    
+    <span class="c">// El nombre debe comenzar con una letra</span>
+    <span class="k">return</span> <span class="n">unicode</span><span class="o">.</span><span class="n">IsLetter</span><span class="p">([]</span><span class="kt">rune</span><span class="p">(</span><span class="n">nombre</span><span class="p">)[</span><span class="m">0</span><span class="p">])</span>
+<span class="p">}</span>
+
+<span class="c">// Validar una contraseña con requisitos de seguridad</span>
+<span class="k">func</span> <span class="n">esContraseñaSegura</span><span class="p">(</span><span class="n">pass</span> <span class="kt">string</span><span class="p">)</span> <span class="p">(</span><span class="kt">bool</span><span class="p">,</span> <span class="kt">string</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">pass</span><span class="p">)</span> <span class="o">&lt;</span> <span class="m">8</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="no">false</span><span class="p">,</span> <span class="s">"La contraseña debe tener al menos 8 caracteres"</span>
+    <span class="p">}</span>
+    
+    <span class="k">var</span> <span class="n">tieneMayuscula</span><span class="p">,</span> <span class="n">tieneMinuscula</span><span class="p">,</span> <span class="n">tieneDigito</span><span class="p">,</span> <span class="n">tieneSimbolo</span> <span class="kt">bool</span>
+    
+    <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">r</span> <span class="o">:=</span> <span class="k">range</span> <span class="n">pass</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="n">unicode</span><span class="o">.</span><span class="n">IsUpper</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">tieneMayuscula</span> <span class="o">=</span> <span class="no">true</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="n">unicode</span><span class="o">.</span><span class="n">IsLower</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">tieneMinuscula</span> <span class="o">=</span> <span class="no">true</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="n">unicode</span><span class="o">.</span><span class="n">IsDigit</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">tieneDigito</span> <span class="o">=</span> <span class="no">true</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="n">unicode</span><span class="o">.</span><span class="n">IsPunct</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="o">||</span> <span class="n">unicode</span><span class="o">.</span><span class="n">IsSymbol</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">tieneSimbolo</span> <span class="o">=</span> <span class="no">true</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    
+    <span class="k">if</span> <span class="o">!</span><span class="n">tieneMayuscula</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="no">false</span><span class="p">,</span> <span class="s">"Debe incluir al menos una letra mayúscula"</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="o">!</span><span class="n">tieneMinuscula</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="no">false</span><span class="p">,</span> <span class="s">"Debe incluir al menos una letra minúscula"</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="o">!</span><span class="n">tieneDigito</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="no">false</span><span class="p">,</span> <span class="s">"Debe incluir al menos un dígito"</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="o">!</span><span class="n">tieneSimbolo</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="no">false</span><span class="p">,</span> <span class="s">"Debe incluir al menos un símbolo"</span>
+    <span class="p">}</span>
+    
+    <span class="k">return</span> <span class="no">true</span><span class="p">,</span> <span class="s">"Contraseña válida"</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c">// Probar validación de nombre de usuario</span>
+    <span class="n">nombresUsuario</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">string</span><span class="p">{</span><span class="s">"usuario123"</span><span class="p">,</span> <span class="s">"Usuario_1"</span><span class="p">,</span> <span class="s">"123user"</span><span class="p">,</span> <span class="s">"us@er"</span><span class="p">,</span> <span class="s">"a"</span><span class="p">}</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Validación de nombres de usuario:"</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">nombre</span> <span class="o">:=</span> <span class="k">range</span> <span class="n">nombresUsuario</span> <span class="p">{</span>
+        <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"%q es válido: %t</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">nombre</span><span class="p">,</span> <span class="n">esNombreUsuarioValido</span><span class="p">(</span><span class="n">nombre</span><span class="p">))</span>
+    <span class="p">}</span>
+    
+    <span class="c">// Probar validación de contraseña</span>
+    <span class="n">contraseñas</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">string</span><span class="p">{</span><span class="s">"abc123"</span><span class="p">,</span> <span class="s">"Password1"</span><span class="p">,</span> <span class="s">"Passw0rd!"</span><span class="p">,</span> <span class="s">"CONTRASEÑA123"</span><span class="p">,</span> <span class="s">"contraseña!"</span><span class="p">}</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">Validación de contraseñas:"</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">pass</span> <span class="o">:=</span> <span class="k">range</span> <span class="n">contraseñas</span> <span class="p">{</span>
+        <span class="n">valida</span><span class="p">,</span> <span class="n">mensaje</span> <span class="o">:=</span> <span class="n">esContraseñaSegura</span><span class="p">(</span><span class="n">pass</span><span class="p">)</span>
+        <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"%q: %s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">pass</span><span class="p">,</span> <span class="n">mensaje</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="procesamiento-de-texto">Procesamiento de Texto</h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="p">(</span>
+    <span class="s">"fmt"</span>
+    <span class="s">"strings"</span>
+    <span class="s">"unicode"</span>
+<span class="p">)</span>
+
+<span class="c">// Normalizar texto eliminando espacios extras y convirtiendo a minúsculas</span>
+<span class="k">func</span> <span class="n">normalizarTexto</span><span class="p">(</span><span class="n">texto</span> <span class="kt">string</span><span class="p">)</span> <span class="kt">string</span> <span class="p">{</span>
+    <span class="c">// Convertir a minúsculas</span>
+    <span class="n">texto</span> <span class="o">=</span> <span class="n">strings</span><span class="o">.</span><span class="n">Map</span><span class="p">(</span><span class="n">unicode</span><span class="o">.</span><span class="n">ToLower</span><span class="p">,</span> <span class="n">texto</span><span class="p">)</span>
+    
+    <span class="c">// Eliminar espacios duplicados</span>
+    <span class="k">var</span> <span class="n">resultado</span> <span class="n">strings</span><span class="o">.</span><span class="n">Builder</span>
+    <span class="n">espacioAnterior</span> <span class="o">:=</span> <span class="no">true</span> <span class="c">// Para manejar espacios al inicio</span>
+    
+    <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">r</span> <span class="o">:=</span> <span class="k">range</span> <span class="n">texto</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="n">unicode</span><span class="o">.</span><span class="n">IsSpace</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="o">!</span><span class="n">espacioAnterior</span> <span class="p">{</span>
+                <span class="n">resultado</span><span class="o">.</span><span class="n">WriteRune</span><span class="p">(</span><span class="sc">' '</span><span class="p">)</span>
+                <span class="n">espacioAnterior</span> <span class="o">=</span> <span class="no">true</span>
+            <span class="p">}</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="n">resultado</span><span class="o">.</span><span class="n">WriteRune</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+            <span class="n">espacioAnterior</span> <span class="o">=</span> <span class="no">false</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    
+    <span class="k">return</span> <span class="n">strings</span><span class="o">.</span><span class="n">TrimSpace</span><span class="p">(</span><span class="n">resultado</span><span class="o">.</span><span class="n">String</span><span class="p">())</span>
+<span class="p">}</span>
+
+<span class="c">// Contar palabras, separando correctamente por Unicode</span>
+<span class="k">func</span> <span class="n">contarPalabras</span><span class="p">(</span><span class="n">texto</span> <span class="kt">string</span><span class="p">)</span> <span class="kt">int</span> <span class="p">{</span>
+    <span class="n">palabras</span> <span class="o">:=</span> <span class="n">strings</span><span class="o">.</span><span class="n">FieldsFunc</span><span class="p">(</span><span class="n">texto</span><span class="p">,</span> <span class="n">unicode</span><span class="o">.</span><span class="n">IsSpace</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">palabras</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c">// Convertir a formato título (primera letra de cada palabra en mayúscula)</span>
+<span class="k">func</span> <span class="n">formatoTitulo</span><span class="p">(</span><span class="n">texto</span> <span class="kt">string</span><span class="p">)</span> <span class="kt">string</span> <span class="p">{</span>
+    <span class="n">palabras</span> <span class="o">:=</span> <span class="n">strings</span><span class="o">.</span><span class="n">FieldsFunc</span><span class="p">(</span><span class="n">texto</span><span class="p">,</span> <span class="n">unicode</span><span class="o">.</span><span class="n">IsSpace</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">palabra</span> <span class="o">:=</span> <span class="k">range</span> <span class="n">palabras</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">palabra</span><span class="p">)</span> <span class="o">&gt;</span> <span class="m">0</span> <span class="p">{</span>
+            <span class="n">runas</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">rune</span><span class="p">(</span><span class="n">palabra</span><span class="p">)</span>
+            <span class="n">runas</span><span class="p">[</span><span class="m">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">unicode</span><span class="o">.</span><span class="n">ToTitle</span><span class="p">(</span><span class="n">runas</span><span class="p">[</span><span class="m">0</span><span class="p">])</span>
+            <span class="n">palabras</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="kt">string</span><span class="p">(</span><span class="n">runas</span><span class="p">)</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">strings</span><span class="o">.</span><span class="n">Join</span><span class="p">(</span><span class="n">palabras</span><span class="p">,</span> <span class="s">" "</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c">// Sanitizar texto para URLs (eliminar acentos, espacios, etc.)</span>
+<span class="k">func</span> <span class="n">sanitizarParaURL</span><span class="p">(</span><span class="n">texto</span> <span class="kt">string</span><span class="p">)</span> <span class="kt">string</span> <span class="p">{</span>
+    <span class="n">texto</span> <span class="o">=</span> <span class="n">strings</span><span class="o">.</span><span class="n">Map</span><span class="p">(</span><span class="k">func</span><span class="p">(</span><span class="n">r</span> <span class="kt">rune</span><span class="p">)</span> <span class="kt">rune</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="n">unicode</span><span class="o">.</span><span class="n">IsLetter</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="o">||</span> <span class="n">unicode</span><span class="o">.</span><span class="n">IsDigit</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="p">{</span>
+            <span class="c">// Convertir letras a minúsculas</span>
+            <span class="k">return</span> <span class="n">unicode</span><span class="o">.</span><span class="n">ToLower</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="n">unicode</span><span class="o">.</span><span class="n">IsSpace</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="sc">'-'</span>
+        <span class="p">}</span>
+        <span class="c">// Eliminar cualquier otro carácter</span>
+        <span class="k">return</span> <span class="o">-</span><span class="m">1</span>
+    <span class="p">},</span> <span class="n">texto</span><span class="p">)</span>
+    
+    <span class="c">// Eliminar guiones duplicados</span>
+    <span class="k">for</span> <span class="n">strings</span><span class="o">.</span><span class="n">Contains</span><span class="p">(</span><span class="n">texto</span><span class="p">,</span> <span class="s">"--"</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">texto</span> <span class="o">=</span> <span class="n">strings</span><span class="o">.</span><span class="n">ReplaceAll</span><span class="p">(</span><span class="n">texto</span><span class="p">,</span> <span class="s">"--"</span><span class="p">,</span> <span class="s">"-"</span><span class="p">)</span>
+    <span class="p">}</span>
+    
+    <span class="k">return</span> <span class="n">strings</span><span class="o">.</span><span class="n">Trim</span><span class="p">(</span><span class="n">texto</span><span class="p">,</span> <span class="s">"-"</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">texto</span> <span class="o">:=</span> <span class="s">"  ¡Hola   MUNDO!  ¿Cómo    estás? 😊  "</span>
+    
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Original: %q</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">texto</span><span class="p">)</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Normalizado: %q</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">normalizarTexto</span><span class="p">(</span><span class="n">texto</span><span class="p">))</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Palabras: %d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">contarPalabras</span><span class="p">(</span><span class="n">texto</span><span class="p">))</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Formato título: %q</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">formatoTitulo</span><span class="p">(</span><span class="n">normalizarTexto</span><span class="p">(</span><span class="n">texto</span><span class="p">)))</span>
+    
+    <span class="n">tituloArticulo</span> <span class="o">:=</span> <span class="s">"Cómo Aprender Go: Una Guía Práctica (2023)"</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">Título original: %q</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">tituloArticulo</span><span class="p">)</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"URL amigable: %q</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">sanitizarParaURL</span><span class="p">(</span><span class="n">tituloArticulo</span><span class="p">))</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="rendimiento-y-optimizaciones">Rendimiento y Optimizaciones</h2>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="p">(</span>
+    <span class="s">"fmt"</span>
+    <span class="s">"strings"</span>
+    <span class="s">"time"</span>
+    <span class="s">"unicode"</span>
+<span class="p">)</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c">// Texto de prueba grande</span>
+    <span class="n">textoGrande</span> <span class="o">:=</span> <span class="n">strings</span><span class="o">.</span><span class="n">Repeat</span><span class="p">(</span><span class="s">"¡Hola Mundo! ¿Cómo estás? 123 αβγ 漢字 "</span><span class="p">,</span> <span class="m">10000</span><span class="p">)</span>
+    
+    <span class="c">// Método 1: Usar unicode.Is* en cada carácter</span>
+    <span class="n">inicio</span> <span class="o">:=</span> <span class="n">time</span><span class="o">.</span><span class="n">Now</span><span class="p">()</span>
+    <span class="n">contarCaracteresPorTipo1</span> <span class="o">:=</span> <span class="k">func</span><span class="p">(</span><span class="n">texto</span> <span class="kt">string</span><span class="p">)</span> <span class="p">(</span><span class="n">letras</span><span class="p">,</span> <span class="n">digitos</span><span class="p">,</span> <span class="n">espacios</span><span class="p">,</span> <span class="n">otros</span> <span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">r</span> <span class="o">:=</span> <span class="k">range</span> <span class="n">texto</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="n">unicode</span><span class="o">.</span><span class="n">IsLetter</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">letras</span><span class="o">++</span>
+            <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="n">unicode</span><span class="o">.</span><span class="n">IsDigit</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">digitos</span><span class="o">++</span>
+            <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="n">unicode</span><span class="o">.</span><span class="n">IsSpace</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">espacios</span><span class="o">++</span>
+            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                <span class="n">otros</span><span class="o">++</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">return</span>
+    <span class="p">}</span>
+    <span class="n">l1</span><span class="p">,</span> <span class="n">d1</span><span class="p">,</span> <span class="n">e1</span><span class="p">,</span> <span class="n">o1</span> <span class="o">:=</span> <span class="n">contarCaracteresPorTipo1</span><span class="p">(</span><span class="n">textoGrande</span><span class="p">)</span>
+    <span class="n">duracion1</span> <span class="o">:=</span> <span class="n">time</span><span class="o">.</span><span class="n">Since</span><span class="p">(</span><span class="n">inicio</span><span class="p">)</span>
+    
+    <span class="c">// Método 2: Combinar búsquedas usando tablas</span>
+    <span class="n">inicio</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">Now</span><span class="p">()</span>
+    <span class="n">contarCaracteresPorTipo2</span> <span class="o">:=</span> <span class="k">func</span><span class="p">(</span><span class="n">texto</span> <span class="kt">string</span><span class="p">)</span> <span class="p">(</span><span class="n">letras</span><span class="p">,</span> <span class="n">digitos</span><span class="p">,</span> <span class="n">espacios</span><span class="p">,</span> <span class="n">otros</span> <span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">r</span> <span class="o">:=</span> <span class="k">range</span> <span class="n">texto</span> <span class="p">{</span>
+            <span class="k">switch</span> <span class="p">{</span>
+            <span class="k">case</span> <span class="n">unicode</span><span class="o">.</span><span class="n">IsLetter</span><span class="p">(</span><span class="n">r</span><span class="p">)</span><span class="o">:</span>
+                <span class="n">letras</span><span class="o">++</span>
+            <span class="k">case</span> <span class="n">unicode</span><span class="o">.</span><span class="n">IsDigit</span><span class="p">(</span><span class="n">r</span><span class="p">)</span><span class="o">:</span>
+                <span class="n">digitos</span><span class="o">++</span>
+            <span class="k">case</span> <span class="n">unicode</span><span class="o">.</span><span class="n">IsSpace</span><span class="p">(</span><span class="n">r</span><span class="p">)</span><span class="o">:</span>
+                <span class="n">espacios</span><span class="o">++</span>
+            <span class="k">default</span><span class="o">:</span>
+                <span class="n">otros</span><span class="o">++</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">return</span>
+    <span class="p">}</span>
+    <span class="n">l2</span><span class="p">,</span> <span class="n">d2</span><span class="p">,</span> <span class="n">e2</span><span class="p">,</span> <span class="n">o2</span> <span class="o">:=</span> <span class="n">contarCaracteresPorTipo2</span><span class="p">(</span><span class="n">textoGrande</span><span class="p">)</span>
+    <span class="n">duracion2</span> <span class="o">:=</span> <span class="n">time</span><span class="o">.</span><span class="n">Since</span><span class="p">(</span><span class="n">inicio</span><span class="p">)</span>
+    
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Comparación de rendimiento:"</span><span class="p">)</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Método 1: %v (Letras: %d, Dígitos: %d, Espacios: %d, Otros: %d)</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> 
+               <span class="n">duracion1</span><span class="p">,</span> <span class="n">l1</span><span class="p">,</span> <span class="n">d1</span><span class="p">,</span> <span class="n">e1</span><span class="p">,</span> <span class="n">o1</span><span class="p">)</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Método 2: %v (Letras: %d, Dígitos: %d, Espacios: %d, Otros: %d)</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> 
+               <span class="n">duracion2</span><span class="p">,</span> <span class="n">l2</span><span class="p">,</span> <span class="n">d2</span><span class="p">,</span> <span class="n">e2</span><span class="p">,</span> <span class="n">o2</span><span class="p">)</span>
+    
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Rendimiento relativo: %.2f%%</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> 
+               <span class="kt">float64</span><span class="p">(</span><span class="n">duracion1</span><span class="o">.</span><span class="n">Nanoseconds</span><span class="p">())</span><span class="o">/</span><span class="kt">float64</span><span class="p">(</span><span class="n">duracion2</span><span class="o">.</span><span class="n">Nanoseconds</span><span class="p">())</span><span class="o">*</span><span class="m">100</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="conclusión">Conclusión</h2>
+
+<p>El paquete <code class="language-plaintext highlighter-rouge">unicode</code> de Go proporciona herramientas robustas para manejar texto internacional y caracteres Unicode de forma eficiente. Es especialmente útil para:</p>
+
+<ol>
+  <li>Validación de entrada de usuario</li>
+  <li>Procesamiento y normalización de texto</li>
+  <li>Manipulación de cadenas multilingües</li>
+  <li>Identificación y clasificación de caracteres</li>
+  <li>Operaciones de conversión entre mayúsculas y minúsculas</li>
+</ol>
+
+<p>Al explotar el poder de este paquete, puedes crear aplicaciones Go que manejen texto de manera precisa y eficiente, independientemente del idioma o script utilizado.</p>
+
+            </main>
+        </div>
+        
+        <!-- Componente flotante de GitHub -->
+<div class="github-floating">
+    <a href="https://github.com/" target="_blank" rel="noopener noreferrer" class="github-link" title="Ver en GitHub">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-github">
+            <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+        </svg>
+    </a>
+    
+    
+    <a href="https://github.com//MiguelP-Dev.github.io/blob/main/_pages/paquetes/unicode.md" target="_blank" rel="noopener noreferrer" class="edit-link" title="Editar esta página">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-2">
+            <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+        </svg>
+    </a>
+    
+</div>
+
+<style>
+    /* Estilos del componente SVG */
+    .github-corner:hover .octo-arm {
+        animation: octocat-wave 560ms ease-in-out;
+    }
+    
+    @keyframes octocat-wave {
+        0%, 100% { transform: rotate(0); }
+        20%, 60% { transform: rotate(-25deg); }
+        40%, 80% { transform: rotate(10deg); }
+    }
+    
+    @media (max-width: 500px) {
+        .github-corner:hover .octo-arm {
+            animation: none;
+        }
+        .github-corner .octo-arm {
+            animation: octocat-wave 560ms ease-in-out;
+        }
+    }
+</style>
+    </div>
+    
+    <script src="/assets/js/scripts.js"></script>
+</body>
+</html>

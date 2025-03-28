@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>slices | Miguel's Programing Notes</title>
+    <link rel="stylesheet" href="/assets/css/styles.css">
+</head>
+<body>
+    <div class="app">
+        <nav class="navbar">
+    <div class="nav-container">
+        <a href="/" class="nav-brand">
+            Miguel's Programming Notes
+        </a>
+
+        <div class="nav-sections">
+            
+                
+                
+                
+                <a href="/paquetes/"
+                    class="nav-section active"
+                    data-section="paquetes">
+                    📦 Paquetes
+                </a>
+            
+                
+                
+                
+                <a href="/ejemplos/"
+                    class="nav-section "
+                    data-section="ejemplos">
+                    🧩 Ejemplos
+                </a>
+            
+        </div>
+    </div>
+</nav>
+        
+        <div class="container">
+            <button class="menu-toggle" aria-label="Abrir menú">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            
+            <aside class="sidebar" id="dynamic-sidebar">
+    <div class="sidebar-header">
+        <h3 class="sidebar-title">Miguel's Programming Notes</h3>
+    </div>
+    
+    <div class="sidebar-content">
+        
+            
+                <h3 class="sidebar-title">📦 Paquetes</h3>
+                <nav class="sidebar-nav">
+                    
+                        <a href="/paquetes/fmt/"
+                            class="sidebar-item "
+                            data-item="fmt">
+                            fmt
+                        </a>
+                    
+                        <a href="/paquetes/net/"
+                            class="sidebar-item "
+                            data-item="net-http">
+                            net/http
+                        </a>
+                    
+                        <a href="/paquetes/encoding/"
+                            class="sidebar-item "
+                            data-item="encoding">
+                            encoding
+                        </a>
+                    
+                </nav>
+            
+        
+            
+        
+    </div>
+</aside>
+            
+            <main class="content">
+                <h1 id="paquete-slices-en-go">Paquete <code class="language-plaintext highlighter-rouge">slices</code> en Go</h1>
+
+<p>El paquete <code class="language-plaintext highlighter-rouge">slices</code>, parte de <code class="language-plaintext highlighter-rouge">golang.org/x/exp/slices</code>, ofrece funciones útiles para manipular slices de manera eficiente y segura. A continuación, se amplían las descripciones y ejemplos de sus funciones principales, incluyendo casos de uso avanzados y mejores prácticas.</p>
+
+<hr />
+
+<h2 id="funciones-principales">Funciones Principales</h2>
+
+<h3 id="1-slicesappend">1. <strong><code class="language-plaintext highlighter-rouge">slices.Append</code></strong></h3>
+
+<p><strong>Descripción</strong>: Añade elementos a un slice, manejando automáticamente la reasignación de memoria si la capacidad es insuficiente. Similar al <code class="language-plaintext highlighter-rouge">append</code> nativo, pero con tipado genérico.<br />
+<strong>Sintaxis</strong>: <code class="language-plaintext highlighter-rouge">func Append[S ~[]E, E any](s S, elems ...E) S</code></p>
+
+<p><strong>Ejemplo Ampliado</strong>:</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>  
+
+<span class="k">import</span> <span class="p">(</span>  
+    <span class="s">"fmt"</span>  
+    <span class="s">"golang.org/x/exp/slices"</span>  
+<span class="p">)</span>  
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>  
+    <span class="n">s</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">int</span><span class="p">,</span> <span class="m">2</span><span class="p">,</span> <span class="m">3</span><span class="p">)</span> <span class="c">// Capacidad inicial: 3  </span>
+    <span class="n">s</span><span class="p">[</span><span class="m">0</span><span class="p">],</span> <span class="n">s</span><span class="p">[</span><span class="m">1</span><span class="p">]</span> <span class="o">=</span> <span class="m">1</span><span class="p">,</span> <span class="m">2</span>  
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Antes de Append: %v, Capacidad: %d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="nb">cap</span><span class="p">(</span><span class="n">s</span><span class="p">))</span> <span class="c">// [1 2], 3  </span>
+
+    <span class="c">// Añadir 3 elementos (supera la capacidad)  </span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">slices</span><span class="o">.</span><span class="n">Append</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="m">3</span><span class="p">,</span> <span class="m">4</span><span class="p">,</span> <span class="m">5</span><span class="p">)</span>  
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Después de Append: %v, Nueva Capacidad: %d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="nb">cap</span><span class="p">(</span><span class="n">s</span><span class="p">))</span> <span class="c">// [1 2 3 4 5], 6  </span>
+<span class="p">}</span>  
+</code></pre></div></div>
+
+<p><strong>Nota</strong>: Al exceder la capacidad, <code class="language-plaintext highlighter-rouge">Append</code> crea un nuevo array con capacidad ampliada (normalmente el doble del tamaño anterior).</p>
+
+<hr />
+
+<h3 id="2-slicesclone">2. <strong><code class="language-plaintext highlighter-rouge">slices.Clone</code></strong></h3>
+
+<p><strong>Descripción</strong>: Crea una copia superficial del slice. Los elementos no se duplican, pero el slice subyacente es nuevo.<br />
+<strong>Sintaxis</strong>: <code class="language-plaintext highlighter-rouge">func Clone[S ~[]E, E any](s S) S</code></p>
+
+<p><strong>Ejemplo con Structs</strong>:</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">type</span> <span class="n">Persona</span> <span class="k">struct</span> <span class="p">{</span>  
+    <span class="n">Nombre</span> <span class="kt">string</span>  
+    <span class="n">Edad</span>   <span class="kt">int</span>  
+<span class="p">}</span>  
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>  
+    <span class="n">original</span> <span class="o">:=</span> <span class="p">[]</span><span class="n">Persona</span><span class="p">{{</span><span class="s">"Ana"</span><span class="p">,</span> <span class="m">30</span><span class="p">},</span> <span class="p">{</span><span class="s">"Juan"</span><span class="p">,</span> <span class="m">25</span><span class="p">}}</span>  
+    <span class="n">copia</span> <span class="o">:=</span> <span class="n">slices</span><span class="o">.</span><span class="n">Clone</span><span class="p">(</span><span class="n">original</span><span class="p">)</span>  
+
+    <span class="n">copia</span><span class="p">[</span><span class="m">0</span><span class="p">]</span><span class="o">.</span><span class="n">Edad</span> <span class="o">=</span> <span class="m">31</span> <span class="c">// Modifica solo la copia  </span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Original:"</span><span class="p">,</span> <span class="n">original</span><span class="p">[</span><span class="m">0</span><span class="p">]</span><span class="o">.</span><span class="n">Edad</span><span class="p">)</span> <span class="c">// 30  </span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Copia:"</span><span class="p">,</span> <span class="n">copia</span><span class="p">[</span><span class="m">0</span><span class="p">]</span><span class="o">.</span><span class="n">Edad</span><span class="p">)</span>       <span class="c">// 31  </span>
+<span class="p">}</span>  
+</code></pre></div></div>
+
+<hr />
+
+<h3 id="3-slicesdelete">3. <strong><code class="language-plaintext highlighter-rouge">slices.Delete</code></strong></h3>
+
+<p><strong>Descripción</strong>: Elimina elementos desde el índice <code class="language-plaintext highlighter-rouge">i</code> hasta <code class="language-plaintext highlighter-rouge">j</code> (sin incluir <code class="language-plaintext highlighter-rouge">j</code>). Si los índices son inválidos, se genera un panic.</p>
+
+<p><strong>Ejemplo con Manejo de Errores</strong>:</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>  
+    <span class="n">s</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">string</span><span class="p">{</span><span class="s">"a"</span><span class="p">,</span> <span class="s">"b"</span><span class="p">,</span> <span class="s">"c"</span><span class="p">,</span> <span class="s">"d"</span><span class="p">}</span>  
+
+    <span class="c">// Caso válido  </span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">slices</span><span class="o">.</span><span class="n">Delete</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="m">1</span><span class="p">,</span> <span class="m">3</span><span class="p">)</span>  
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="c">// [a d]  </span>
+
+    <span class="c">// Caso inválido (índices fuera de rango)  </span>
+    <span class="k">defer</span> <span class="k">func</span><span class="p">()</span> <span class="p">{</span>  
+        <span class="k">if</span> <span class="n">r</span> <span class="o">:=</span> <span class="nb">recover</span><span class="p">();</span> <span class="n">r</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>  
+            <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Error:"</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span> <span class="c">// "slices: invalid slice indices"  </span>
+        <span class="p">}</span>  
+    <span class="p">}()</span>  
+    <span class="n">slices</span><span class="o">.</span><span class="n">Delete</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="m">5</span><span class="p">,</span> <span class="m">10</span><span class="p">)</span> <span class="c">// Genera panic  </span>
+<span class="p">}</span>  
+</code></pre></div></div>
+
+<hr />
+
+<h3 id="4-slicesinsert">4. <strong><code class="language-plaintext highlighter-rouge">slices.Insert</code></strong></h3>
+
+<p><strong>Descripción</strong>: Inserta elementos en la posición <code class="language-plaintext highlighter-rouge">i</code>. Si <code class="language-plaintext highlighter-rouge">i</code> es mayor que la longitud del slice, los elementos se añaden al final.</p>
+
+<p><strong>Ejemplos Variados</strong>:</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>  
+    <span class="n">s</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{</span><span class="m">10</span><span class="p">,</span> <span class="m">20</span><span class="p">,</span> <span class="m">30</span><span class="p">}</span>  
+
+    <span class="c">// Insertar al inicio  </span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">slices</span><span class="o">.</span><span class="n">Insert</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">5</span><span class="p">)</span>  
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="c">// [5 10 20 30]  </span>
+
+    <span class="c">// Insertar en posición intermedia  </span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">slices</span><span class="o">.</span><span class="n">Insert</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="m">2</span><span class="p">,</span> <span class="m">15</span><span class="p">,</span> <span class="m">16</span><span class="p">)</span>  
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="c">// [5 10 15 16 20 30]  </span>
+
+    <span class="c">// Insertar más allá de la longitud  </span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">slices</span><span class="o">.</span><span class="n">Insert</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span><span class="o">+</span><span class="m">5</span><span class="p">,</span> <span class="m">99</span><span class="p">)</span> <span class="c">// Equivalente a Append  </span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="c">// [5 10 15 16 20 30 99]  </span>
+<span class="p">}</span>  
+</code></pre></div></div>
+
+<hr />
+
+<h3 id="5-slicesindex">5. <strong><code class="language-plaintext highlighter-rouge">slices.Index</code></strong></h3>
+
+<p><strong>Descripción</strong>: Retorna el primer índice del elemento <code class="language-plaintext highlighter-rouge">v</code>. Funciona con tipos <code class="language-plaintext highlighter-rouge">comparable</code> (enteros, strings, structs sin campos no comparables).</p>
+
+<p><strong>Ejemplo con Strings y Búsqueda Fallida</strong>:</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>  
+    <span class="n">frutas</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">string</span><span class="p">{</span><span class="s">"manzana"</span><span class="p">,</span> <span class="s">"banana"</span><span class="p">,</span> <span class="s">"naranja"</span><span class="p">}</span>  
+
+    <span class="n">idx</span> <span class="o">:=</span> <span class="n">slices</span><span class="o">.</span><span class="n">Index</span><span class="p">(</span><span class="n">frutas</span><span class="p">,</span> <span class="s">"banana"</span><span class="p">)</span>  
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Índice de banana:"</span><span class="p">,</span> <span class="n">idx</span><span class="p">)</span> <span class="c">// 1  </span>
+
+    <span class="n">idx</span> <span class="o">=</span> <span class="n">slices</span><span class="o">.</span><span class="n">Index</span><span class="p">(</span><span class="n">frutas</span><span class="p">,</span> <span class="s">"pera"</span><span class="p">)</span>  
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Índice de pera:"</span><span class="p">,</span> <span class="n">idx</span><span class="p">)</span> <span class="c">// -1  </span>
+<span class="p">}</span>  
+</code></pre></div></div>
+
+<hr />
+
+<h3 id="6-slicessort">6. <strong><code class="language-plaintext highlighter-rouge">slices.Sort</code></strong></h3>
+
+<p><strong>Descripción</strong>: Ordena el slice en orden ascendente. Soporta cualquier tipo que implemente <code class="language-plaintext highlighter-rouge">constraints.Ordered</code> (int, float, string).</p>
+
+<p><strong>Ejemplo con Strings y Ordenamiento Personalizado</strong>:</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>  
+    <span class="n">nombres</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">string</span><span class="p">{</span><span class="s">"Carlos"</span><span class="p">,</span> <span class="s">"Ana"</span><span class="p">,</span> <span class="s">"David"</span><span class="p">,</span> <span class="s">"Beatriz"</span><span class="p">}</span>  
+    <span class="n">slices</span><span class="o">.</span><span class="n">Sort</span><span class="p">(</span><span class="n">nombres</span><span class="p">)</span>  
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">nombres</span><span class="p">)</span> <span class="c">// [Ana Beatriz Carlos David]  </span>
+
+    <span class="c">// Orden descendente usando SortFunc  </span>
+    <span class="n">slices</span><span class="o">.</span><span class="n">SortFunc</span><span class="p">(</span><span class="n">nombres</span><span class="p">,</span> <span class="k">func</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="kt">string</span><span class="p">)</span> <span class="kt">bool</span> <span class="p">{</span>  
+        <span class="k">return</span> <span class="n">a</span> <span class="o">&gt;</span> <span class="n">b</span>  
+    <span class="p">})</span>  
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">nombres</span><span class="p">)</span> <span class="c">// [David Carlos Beatriz Ana]  </span>
+<span class="p">}</span>  
+</code></pre></div></div>
+
+<hr />
+
+<h3 id="7-slicesequal">7. <strong><code class="language-plaintext highlighter-rouge">slices.Equal</code></strong></h3>
+
+<p><strong>Descripción</strong>: Compara dos slices elemento por elemento. Para slices de structs, compara los valores de los campos.</p>
+
+<p><strong>Ejemplo con Slices de Distinta Longitud</strong>:</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>  
+    <span class="n">a</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{</span><span class="m">1</span><span class="p">,</span> <span class="m">2</span><span class="p">,</span> <span class="m">3</span><span class="p">}</span>  
+    <span class="n">b</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{</span><span class="m">1</span><span class="p">,</span> <span class="m">2</span><span class="p">,</span> <span class="m">3</span><span class="p">,</span> <span class="m">4</span><span class="p">}</span>  
+    <span class="n">c</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{</span><span class="m">1</span><span class="p">,</span> <span class="m">2</span><span class="p">,</span> <span class="m">3</span><span class="p">}</span>  
+
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">slices</span><span class="o">.</span><span class="n">Equal</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">))</span> <span class="c">// false  </span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">slices</span><span class="o">.</span><span class="n">Equal</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">c</span><span class="p">))</span> <span class="c">// true  </span>
+<span class="p">}</span>  
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="mejores-prácticas">Mejores Prácticas</h2>
+
+<ol>
+  <li>
+    <p><strong>Capacidad vs. Longitud</strong>: Al usar <code class="language-plaintext highlighter-rouge">Append</code>, pre-asigna capacidad con <code class="language-plaintext highlighter-rouge">make</code> si conoces el tamaño aproximado para evitar reasignaciones frecuentes.</p>
+  </li>
+  <li><strong>Índices en <code class="language-plaintext highlighter-rouge">Delete</code> e <code class="language-plaintext highlighter-rouge">Insert</code></strong>: Valida los índices dinámicamente para evitar panics.</li>
+  <li><strong>Clonación Profunda</strong>: <code class="language-plaintext highlighter-rouge">Clone</code> no duplica elementos anidados (ej: slices dentro de structs). Para copias profundas, implementa lógica personalizada.</li>
+  <li><strong>Ordenamiento Personalizado</strong>: Usa <code class="language-plaintext highlighter-rouge">SortFunc</code> para tipos complejos o criterios no estándar.</li>
+</ol>
+
+<hr />
+
+<h2 id="conclusión">Conclusión</h2>
+
+<p>El paquete <code class="language-plaintext highlighter-rouge">slices</code> simplifica operaciones comunes, ofreciendo un rendimiento óptimo y seguridad de tipos. Al combinarlo con buenas prácticas, puedes escribir código Go más limpio y eficiente.</p>
+
+            </main>
+        </div>
+        
+        <!-- Componente flotante de GitHub -->
+<div class="github-floating">
+    <a href="https://github.com/" target="_blank" rel="noopener noreferrer" class="github-link" title="Ver en GitHub">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-github">
+            <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+        </svg>
+    </a>
+    
+    
+    <a href="https://github.com//MiguelP-Dev.github.io/blob/main/_pages/paquetes/slices.md" target="_blank" rel="noopener noreferrer" class="edit-link" title="Editar esta página">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-2">
+            <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+        </svg>
+    </a>
+    
+</div>
+
+<style>
+    /* Estilos del componente SVG */
+    .github-corner:hover .octo-arm {
+        animation: octocat-wave 560ms ease-in-out;
+    }
+    
+    @keyframes octocat-wave {
+        0%, 100% { transform: rotate(0); }
+        20%, 60% { transform: rotate(-25deg); }
+        40%, 80% { transform: rotate(10deg); }
+    }
+    
+    @media (max-width: 500px) {
+        .github-corner:hover .octo-arm {
+            animation: none;
+        }
+        .github-corner .octo-arm {
+            animation: octocat-wave 560ms ease-in-out;
+        }
+    }
+</style>
+    </div>
+    
+    <script src="/assets/js/scripts.js"></script>
+</body>
+</html>

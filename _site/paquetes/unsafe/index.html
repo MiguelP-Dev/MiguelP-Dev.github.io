@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>unsafe | Miguel's Programing Notes</title>
+    <link rel="stylesheet" href="/assets/css/styles.css">
+</head>
+<body>
+    <div class="app">
+        <nav class="navbar">
+    <div class="nav-container">
+        <a href="/" class="nav-brand">
+            Miguel's Programming Notes
+        </a>
+
+        <div class="nav-sections">
+            
+                
+                
+                
+                <a href="/paquetes/"
+                    class="nav-section active"
+                    data-section="paquetes">
+                    📦 Paquetes
+                </a>
+            
+                
+                
+                
+                <a href="/ejemplos/"
+                    class="nav-section "
+                    data-section="ejemplos">
+                    🧩 Ejemplos
+                </a>
+            
+        </div>
+    </div>
+</nav>
+        
+        <div class="container">
+            <button class="menu-toggle" aria-label="Abrir menú">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            
+            <aside class="sidebar" id="dynamic-sidebar">
+    <div class="sidebar-header">
+        <h3 class="sidebar-title">Miguel's Programming Notes</h3>
+    </div>
+    
+    <div class="sidebar-content">
+        
+            
+                <h3 class="sidebar-title">📦 Paquetes</h3>
+                <nav class="sidebar-nav">
+                    
+                        <a href="/paquetes/fmt/"
+                            class="sidebar-item "
+                            data-item="fmt">
+                            fmt
+                        </a>
+                    
+                        <a href="/paquetes/net/"
+                            class="sidebar-item "
+                            data-item="net-http">
+                            net/http
+                        </a>
+                    
+                        <a href="/paquetes/encoding/"
+                            class="sidebar-item "
+                            data-item="encoding">
+                            encoding
+                        </a>
+                    
+                </nav>
+            
+        
+            
+        
+    </div>
+</aside>
+            
+            <main class="content">
+                <h1 id="paquete-unsafe-en-go">Paquete <code class="language-plaintext highlighter-rouge">unsafe</code> en Go</h1>
+
+<p>El paquete <code class="language-plaintext highlighter-rouge">unsafe</code> permite manipular memoria directamente, rompiendo las garantías de seguridad de tipos de Go. <strong>Úsalo con extrema precaución</strong>, ya que errores pueden causar crashes o vulnerabilidades.</p>
+
+<hr />
+
+<h2 id="funciones-principales">Funciones Principales</h2>
+
+<h3 id="1-unsafesizeof">1. <strong><code class="language-plaintext highlighter-rouge">unsafe.Sizeof</code></strong></h3>
+
+<p><strong>Descripción</strong>: Obtiene el tamaño en bytes de un tipo o variable.</p>
+
+<p><strong>Ejemplo con Estructuras</strong>:</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">type</span> <span class="n">User</span> <span class="k">struct</span> <span class="p">{</span>  
+    <span class="n">ID</span>    <span class="kt">int32</span>   <span class="c">// 4 bytes  </span>
+    <span class="n">Name</span>  <span class="kt">string</span>  <span class="c">// 16 bytes (en 64-bit)  </span>
+    <span class="n">Admin</span> <span class="kt">bool</span>    <span class="c">// 1 byte (pero alineación a 8 bytes)  </span>
+<span class="p">}</span>  
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>  
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Tamaño de User:"</span><span class="p">,</span> <span class="n">unsafe</span><span class="o">.</span><span class="n">Sizeof</span><span class="p">(</span><span class="n">User</span><span class="p">{}))</span> <span class="c">// 4 + 16 + 8 = 32 bytes  </span>
+<span class="p">}</span>  
+</code></pre></div></div>
+
+<hr />
+
+<h3 id="2-unsafealignof">2. <strong><code class="language-plaintext highlighter-rouge">unsafe.Alignof</code></strong></h3>
+
+<p><strong>Descripción</strong>: Determina la alineación en memoria requerida por un tipo.</p>
+
+<p><strong>Ejemplo Práctico</strong>:</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>  
+    <span class="k">var</span> <span class="p">(</span>  
+        <span class="n">a</span> <span class="kt">int8</span>  
+        <span class="n">b</span> <span class="kt">float64</span>  
+    <span class="p">)</span>  
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Alineación int8:"</span><span class="p">,</span> <span class="n">unsafe</span><span class="o">.</span><span class="n">Alignof</span><span class="p">(</span><span class="n">a</span><span class="p">))</span>   <span class="c">// 1  </span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Alineación float64:"</span><span class="p">,</span> <span class="n">unsafe</span><span class="o">.</span><span class="n">Alignof</span><span class="p">(</span><span class="n">b</span><span class="p">))</span> <span class="c">// 8  </span>
+<span class="p">}</span>  
+</code></pre></div></div>
+
+<hr />
+
+<h3 id="3-unsafeoffsetof">3. <strong><code class="language-plaintext highlighter-rouge">unsafe.Offsetof</code></strong></h3>
+
+<p><strong>Descripción</strong>: Calcula el desplazamiento de un campo dentro de una estructura.</p>
+
+<p><strong>Uso en Serialización Binaria</strong>:</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">type</span> <span class="n">Header</span> <span class="k">struct</span> <span class="p">{</span>  
+    <span class="n">Magic</span>  <span class="p">[</span><span class="m">4</span><span class="p">]</span><span class="kt">byte</span>  
+    <span class="n">Length</span> <span class="kt">uint32</span>  
+<span class="p">}</span>  
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>  
+    <span class="n">h</span> <span class="o">:=</span> <span class="n">Header</span><span class="p">{}</span>  
+    <span class="c">// Obtener posición del campo Length  </span>
+    <span class="n">offset</span> <span class="o">:=</span> <span class="n">unsafe</span><span class="o">.</span><span class="n">Offsetof</span><span class="p">(</span><span class="n">h</span><span class="o">.</span><span class="n">Length</span><span class="p">)</span>  
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Offset de Length:"</span><span class="p">,</span> <span class="n">offset</span><span class="p">)</span> <span class="c">// 4  </span>
+<span class="p">}</span>  
+</code></pre></div></div>
+
+<hr />
+
+<h3 id="4-unsafepointer">4. <strong><code class="language-plaintext highlighter-rouge">unsafe.Pointer</code></strong></h3>
+
+<p><strong>Descripción</strong>: Puntero genérico que permite conversiones entre tipos.</p>
+
+<p><strong>Conversión de Slices a Bytes</strong>:</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">sliceToBytes</span><span class="p">(</span><span class="n">s</span> <span class="p">[]</span><span class="kt">int</span><span class="p">)</span> <span class="p">[]</span><span class="kt">byte</span> <span class="p">{</span>  
+    <span class="n">size</span> <span class="o">:=</span> <span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="o">*</span> <span class="n">unsafe</span><span class="o">.</span><span class="n">Sizeof</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="m">0</span><span class="p">])</span>  
+    <span class="n">ptr</span> <span class="o">:=</span> <span class="n">unsafe</span><span class="o">.</span><span class="n">Pointer</span><span class="p">(</span><span class="o">&amp;</span><span class="n">s</span><span class="p">[</span><span class="m">0</span><span class="p">])</span>  
+    <span class="k">return</span> <span class="n">unsafe</span><span class="o">.</span><span class="n">Slice</span><span class="p">((</span><span class="o">*</span><span class="kt">byte</span><span class="p">)(</span><span class="n">ptr</span><span class="p">),</span> <span class="n">size</span><span class="p">)</span>  
+<span class="p">}</span>  
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>  
+    <span class="n">nums</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{</span><span class="m">0x12345678</span><span class="p">,</span> <span class="m">0x9ABCDEF0</span><span class="p">}</span>  
+    <span class="n">bytes</span> <span class="o">:=</span> <span class="n">sliceToBytes</span><span class="p">(</span><span class="n">nums</span><span class="p">)</span>  
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"% x</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">bytes</span><span class="p">)</span> <span class="c">// 78 56 34 12 f0 de bc 9a (little-endian)  </span>
+<span class="p">}</span>  
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="casos-de-uso-avanzados">Casos de Uso Avanzados</h2>
+
+<h3 id="1-acceso-a-campos-no-exportados">1. <strong>Acceso a Campos No Exportados</strong></h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">type</span> <span class="n">Secret</span> <span class="k">struct</span> <span class="p">{</span>  
+    <span class="n">visible</span> <span class="kt">int</span>  
+    <span class="n">hidden</span>  <span class="kt">int</span>  
+<span class="p">}</span>  
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>  
+    <span class="n">s</span> <span class="o">:=</span> <span class="n">Secret</span><span class="p">{</span><span class="m">10</span><span class="p">,</span> <span class="m">20</span><span class="p">}</span>  
+    <span class="c">// Acceder al campo 'hidden'  </span>
+    <span class="n">ptr</span> <span class="o">:=</span> <span class="n">unsafe</span><span class="o">.</span><span class="n">Pointer</span><span class="p">(</span><span class="o">&amp;</span><span class="n">s</span><span class="p">)</span>  
+    <span class="n">hiddenPtr</span> <span class="o">:=</span> <span class="n">unsafe</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="n">ptr</span><span class="p">,</span> <span class="n">unsafe</span><span class="o">.</span><span class="n">Offsetof</span><span class="p">(</span><span class="n">Secret</span><span class="p">{}</span><span class="o">.</span><span class="n">hidden</span><span class="p">))</span>  
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"hidden:"</span><span class="p">,</span> <span class="o">*</span><span class="p">(</span><span class="o">*</span><span class="kt">int</span><span class="p">)(</span><span class="n">hiddenPtr</span><span class="p">))</span> <span class="c">// 20  </span>
+<span class="p">}</span>  
+</code></pre></div></div>
+
+<h3 id="2-interoperabilidad-con-c">2. <strong>Interoperabilidad con C</strong></h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">/* 
+#include &lt;stdlib.h&gt; 
+*/</span>  
+<span class="k">import</span> <span class="s">"C"</span>  
+<span class="k">import</span> <span class="s">"unsafe"</span>  
+
+<span class="k">func</span> <span class="n">callCMalloc</span><span class="p">()</span> <span class="p">{</span>  
+    <span class="n">cptr</span> <span class="o">:=</span> <span class="n">C</span><span class="o">.</span><span class="n">malloc</span><span class="p">(</span><span class="m">100</span><span class="p">)</span>  
+    <span class="k">defer</span> <span class="n">C</span><span class="o">.</span><span class="n">free</span><span class="p">(</span><span class="n">cptr</span><span class="p">)</span>  
+    <span class="n">goSlice</span> <span class="o">:=</span> <span class="n">unsafe</span><span class="o">.</span><span class="n">Slice</span><span class="p">((</span><span class="o">*</span><span class="kt">byte</span><span class="p">)(</span><span class="n">cptr</span><span class="p">),</span> <span class="m">100</span><span class="p">)</span>  
+    <span class="n">goSlice</span><span class="p">[</span><span class="m">0</span><span class="p">]</span> <span class="o">=</span> <span class="m">0xFF</span>  
+<span class="p">}</span>  
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="mejores-prácticas">Mejores Prácticas</h2>
+
+<ol>
+  <li>
+    <p><strong>Alternativas Seguras</strong>:</p>
+
+    <ul>
+      <li>Usar <code class="language-plaintext highlighter-rouge">encoding/binary</code> para serialización en lugar de <code class="language-plaintext highlighter-rouge">unsafe</code>.</li>
+      <li>Preferir <code class="language-plaintext highlighter-rouge">reflect</code> para inspección de tipos cuando sea posible.</li>
+    </ul>
+  </li>
+  <li>
+    <p><strong>Aislamiento</strong>:</p>
+
+    <ul>
+      <li>Limitar el uso de <code class="language-plaintext highlighter-rouge">unsafe</code> a paquetes pequeños y bien documentados.</li>
+    </ul>
+  </li>
+  <li>
+    <p><strong>Pruebas Rigurosas</strong>:</p>
+
+    <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">TestUnsafeConversion</span><span class="p">(</span><span class="n">t</span> <span class="o">*</span><span class="n">testing</span><span class="o">.</span><span class="n">T</span><span class="p">)</span> <span class="p">{</span>  
+    <span class="n">orig</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">int32</span><span class="p">{</span><span class="m">1</span><span class="p">,</span> <span class="m">2</span><span class="p">,</span> <span class="m">3</span><span class="p">}</span>  
+    <span class="n">bytes</span> <span class="o">:=</span> <span class="n">sliceToBytes</span><span class="p">(</span><span class="n">orig</span><span class="p">)</span>  
+    <span class="n">restored</span> <span class="o">:=</span> <span class="p">(</span><span class="o">*</span><span class="p">[</span><span class="m">3</span><span class="p">]</span><span class="kt">int32</span><span class="p">)(</span><span class="n">unsafe</span><span class="o">.</span><span class="n">Pointer</span><span class="p">(</span><span class="o">&amp;</span><span class="n">bytes</span><span class="p">[</span><span class="m">0</span><span class="p">]))[</span><span class="o">:</span><span class="p">]</span>  
+    <span class="n">assert</span><span class="o">.</span><span class="n">Equal</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">orig</span><span class="p">,</span> <span class="n">restored</span><span class="p">)</span>  
+<span class="p">}</span>  
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<hr />
+
+<h2 id="errores-comunes">Errores Comunes</h2>
+
+<h3 id="1-punteros-inválidos-por-recolección-de-basura">1. <strong>Punteros Inválidos por Recolección de Basura</strong></h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// ❌ Incorrecto  </span>
+<span class="n">ptr</span> <span class="o">:=</span> <span class="kt">uintptr</span><span class="p">(</span><span class="n">unsafe</span><span class="o">.</span><span class="n">Pointer</span><span class="p">(</span><span class="o">&amp;</span><span class="n">x</span><span class="p">))</span>  
+<span class="c">// GC puede mover &amp;x, haciendo ptr inválido  </span>
+
+<span class="c">// ✅ Correcto  </span>
+<span class="n">ptr</span> <span class="o">:=</span> <span class="n">unsafe</span><span class="o">.</span><span class="n">Pointer</span><span class="p">(</span><span class="o">&amp;</span><span class="n">x</span><span class="p">)</span> <span class="c">// Mantiene referencia activa  </span>
+</code></pre></div></div>
+
+<h3 id="2-alineación-incorrecta">2. <strong>Alineación Incorrecta</strong></h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">type</span> <span class="n">Data</span> <span class="k">struct</span> <span class="p">{</span>  
+    <span class="n">a</span> <span class="kt">byte</span>  
+    <span class="n">b</span> <span class="kt">int64</span> <span class="c">// Requiere alineación de 8 bytes  </span>
+<span class="p">}</span>  
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>  
+    <span class="n">d</span> <span class="o">:=</span> <span class="n">Data</span><span class="p">{}</span>  
+    <span class="c">// Offsetof(b) es 8, no 1  </span>
+<span class="p">}</span>  
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="rendimiento-vs-seguridad">Rendimiento vs Seguridad</h2>
+
+<h3 id="benchmark-suma-de-slice-con-unsafe">Benchmark: Suma de Slice con <code class="language-plaintext highlighter-rouge">unsafe</code></h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">SumaSegura</span><span class="p">(</span><span class="n">s</span> <span class="p">[]</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="n">sum</span> <span class="kt">int</span><span class="p">)</span> <span class="p">{</span>  
+    <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">v</span> <span class="o">:=</span> <span class="k">range</span> <span class="n">s</span> <span class="p">{</span>  
+        <span class="n">sum</span> <span class="o">+=</span> <span class="n">v</span>  
+    <span class="p">}</span>  
+    <span class="k">return</span>  
+<span class="p">}</span>  
+
+<span class="k">func</span> <span class="n">SumaUnsafe</span><span class="p">(</span><span class="n">s</span> <span class="p">[]</span><span class="kt">int</span><span class="p">)</span> <span class="kt">int</span> <span class="p">{</span>  
+    <span class="n">ptr</span> <span class="o">:=</span> <span class="n">unsafe</span><span class="o">.</span><span class="n">Pointer</span><span class="p">(</span><span class="o">&amp;</span><span class="n">s</span><span class="p">[</span><span class="m">0</span><span class="p">])</span>  
+    <span class="n">size</span> <span class="o">:=</span> <span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>  
+    <span class="n">sum</span> <span class="o">:=</span> <span class="m">0</span>  
+    <span class="k">for</span> <span class="n">i</span> <span class="o">:=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">size</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span> <span class="p">{</span>  
+        <span class="n">sum</span> <span class="o">+=</span> <span class="o">*</span><span class="p">(</span><span class="o">*</span><span class="kt">int</span><span class="p">)(</span><span class="n">unsafe</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="n">ptr</span><span class="p">,</span> <span class="kt">uintptr</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">*</span><span class="n">unsafe</span><span class="o">.</span><span class="n">Sizeof</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="m">0</span><span class="p">])))</span>  
+    <span class="p">}</span>  
+    <span class="k">return</span> <span class="n">sum</span>  
+<span class="p">}</span>  
+
+<span class="c">// Resultados:  </span>
+<span class="c">// SumaSegura-8   500 ns/op  </span>
+<span class="c">// SumaUnsafe-8   150 ns/op  </span>
+</code></pre></div></div>
+
+<p><strong>Conclusión</strong>: <code class="language-plaintext highlighter-rouge">unsafe</code> puede acelerar código crítico, pero sacrifica seguridad.</p>
+
+<hr />
+
+<h2 id="advertencias-de-seguridad">Advertencias de Seguridad</h2>
+
+<ol>
+  <li>
+    <p><strong>Corrupción de Memoria</strong>:</p>
+
+    <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">a</span> <span class="o">:=</span> <span class="p">[</span><span class="m">3</span><span class="p">]</span><span class="kt">int</span><span class="p">{</span><span class="m">1</span><span class="p">,</span> <span class="m">2</span><span class="p">,</span> <span class="m">3</span><span class="p">}</span>  
+<span class="n">b</span> <span class="o">:=</span> <span class="p">(</span><span class="o">*</span><span class="p">[</span><span class="m">4</span><span class="p">]</span><span class="kt">int</span><span class="p">)(</span><span class="n">unsafe</span><span class="o">.</span><span class="n">Pointer</span><span class="p">(</span><span class="o">&amp;</span><span class="n">a</span><span class="p">))</span> <span class="c">// ¡Peligro!  </span>
+<span class="n">b</span><span class="p">[</span><span class="m">3</span><span class="p">]</span> <span class="o">=</span> <span class="m">4</span> <span class="c">// Escribe fuera del array  </span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p><strong>Violación de Tipos</strong>:</p>
+
+    <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">var</span> <span class="n">x</span> <span class="kt">float64</span> <span class="o">=</span> <span class="m">3.14</span>  
+<span class="n">y</span> <span class="o">:=</span> <span class="o">*</span><span class="p">(</span><span class="o">*</span><span class="kt">int64</span><span class="p">)(</span><span class="n">unsafe</span><span class="o">.</span><span class="n">Pointer</span><span class="p">(</span><span class="o">&amp;</span><span class="n">x</span><span class="p">))</span>  
+<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="c">// 4614253070214989087 (representación binaria)  </span>
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<hr />
+
+<h2 id="conclusión">Conclusión</h2>
+
+<p>El paquete <code class="language-plaintext highlighter-rouge">unsafe</code> es una herramienta poderosa para:</p>
+
+<ul>
+  <li>Optimización extrema de rendimiento</li>
+  <li>Interfaz con código de bajo nivel (C, hardware)</li>
+  <li>Experimentación con estructuras de memoria</li>
+</ul>
+
+<p>Siempre:</p>
+
+<ul>
+  <li>Documenta exhaustivamente su uso</li>
+  <li>Aísla en módulos específicos</li>
+  <li>Valida con pruebas y análisis estático (<code class="language-plaintext highlighter-rouge">go vet</code>)</li>
+</ul>
+
+            </main>
+        </div>
+        
+        <!-- Componente flotante de GitHub -->
+<div class="github-floating">
+    <a href="https://github.com/" target="_blank" rel="noopener noreferrer" class="github-link" title="Ver en GitHub">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-github">
+            <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+        </svg>
+    </a>
+    
+    
+    <a href="https://github.com//MiguelP-Dev.github.io/blob/main/_pages/paquetes/unsafe.md" target="_blank" rel="noopener noreferrer" class="edit-link" title="Editar esta página">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-2">
+            <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+        </svg>
+    </a>
+    
+</div>
+
+<style>
+    /* Estilos del componente SVG */
+    .github-corner:hover .octo-arm {
+        animation: octocat-wave 560ms ease-in-out;
+    }
+    
+    @keyframes octocat-wave {
+        0%, 100% { transform: rotate(0); }
+        20%, 60% { transform: rotate(-25deg); }
+        40%, 80% { transform: rotate(10deg); }
+    }
+    
+    @media (max-width: 500px) {
+        .github-corner:hover .octo-arm {
+            animation: none;
+        }
+        .github-corner .octo-arm {
+            animation: octocat-wave 560ms ease-in-out;
+        }
+    }
+</style>
+    </div>
+    
+    <script src="/assets/js/scripts.js"></script>
+</body>
+</html>

@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>fmt | Miguel's Programing Notes</title>
+    <link rel="stylesheet" href="/assets/css/styles.css">
+</head>
+<body>
+    <div class="app">
+        <nav class="navbar">
+    <div class="nav-container">
+        <a href="/" class="nav-brand">
+            Miguel's Programming Notes
+        </a>
+
+        <div class="nav-sections">
+            
+                
+                
+                
+                <a href="/paquetes/"
+                    class="nav-section active"
+                    data-section="paquetes">
+                    📦 Paquetes
+                </a>
+            
+                
+                
+                
+                <a href="/ejemplos/"
+                    class="nav-section "
+                    data-section="ejemplos">
+                    🧩 Ejemplos
+                </a>
+            
+        </div>
+    </div>
+</nav>
+        
+        <div class="container">
+            <button class="menu-toggle" aria-label="Abrir menú">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            
+            <aside class="sidebar" id="dynamic-sidebar">
+    <div class="sidebar-header">
+        <h3 class="sidebar-title">Miguel's Programming Notes</h3>
+    </div>
+    
+    <div class="sidebar-content">
+        
+            
+                <h3 class="sidebar-title">📦 Paquetes</h3>
+                <nav class="sidebar-nav">
+                    
+                        <a href="/paquetes/fmt/"
+                            class="sidebar-item active"
+                            data-item="fmt">
+                            fmt
+                        </a>
+                    
+                        <a href="/paquetes/net/"
+                            class="sidebar-item "
+                            data-item="net-http">
+                            net/http
+                        </a>
+                    
+                        <a href="/paquetes/encoding/"
+                            class="sidebar-item "
+                            data-item="encoding">
+                            encoding
+                        </a>
+                    
+                </nav>
+            
+        
+            
+        
+    </div>
+</aside>
+            
+            <main class="content">
+                <h1 id="paquete-fmt-en-go-guía-completa-con-ejemplos-avanzados">Paquete <code class="language-plaintext highlighter-rouge">fmt</code> en Go: Guía Completa con Ejemplos Avanzados</h1>
+
+<p>El paquete <code class="language-plaintext highlighter-rouge">fmt</code> es fundamental para operaciones de entrada/salida en Go. Esta guía cubre todas sus funciones con ejemplos realistas y técnicas avanzadas.</p>
+
+<hr />
+
+<h2 id="funciones-básicas-de-impresión">Funciones Básicas de Impresión</h2>
+
+<h3 id="1-print-y-println">1. <strong><code class="language-plaintext highlighter-rouge">Print</code> y <code class="language-plaintext highlighter-rouge">Println</code></strong></h3>
+<p><strong>Diferencias Clave</strong>:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">Print</code> no añade espacios automáticos entre argumentos</li>
+  <li><code class="language-plaintext highlighter-rouge">Println</code> añade espacios y un salto de línea final</li>
+</ul>
+
+<p><strong>Ejemplo Mejorado</strong>:</p>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c">// Comportamiento con múltiples argumentos</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Print</span><span class="p">(</span><span class="s">"Hoy es:"</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">Now</span><span class="p">()</span><span class="o">.</span><span class="n">Weekday</span><span class="p">(),</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>  <span class="c">// Hoy es:Monday</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Hoy es:"</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">Now</span><span class="p">()</span><span class="o">.</span><span class="n">Weekday</span><span class="p">())</span>      <span class="c">// Hoy es: Monday\n</span>
+    
+    <span class="c">// Impresión de estructuras</span>
+    <span class="n">user</span> <span class="o">:=</span> <span class="k">struct</span> <span class="p">{</span>
+        <span class="n">Name</span> <span class="kt">string</span>
+        <span class="n">Age</span>  <span class="kt">int</span>
+    <span class="p">}{</span><span class="s">"Alice"</span><span class="p">,</span> <span class="m">30</span><span class="p">}</span>
+    
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Usuario:"</span><span class="p">,</span> <span class="n">user</span><span class="p">)</span> <span class="c">// Usuario: {Alice 30}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="2-printf---formateo-avanzado">2. <strong><code class="language-plaintext highlighter-rouge">Printf</code> - Formateo Avanzado</strong></h3>
+<p><strong>Verbos Comunes</strong>:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">%s</code> Cadena</li>
+  <li><code class="language-plaintext highlighter-rouge">%d</code> Entero</li>
+  <li><code class="language-plaintext highlighter-rouge">%f</code> Flotante (<code class="language-plaintext highlighter-rouge">%.2f</code> para 2 decimales)</li>
+  <li><code class="language-plaintext highlighter-rouge">%t</code> Booleano</li>
+  <li><code class="language-plaintext highlighter-rouge">%v</code> Valor en formato predeterminado</li>
+  <li><code class="language-plaintext highlighter-rouge">%+v</code> Campos de estructura con nombres</li>
+  <li><code class="language-plaintext highlighter-rouge">%#v</code> Sintaxis Go del valor</li>
+</ul>
+
+<p><strong>Ejemplo Completo</strong>:</p>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">type</span> <span class="n">Product</span> <span class="k">struct</span> <span class="p">{</span>
+        <span class="n">ID</span>     <span class="kt">int</span>
+        <span class="n">Name</span>   <span class="kt">string</span>
+        <span class="n">Price</span>  <span class="kt">float64</span>
+        <span class="n">InStock</span> <span class="kt">bool</span>
+    <span class="p">}</span>
+    
+    <span class="n">p</span> <span class="o">:=</span> <span class="n">Product</span><span class="p">{</span><span class="m">102</span><span class="p">,</span> <span class="s">"Go Programming Book"</span><span class="p">,</span> <span class="m">39.99</span><span class="p">,</span> <span class="no">true</span><span class="p">}</span>
+    
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Detalle básico: %v</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span>
+    <span class="c">// Detalle básico: {102 Go Programming Book 39.99 true}</span>
+    
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Detalle extendido: %+v</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span>
+    <span class="c">// Detalle extendido: {ID:102 Name:Go Programming Book Price:39.99 InStock:true}</span>
+    
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Precio formateado: $%.2f</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">Price</span><span class="p">)</span>
+    <span class="c">// Precio formateado: $39.99</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="funciones-de-cadena-sprint-family">Funciones de Cadena (Sprint Family)</h2>
+
+<h3 id="3-sprintf---construcción-de-mensajes">3. <strong><code class="language-plaintext highlighter-rouge">Sprintf</code> - Construcción de Mensajes</strong></h3>
+<p><strong>Caso de Uso</strong>: Generar HTML dinámico o mensajes de log estructurados</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">generateEmailTemplate</span><span class="p">(</span><span class="n">userName</span> <span class="kt">string</span><span class="p">,</span> <span class="n">expiration</span> <span class="n">time</span><span class="o">.</span><span class="n">Time</span><span class="p">)</span> <span class="kt">string</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">fmt</span><span class="o">.</span><span class="n">Sprintf</span><span class="p">(</span><span class="s">`
+        &lt;html&gt;
+            &lt;body&gt;
+                &lt;h1&gt;Hola, %s!&lt;/h1&gt;
+                &lt;p&gt;Tu suscripción expira en %d días&lt;/p&gt;
+            &lt;/body&gt;
+        &lt;/html&gt;
+    `</span><span class="p">,</span> <span class="n">userName</span><span class="p">,</span> <span class="kt">int</span><span class="p">(</span><span class="n">expiration</span><span class="o">.</span><span class="n">Sub</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">Now</span><span class="p">())</span><span class="o">.</span><span class="n">Hours</span><span class="p">()</span><span class="o">/</span><span class="m">24</span><span class="p">))</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="4-sprintln-vs-sprint">4. <strong><code class="language-plaintext highlighter-rouge">Sprintln</code> vs <code class="language-plaintext highlighter-rouge">Sprint</code></strong></h3>
+<p><strong>Ejemplo Comparativo</strong>:</p>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">logEntry</span> <span class="o">:=</span> <span class="n">fmt</span><span class="o">.</span><span class="n">Sprint</span><span class="p">(</span><span class="s">"Error en "</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">Now</span><span class="p">()</span><span class="o">.</span><span class="n">Format</span><span class="p">(</span><span class="s">"2006-01-02"</span><span class="p">),</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
+    <span class="c">// "Error en 2023-10-25\n"</span>
+    
+    <span class="n">logEntryLn</span> <span class="o">:=</span> <span class="n">fmt</span><span class="o">.</span><span class="n">Sprintln</span><span class="p">(</span><span class="s">"Error en"</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">Now</span><span class="p">()</span><span class="o">.</span><span class="n">Format</span><span class="p">(</span><span class="s">"2006-01-02"</span><span class="p">))</span>
+    <span class="c">// "Error en 2023-10-25\n"</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="entradasalida-con-interfaces-fprint-family">Entrada/Salida con Interfaces (Fprint Family)</h2>
+
+<h3 id="5-fprintf---escritura-en-archivos">5. <strong><code class="language-plaintext highlighter-rouge">Fprintf</code> - Escritura en Archivos</strong></h3>
+<p><strong>Ejemplo Práctico</strong>:</p>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">writeConfig</span><span class="p">(</span><span class="n">filePath</span> <span class="kt">string</span><span class="p">,</span> <span class="n">config</span> <span class="k">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="k">interface</span><span class="p">{})</span> <span class="kt">error</span> <span class="p">{</span>
+    <span class="n">file</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">os</span><span class="o">.</span><span class="n">Create</span><span class="p">(</span><span class="n">filePath</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">fmt</span><span class="o">.</span><span class="n">Errorf</span><span class="p">(</span><span class="s">"error creando archivo: %w"</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="k">defer</span> <span class="n">file</span><span class="o">.</span><span class="n">Close</span><span class="p">()</span>
+    
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="o">:=</span> <span class="k">range</span> <span class="n">config</span> <span class="p">{</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">fmt</span><span class="o">.</span><span class="n">Fprintf</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="s">"%s = %v</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="n">err</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="no">nil</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="6-fscan---lectura-desde-ioreader">6. <strong><code class="language-plaintext highlighter-rouge">Fscan</code> - Lectura desde io.Reader</strong></h3>
+<p><strong>Ejemplo Avanzado</strong>:</p>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">parseServerConfig</span><span class="p">(</span><span class="n">r</span> <span class="n">io</span><span class="o">.</span><span class="n">Reader</span><span class="p">)</span> <span class="p">(</span><span class="n">host</span> <span class="kt">string</span><span class="p">,</span> <span class="n">port</span> <span class="kt">int</span><span class="p">,</span> <span class="n">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">err</span> <span class="o">=</span> <span class="n">fmt</span><span class="o">.</span><span class="n">Fscanf</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="s">"host:%s port:%d"</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">host</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">port</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="s">""</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="n">fmt</span><span class="o">.</span><span class="n">Errorf</span><span class="p">(</span><span class="s">"formato de configuración inválido: %w"</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="p">,</span> <span class="no">nil</span>
+<span class="p">}</span>
+
+<span class="c">// Uso:</span>
+<span class="n">config</span> <span class="o">:=</span> <span class="n">strings</span><span class="o">.</span><span class="n">NewReader</span><span class="p">(</span><span class="s">"host:localhost port:8080"</span><span class="p">)</span>
+<span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">parseServerConfig</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="manejo-de-errores">Manejo de Errores</h2>
+
+<h3 id="7-errorf-con-wrapping">7. <strong><code class="language-plaintext highlighter-rouge">Errorf</code> con Wrapping</strong></h3>
+<p><strong>Mejor Práctica</strong>: Usar <code class="language-plaintext highlighter-rouge">%w</code> para envolver errores</p>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">loadUserData</span><span class="p">(</span><span class="n">userID</span> <span class="kt">int</span><span class="p">)</span> <span class="p">([]</span><span class="kt">byte</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">data</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">os</span><span class="o">.</span><span class="n">ReadFile</span><span class="p">(</span><span class="n">fmt</span><span class="o">.</span><span class="n">Sprintf</span><span class="p">(</span><span class="s">"users/%d.json"</span><span class="p">,</span> <span class="n">userID</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="no">nil</span><span class="p">,</span> <span class="n">fmt</span><span class="o">.</span><span class="n">Errorf</span><span class="p">(</span><span class="s">"error cargando usuario %d: %w"</span><span class="p">,</span> <span class="n">userID</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">data</span><span class="p">,</span> <span class="no">nil</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="funciones-de-escaneo">Funciones de Escaneo</h2>
+
+<h3 id="8-scan-vs-scanln---captura-de-entrada">8. <strong><code class="language-plaintext highlighter-rouge">Scan</code> vs <code class="language-plaintext highlighter-rouge">Scanln</code> - Captura de Entrada</strong></h3>
+<p><strong>Diferencias Clave</strong>:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">Scan</code> lee hasta cualquier espacio en blanco</li>
+  <li><code class="language-plaintext highlighter-rouge">Scanln</code> lee hasta nueva línea</li>
+</ul>
+
+<p><strong>Ejemplo con Validación</strong>:</p>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">getCredentials</span><span class="p">()</span> <span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span> <span class="kt">string</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Print</span><span class="p">(</span><span class="s">"Ingrese usuario: "</span><span class="p">)</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">fmt</span><span class="o">.</span><span class="n">Scanln</span><span class="p">(</span><span class="o">&amp;</span><span class="n">username</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">Fatal</span><span class="p">(</span><span class="s">"Error leyendo usuario:"</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span>
+    <span class="p">}</span>
+    
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Print</span><span class="p">(</span><span class="s">"Ingrese contraseña: "</span><span class="p">)</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">err</span> <span class="o">=</span> <span class="n">fmt</span><span class="o">.</span><span class="n">Scanln</span><span class="p">(</span><span class="o">&amp;</span><span class="n">password</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">Fatal</span><span class="p">(</span><span class="s">"Error leyendo contraseña:"</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span>
+    <span class="p">}</span>
+    
+    <span class="k">return</span> <span class="n">username</span><span class="p">,</span> <span class="n">password</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="9-sscanf---parseo-de-cadenas">9. <strong><code class="language-plaintext highlighter-rouge">Sscanf</code> - Parseo de Cadenas</strong></h3>
+<p><strong>Caso de Uso</strong>: Procesar registros de log</p>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">parseLogEntry</span><span class="p">(</span><span class="n">entry</span> <span class="kt">string</span><span class="p">)</span> <span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">Time</span><span class="p">,</span> <span class="kt">string</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">var</span> <span class="p">(</span>
+        <span class="n">timestamp</span> <span class="kt">string</span>
+        <span class="n">level</span>     <span class="kt">string</span>
+        <span class="n">message</span>   <span class="kt">string</span>
+    <span class="p">)</span>
+    
+    <span class="n">_</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">fmt</span><span class="o">.</span><span class="n">Sscanf</span><span class="p">(</span><span class="n">entry</span><span class="p">,</span> <span class="s">"[%s] %s: %s"</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">timestamp</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">level</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">message</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">time</span><span class="o">.</span><span class="n">Time</span><span class="p">{},</span> <span class="s">""</span><span class="p">,</span> <span class="n">err</span>
+    <span class="p">}</span>
+    
+    <span class="n">parsedTime</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">time</span><span class="o">.</span><span class="n">Parse</span><span class="p">(</span><span class="s">"2006-01-02T15:04:05Z07:00"</span><span class="p">,</span> <span class="n">timestamp</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">parsedTime</span><span class="p">,</span> <span class="n">message</span><span class="p">,</span> <span class="n">err</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="verbos-especiales-y-trucos">Verbos Especiales y Trucos</h2>
+
+<h3 id="10-formateo-avanzado">10. <strong>Formateo Avanzado</strong></h3>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c">// Base numérica</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Hex: %x, Bin: %b, Octal: %o</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="m">255</span><span class="p">,</span> <span class="m">255</span><span class="p">,</span> <span class="m">255</span><span class="p">)</span>
+    
+    <span class="c">// Relleno y alineación</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"|%10s|%-10s|</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="s">"derecha"</span><span class="p">,</span> <span class="s">"izquierda"</span><span class="p">)</span>
+    
+    <span class="c">// Caracteres Unicode</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Corazón: %c</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="sc">'\u2764'</span><span class="p">)</span>
+    
+    <span class="c">// Punteros</span>
+    <span class="n">x</span> <span class="o">:=</span> <span class="m">42</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Dirección: %p</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">x</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="mejores-prácticas">Mejores Prácticas</h2>
+
+<ol>
+  <li><strong>Validación de Entrada</strong>:
+    <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">var</span> <span class="n">age</span> <span class="kt">int</span>
+<span class="n">n</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">fmt</span><span class="o">.</span><span class="n">Scanf</span><span class="p">(</span><span class="s">"%d"</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">age</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="o">||</span> <span class="n">n</span> <span class="o">!=</span> <span class="m">1</span> <span class="p">{</span>
+    <span class="c">// Manejar error</span>
+<span class="p">}</span>
+</code></pre></div>    </div>
+  </li>
+  <li><strong>Optimización de Rendimiento</strong>:
+    <ul>
+      <li>Usar <code class="language-plaintext highlighter-rouge">fmt.Fprint</code> en lugar de concatenar strings para output directo</li>
+      <li>Pre-allocatar buffers con <code class="language-plaintext highlighter-rouge">strings.Builder</code> para múltiples operaciones</li>
+    </ul>
+  </li>
+  <li><strong>Logging Profesional</strong>:
+    <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">logTransaction</span><span class="p">(</span><span class="n">t</span> <span class="n">Transaction</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"[%s] %-15s $%7.2f</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> 
+        <span class="n">time</span><span class="o">.</span><span class="n">Now</span><span class="p">()</span><span class="o">.</span><span class="n">Format</span><span class="p">(</span><span class="s">"2006-01-02 15:04:05"</span><span class="p">),</span>
+        <span class="n">t</span><span class="o">.</span><span class="n">Type</span><span class="p">,</span>
+        <span class="n">t</span><span class="o">.</span><span class="n">Amount</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div>    </div>
+  </li>
+  <li><strong>Manejo Seguro de Errores</strong>:
+    <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="n">_</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">fmt</span><span class="o">.</span><span class="n">Fprintf</span><span class="p">(</span><span class="n">writer</span><span class="p">,</span> <span class="n">data</span><span class="p">);</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+    <span class="c">// Manejar error de escritura</span>
+<span class="p">}</span>
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<hr />
+
+<h2 id="comparativa-de-funciones">Comparativa de Funciones</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Función</th>
+      <th>Salida</th>
+      <th>Formato</th>
+      <th>Destino</th>
+      <th>Retorno</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Print</code></td>
+      <td>Stdout</td>
+      <td>No</td>
+      <td>-</td>
+      <td>Bytes</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Println</code></td>
+      <td>Stdout</td>
+      <td>No</td>
+      <td>-</td>
+      <td>Bytes</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Printf</code></td>
+      <td>Stdout</td>
+      <td>Sí</td>
+      <td>-</td>
+      <td>Bytes</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Sprint</code></td>
+      <td>-</td>
+      <td>No</td>
+      <td>String</td>
+      <td>String</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Fprintf</code></td>
+      <td>Custom</td>
+      <td>Sí</td>
+      <td>io.Writer</td>
+      <td>Bytes</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Errorf</code></td>
+      <td>-</td>
+      <td>Sí</td>
+      <td>error</td>
+      <td>error</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<p>Este contenido ampliado provee ejemplos prácticos, cubre casos de uso avanzados, y ofrece recomendaciones profesionales para usar efectivamente el paquete <code class="language-plaintext highlighter-rouge">fmt</code> en aplicaciones reales.</p>
+
+            </main>
+        </div>
+        
+        <!-- Componente flotante de GitHub -->
+<div class="github-floating">
+    <a href="https://github.com/" target="_blank" rel="noopener noreferrer" class="github-link" title="Ver en GitHub">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-github">
+            <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+        </svg>
+    </a>
+    
+    
+    <a href="https://github.com//MiguelP-Dev.github.io/blob/main/_pages/paquetes/fmt.md" target="_blank" rel="noopener noreferrer" class="edit-link" title="Editar esta página">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-2">
+            <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+        </svg>
+    </a>
+    
+</div>
+
+<style>
+    /* Estilos del componente SVG */
+    .github-corner:hover .octo-arm {
+        animation: octocat-wave 560ms ease-in-out;
+    }
+    
+    @keyframes octocat-wave {
+        0%, 100% { transform: rotate(0); }
+        20%, 60% { transform: rotate(-25deg); }
+        40%, 80% { transform: rotate(10deg); }
+    }
+    
+    @media (max-width: 500px) {
+        .github-corner:hover .octo-arm {
+            animation: none;
+        }
+        .github-corner .octo-arm {
+            animation: octocat-wave 560ms ease-in-out;
+        }
+    }
+</style>
+    </div>
+    
+    <script src="/assets/js/scripts.js"></script>
+</body>
+</html>

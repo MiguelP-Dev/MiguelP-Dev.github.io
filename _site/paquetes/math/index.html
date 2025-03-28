@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>math | Miguel's Programing Notes</title>
+    <link rel="stylesheet" href="/assets/css/styles.css">
+</head>
+<body>
+    <div class="app">
+        <nav class="navbar">
+    <div class="nav-container">
+        <a href="/" class="nav-brand">
+            Miguel's Programming Notes
+        </a>
+
+        <div class="nav-sections">
+            
+                
+                
+                
+                <a href="/paquetes/"
+                    class="nav-section active"
+                    data-section="paquetes">
+                    📦 Paquetes
+                </a>
+            
+                
+                
+                
+                <a href="/ejemplos/"
+                    class="nav-section "
+                    data-section="ejemplos">
+                    🧩 Ejemplos
+                </a>
+            
+        </div>
+    </div>
+</nav>
+        
+        <div class="container">
+            <button class="menu-toggle" aria-label="Abrir menú">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            
+            <aside class="sidebar" id="dynamic-sidebar">
+    <div class="sidebar-header">
+        <h3 class="sidebar-title">Miguel's Programming Notes</h3>
+    </div>
+    
+    <div class="sidebar-content">
+        
+            
+                <h3 class="sidebar-title">📦 Paquetes</h3>
+                <nav class="sidebar-nav">
+                    
+                        <a href="/paquetes/fmt/"
+                            class="sidebar-item "
+                            data-item="fmt">
+                            fmt
+                        </a>
+                    
+                        <a href="/paquetes/net/"
+                            class="sidebar-item "
+                            data-item="net-http">
+                            net/http
+                        </a>
+                    
+                        <a href="/paquetes/encoding/"
+                            class="sidebar-item "
+                            data-item="encoding">
+                            encoding
+                        </a>
+                    
+                </nav>
+            
+        
+            
+        
+    </div>
+</aside>
+            
+            <main class="content">
+                <h1 id="paquete-math-en-go-guía-completa-con-ejemplos-avanzados">Paquete <code class="language-plaintext highlighter-rouge">math</code> en Go: Guía Completa con Ejemplos Avanzados</h1>
+
+<p>El paquete <code class="language-plaintext highlighter-rouge">math</code> en Go proporciona una amplia gama de funciones matemáticas esenciales para aplicaciones científicas, de ingeniería y análisis de datos. Esta guía ampliada incluye ejemplos prácticos, casos especiales y aplicaciones del mundo real.</p>
+
+<hr />
+
+<h2 id="constantes-matemáticas-clave">Constantes Matemáticas Clave</h2>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">math</span><span class="o">.</span><span class="n">Pi</span>   <span class="c">// 3.141592653589793</span>
+<span class="n">math</span><span class="o">.</span><span class="n">E</span>    <span class="c">// 2.718281828459045</span>
+<span class="n">math</span><span class="o">.</span><span class="n">Phi</span>  <span class="c">// 1.618033988749895 (proporción áurea)</span>
+<span class="n">math</span><span class="o">.</span><span class="n">Inf</span><span class="p">(</span><span class="m">1</span><span class="p">)</span>  <span class="c">// +Infinito</span>
+<span class="n">math</span><span class="o">.</span><span class="n">NaN</span><span class="p">()</span>   <span class="c">// Not-a-Number</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="funciones-básicas-mejoradas">Funciones Básicas Mejoradas</h2>
+
+<h3 id="1-mathabs---valor-absoluto">1. <strong><code class="language-plaintext highlighter-rouge">math.Abs</code> - Valor Absoluto</strong></h3>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// Manejo de tipos enteros</span>
+<span class="k">func</span> <span class="n">AbsInt</span><span class="p">(</span><span class="n">x</span> <span class="kt">int</span><span class="p">)</span> <span class="kt">int</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="m">0</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="o">-</span><span class="n">x</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">x</span>
+<span class="p">}</span>
+
+<span class="c">// Ejemplo con float64</span>
+<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">Abs</span><span class="p">(</span><span class="o">-</span><span class="m">3.14</span><span class="p">))</span>      <span class="c">// 3.14</span>
+<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">Abs</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">Inf</span><span class="p">(</span><span class="m">1</span><span class="p">)))</span> <span class="c">// +Inf</span>
+</code></pre></div></div>
+
+<h3 id="2-mathpow---potenciación">2. <strong><code class="language-plaintext highlighter-rouge">math.Pow</code> - Potenciación</strong></h3>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// Cálculo de interés compuesto</span>
+<span class="n">principal</span> <span class="o">:=</span> <span class="m">1000.0</span>
+<span class="n">tasa</span> <span class="o">:=</span> <span class="m">0.05</span>
+<span class="n">años</span> <span class="o">:=</span> <span class="m">3.0</span>
+<span class="n">monto</span> <span class="o">:=</span> <span class="n">principal</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">Pow</span><span class="p">(</span><span class="m">1</span> <span class="o">+</span> <span class="n">tasa</span><span class="p">,</span> <span class="n">años</span><span class="p">)</span>
+<span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Monto final: $%.2f</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">monto</span><span class="p">)</span> <span class="c">// $1157.63</span>
+
+<span class="c">// Caso especial: Potencia cero</span>
+<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">Pow</span><span class="p">(</span><span class="m">5</span><span class="p">,</span> <span class="m">0</span><span class="p">))</span> <span class="c">// 1 (siempre)</span>
+</code></pre></div></div>
+
+<h3 id="3-mathsqrt---raíz-cuadrada">3. <strong><code class="language-plaintext highlighter-rouge">math.Sqrt</code> - Raíz Cuadrada</strong></h3>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// Distancia entre dos puntos (teorema de Pitágoras)</span>
+<span class="k">func</span> <span class="n">Distancia</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span> <span class="kt">float64</span><span class="p">)</span> <span class="kt">float64</span> <span class="p">{</span>
+    <span class="n">dx</span> <span class="o">:=</span> <span class="n">x2</span> <span class="o">-</span> <span class="n">x1</span>
+    <span class="n">dy</span> <span class="o">:=</span> <span class="n">y2</span> <span class="o">-</span> <span class="n">y1</span>
+    <span class="k">return</span> <span class="n">math</span><span class="o">.</span><span class="n">Sqrt</span><span class="p">(</span><span class="n">dx</span><span class="o">*</span><span class="n">dx</span> <span class="o">+</span> <span class="n">dy</span><span class="o">*</span><span class="n">dy</span><span class="p">)</span>
+<span class="p">}</span>
+<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">Distancia</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">3</span><span class="p">,</span> <span class="m">4</span><span class="p">))</span> <span class="c">// 5</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="funciones-trigonométricas-avanzadas">Funciones Trigonométricas Avanzadas</h2>
+
+<h3 id="4-conversión-de-grados-a-radianes">4. <strong>Conversión de Grados a Radianes</strong></h3>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">GradosARadianes</span><span class="p">(</span><span class="n">grados</span> <span class="kt">float64</span><span class="p">)</span> <span class="kt">float64</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">grados</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">Pi</span> <span class="o">/</span> <span class="m">180</span>
+<span class="p">}</span>
+
+<span class="c">// Cálculo de altura de un edificio usando ángulo</span>
+<span class="n">distancia</span> <span class="o">:=</span> <span class="m">50.0</span>  <span class="c">// metros</span>
+<span class="n">angulo</span> <span class="o">:=</span> <span class="m">60.0</span>      <span class="c">// grados</span>
+<span class="n">altura</span> <span class="o">:=</span> <span class="n">distancia</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">Tan</span><span class="p">(</span><span class="n">GradosARadianes</span><span class="p">(</span><span class="n">angulo</span><span class="p">))</span>
+<span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Altura: %.2f metros</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">altura</span><span class="p">)</span> <span class="c">// 86.60 m</span>
+</code></pre></div></div>
+
+<h3 id="5-mathsin---movimiento-ondulatorio">5. <strong><code class="language-plaintext highlighter-rouge">math.Sin</code> - Movimiento Ondulatorio</strong></h3>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// Simulación de onda senoidal</span>
+<span class="n">amplitud</span> <span class="o">:=</span> <span class="m">2.0</span>
+<span class="n">frecuencia</span> <span class="o">:=</span> <span class="m">1.0</span>
+<span class="n">tiempo</span> <span class="o">:=</span> <span class="m">0.5</span>
+
+<span class="n">posicion</span> <span class="o">:=</span> <span class="n">amplitud</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">Sin</span><span class="p">(</span><span class="m">2</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">Pi</span> <span class="o">*</span> <span class="n">frecuencia</span> <span class="o">*</span> <span class="n">tiempo</span><span class="p">)</span>
+<span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Posición: %.2f</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">posicion</span><span class="p">)</span> <span class="c">// 2.00</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="funciones-logarítmicas-y-exponenciales">Funciones Logarítmicas y Exponenciales</h2>
+
+<h3 id="6-mathlog---crecimiento-exponencial">6. <strong><code class="language-plaintext highlighter-rouge">math.Log</code> - Crecimiento Exponencial</strong></h3>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// Cálculo de tiempo de duplicación (regla del 72)</span>
+<span class="n">tasaCrecimiento</span> <span class="o">:=</span> <span class="m">0.08</span>  <span class="c">// 8%</span>
+<span class="n">tiempoDuplicacion</span> <span class="o">:=</span> <span class="n">math</span><span class="o">.</span><span class="n">Log</span><span class="p">(</span><span class="m">2</span><span class="p">)</span> <span class="o">/</span> <span class="n">math</span><span class="o">.</span><span class="n">Log</span><span class="p">(</span><span class="m">1</span> <span class="o">+</span> <span class="n">tasaCrecimiento</span><span class="p">)</span>
+<span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Se duplica en %.1f años</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">tiempoDuplicacion</span><span class="p">)</span> <span class="c">// 9.0 años</span>
+</code></pre></div></div>
+
+<h3 id="7-mathexp---decaimiento-radioactivo">7. <strong><code class="language-plaintext highlighter-rouge">math.Exp</code> - Decaimiento Radioactivo</strong></h3>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// Cálculo de material restante</span>
+<span class="n">cantidadInicial</span> <span class="o">:=</span> <span class="m">100.0</span>  <span class="c">// gramos</span>
+<span class="n">constanteDecaimiento</span> <span class="o">:=</span> <span class="m">0.005</span>
+<span class="n">tiempo</span> <span class="o">:=</span> <span class="m">100.0</span>
+
+<span class="n">cantidad</span> <span class="o">:=</span> <span class="n">cantidadInicial</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">Exp</span><span class="p">(</span><span class="o">-</span><span class="n">constanteDecaimiento</span> <span class="o">*</span> <span class="n">tiempo</span><span class="p">)</span>
+<span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Material restante: %.2f gramos</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">cantidad</span><span class="p">)</span> <span class="c">// 60.65 g</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="funciones-de-comparación-y-casos-especiales">Funciones de Comparación y Casos Especiales</h2>
+
+<h3 id="8-mathmaxmathmin---normalización-de-datos">8. <strong><code class="language-plaintext highlighter-rouge">math.Max</code>/<code class="language-plaintext highlighter-rouge">math.Min</code> - Normalización de Datos</strong></h3>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// Normalizar valores entre 0 y 1</span>
+<span class="n">valores</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">float64</span><span class="p">{</span><span class="m">4</span><span class="p">,</span> <span class="m">2</span><span class="p">,</span> <span class="m">7</span><span class="p">,</span> <span class="m">1</span><span class="p">}</span>
+<span class="n">minVal</span> <span class="o">:=</span> <span class="n">math</span><span class="o">.</span><span class="n">Inf</span><span class="p">(</span><span class="m">1</span><span class="p">)</span>
+<span class="n">maxVal</span> <span class="o">:=</span> <span class="n">math</span><span class="o">.</span><span class="n">Inf</span><span class="p">(</span><span class="o">-</span><span class="m">1</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">v</span> <span class="o">:=</span> <span class="k">range</span> <span class="n">valores</span> <span class="p">{</span>
+    <span class="n">minVal</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">Min</span><span class="p">(</span><span class="n">minVal</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+    <span class="n">maxVal</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">Max</span><span class="p">(</span><span class="n">maxVal</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">v</span> <span class="o">:=</span> <span class="k">range</span> <span class="n">valores</span> <span class="p">{</span>
+    <span class="n">valores</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">v</span> <span class="o">-</span> <span class="n">minVal</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">maxVal</span> <span class="o">-</span> <span class="n">minVal</span><span class="p">)</span>
+<span class="p">}</span>
+<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">valores</span><span class="p">)</span> <span class="c">// [0.5 0.166... 1 0]</span>
+</code></pre></div></div>
+
+<h3 id="9-mathmod---manejo-de-números-negativos">9. <strong><code class="language-plaintext highlighter-rouge">math.Mod</code> - Manejo de Números Negativos</strong></h3>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">Mod</span><span class="p">(</span><span class="m">7</span><span class="p">,</span> <span class="m">3</span><span class="p">))</span>   <span class="c">// 1</span>
+<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">Mod</span><span class="p">(</span><span class="o">-</span><span class="m">7</span><span class="p">,</span> <span class="m">3</span><span class="p">))</span>  <span class="c">// -1 (comportamiento particular)</span>
+<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">Mod</span><span class="p">(</span><span class="m">7</span><span class="p">,</span> <span class="o">-</span><span class="m">3</span><span class="p">))</span>  <span class="c">// 1</span>
+<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">Mod</span><span class="p">(</span><span class="m">7</span><span class="p">,</span> <span class="m">0</span><span class="p">))</span>   <span class="c">// NaN</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="mejores-prácticas-y-advertencias">Mejores Prácticas y Advertencias</h2>
+
+<ol>
+  <li><strong>Precisión en Comparaciones</strong>:
+    <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// Evitar comparaciones directas con floats</span>
+<span class="n">a</span> <span class="o">:=</span> <span class="m">0.1</span> <span class="o">+</span> <span class="m">0.2</span>
+<span class="n">b</span> <span class="o">:=</span> <span class="m">0.3</span>
+<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">a</span> <span class="o">==</span> <span class="n">b</span><span class="p">)</span>                  <span class="c">// false</span>
+<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">Abs</span><span class="p">(</span><span class="n">a</span><span class="o">-</span><span class="n">b</span><span class="p">)</span> <span class="o">&lt;</span> <span class="m">1e-9</span><span class="p">)</span>    <span class="c">// true</span>
+</code></pre></div>    </div>
+  </li>
+  <li><strong>Manejo de Valores Especiales</strong>:
+    <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">x</span> <span class="o">:=</span> <span class="n">math</span><span class="o">.</span><span class="n">Log</span><span class="p">(</span><span class="o">-</span><span class="m">1</span><span class="p">)</span>                    <span class="c">// NaN</span>
+<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">IsNaN</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>           <span class="c">// true</span>
+<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">IsInf</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">Inf</span><span class="p">(</span><span class="m">1</span><span class="p">),</span> <span class="m">1</span><span class="p">))</span> <span class="c">// true</span>
+</code></pre></div>    </div>
+  </li>
+  <li><strong>Optimización de Rendimiento</strong>:
+    <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// Precalcular valores frecuentes</span>
+<span class="k">var</span> <span class="p">(</span>
+    <span class="n">rad30</span> <span class="o">=</span> <span class="n">GradosARadianes</span><span class="p">(</span><span class="m">30</span><span class="p">)</span>
+    <span class="n">sin30</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">Sin</span><span class="p">(</span><span class="n">rad30</span><span class="p">)</span>
+    <span class="n">cos30</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">Cos</span><span class="p">(</span><span class="n">rad30</span><span class="p">)</span>
+<span class="p">)</span>
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<hr />
+
+<h2 id="ejemplo-integrado-simulación-física">Ejemplo Integrado: Simulación Física</h2>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// Simulación de movimiento parabólico</span>
+<span class="k">func</span> <span class="n">SimularProyectil</span><span class="p">(</span><span class="n">velocidad</span><span class="p">,</span> <span class="n">angulo</span><span class="p">,</span> <span class="n">gravedad</span> <span class="kt">float64</span><span class="p">)</span> <span class="p">([]</span><span class="kt">float64</span><span class="p">,</span> <span class="p">[]</span><span class="kt">float64</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">rad</span> <span class="o">:=</span> <span class="n">GradosARadianes</span><span class="p">(</span><span class="n">angulo</span><span class="p">)</span>
+    <span class="n">vx</span> <span class="o">:=</span> <span class="n">velocidad</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">Cos</span><span class="p">(</span><span class="n">rad</span><span class="p">)</span>
+    <span class="n">vy</span> <span class="o">:=</span> <span class="n">velocidad</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">Sin</span><span class="p">(</span><span class="n">rad</span><span class="p">)</span>
+    <span class="n">tTotal</span> <span class="o">:=</span> <span class="m">2</span> <span class="o">*</span> <span class="n">vy</span> <span class="o">/</span> <span class="n">gravedad</span>
+    
+    <span class="k">var</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="p">[]</span><span class="kt">float64</span>
+    <span class="k">for</span> <span class="n">t</span> <span class="o">:=</span> <span class="m">0.0</span><span class="p">;</span> <span class="n">t</span> <span class="o">&lt;=</span> <span class="n">tTotal</span><span class="p">;</span> <span class="n">t</span> <span class="o">+=</span> <span class="m">0.1</span> <span class="p">{</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="nb">append</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">vx</span> <span class="o">*</span> <span class="n">t</span><span class="p">)</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="nb">append</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">vy</span> <span class="o">*</span> <span class="n">t</span> <span class="o">-</span> <span class="m">0.5</span> <span class="o">*</span> <span class="n">gravedad</span> <span class="o">*</span> <span class="n">t</span> <span class="o">*</span> <span class="n">t</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span>
+<span class="p">}</span>
+
+<span class="c">// Uso:</span>
+<span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">:=</span> <span class="n">SimularProyectil</span><span class="p">(</span><span class="m">50</span><span class="p">,</span> <span class="m">45</span><span class="p">,</span> <span class="m">9.81</span><span class="p">)</span>
+<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Posiciones X:"</span><span class="p">,</span> <span class="n">x</span><span class="p">[</span><span class="o">:</span><span class="m">3</span><span class="p">])</span> <span class="c">// [0 35.355... 70.710...]</span>
+<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Posiciones Y:"</span><span class="p">,</span> <span class="n">y</span><span class="p">[</span><span class="o">:</span><span class="m">3</span><span class="p">])</span> <span class="c">// [0 35.355...-4.905 70.710...-19.62]</span>
+</code></pre></div></div>
+
+<hr />
+
+<p>Esta guía ampliada muestra cómo utilizar el paquete <code class="language-plaintext highlighter-rouge">math</code> para resolver problemas complejos, desde cálculos financieros hasta simulaciones físicas. Incluye manejo de casos especiales, optimizaciones y ejemplos aplicados a escenarios reales, proporcionando una base sólida para el desarrollo de aplicaciones matemáticas en Go.</p>
+
+            </main>
+        </div>
+        
+        <!-- Componente flotante de GitHub -->
+<div class="github-floating">
+    <a href="https://github.com/" target="_blank" rel="noopener noreferrer" class="github-link" title="Ver en GitHub">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-github">
+            <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+        </svg>
+    </a>
+    
+    
+    <a href="https://github.com//MiguelP-Dev.github.io/blob/main/_pages/paquetes/math.md" target="_blank" rel="noopener noreferrer" class="edit-link" title="Editar esta página">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-2">
+            <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+        </svg>
+    </a>
+    
+</div>
+
+<style>
+    /* Estilos del componente SVG */
+    .github-corner:hover .octo-arm {
+        animation: octocat-wave 560ms ease-in-out;
+    }
+    
+    @keyframes octocat-wave {
+        0%, 100% { transform: rotate(0); }
+        20%, 60% { transform: rotate(-25deg); }
+        40%, 80% { transform: rotate(10deg); }
+    }
+    
+    @media (max-width: 500px) {
+        .github-corner:hover .octo-arm {
+            animation: none;
+        }
+        .github-corner .octo-arm {
+            animation: octocat-wave 560ms ease-in-out;
+        }
+    }
+</style>
+    </div>
+    
+    <script src="/assets/js/scripts.js"></script>
+</body>
+</html>

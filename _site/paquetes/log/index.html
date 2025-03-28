@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>log | Miguel's Programing Notes</title>
+    <link rel="stylesheet" href="/assets/css/styles.css">
+</head>
+<body>
+    <div class="app">
+        <nav class="navbar">
+    <div class="nav-container">
+        <a href="/" class="nav-brand">
+            Miguel's Programming Notes
+        </a>
+
+        <div class="nav-sections">
+            
+                
+                
+                
+                <a href="/paquetes/"
+                    class="nav-section active"
+                    data-section="paquetes">
+                    📦 Paquetes
+                </a>
+            
+                
+                
+                
+                <a href="/ejemplos/"
+                    class="nav-section "
+                    data-section="ejemplos">
+                    🧩 Ejemplos
+                </a>
+            
+        </div>
+    </div>
+</nav>
+        
+        <div class="container">
+            <button class="menu-toggle" aria-label="Abrir menú">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            
+            <aside class="sidebar" id="dynamic-sidebar">
+    <div class="sidebar-header">
+        <h3 class="sidebar-title">Miguel's Programming Notes</h3>
+    </div>
+    
+    <div class="sidebar-content">
+        
+            
+                <h3 class="sidebar-title">📦 Paquetes</h3>
+                <nav class="sidebar-nav">
+                    
+                        <a href="/paquetes/fmt/"
+                            class="sidebar-item "
+                            data-item="fmt">
+                            fmt
+                        </a>
+                    
+                        <a href="/paquetes/net/"
+                            class="sidebar-item "
+                            data-item="net-http">
+                            net/http
+                        </a>
+                    
+                        <a href="/paquetes/encoding/"
+                            class="sidebar-item "
+                            data-item="encoding">
+                            encoding
+                        </a>
+                    
+                </nav>
+            
+        
+            
+        
+    </div>
+</aside>
+            
+            <main class="content">
+                <h1 id="paquete-log-en-go-guía-completa-de-logging-con-ejemplos-avanzados">Paquete <code class="language-plaintext highlighter-rouge">log</code> en Go: Guía Completa de Logging con Ejemplos Avanzados</h1>
+
+<p>El paquete <code class="language-plaintext highlighter-rouge">log</code> en Go ofrece herramientas fundamentales para el registro de eventos en aplicaciones. Esta guía ampliada cubre técnicas avanzadas, mejores prácticas y ejemplos prácticos para implementar un sistema de logging robusto.</p>
+
+<hr />
+
+<h2 id="funciones-principales-y-uso-avanzado">Funciones Principales y Uso Avanzado</h2>
+
+<h3 id="1-registro-básico">1. <strong>Registro Básico</strong></h3>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// Registro simple</span>
+<span class="n">log</span><span class="o">.</span><span class="n">Print</span><span class="p">(</span><span class="s">"Inicio de la aplicación"</span><span class="p">)</span>
+
+<span class="c">// Registro formateado</span>
+<span class="n">log</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Conexión establecida en %s"</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">Now</span><span class="p">()</span><span class="o">.</span><span class="n">Format</span><span class="p">(</span><span class="s">"15:04:05"</span><span class="p">))</span>
+
+<span class="c">// Registro con salto de línea</span>
+<span class="n">log</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Usuario: john_doe | Acción: login"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="2-manejo-de-errores-críticos">2. <strong>Manejo de Errores Críticos</strong></h3>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">cargarConfiguracion</span><span class="p">()</span> <span class="kt">error</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="n">_</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">os</span><span class="o">.</span><span class="n">ReadFile</span><span class="p">(</span><span class="s">"config.yaml"</span><span class="p">);</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">fmt</span><span class="o">.</span><span class="n">Errorf</span><span class="p">(</span><span class="s">"error leyendo configuración: %w"</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="no">nil</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">cargarConfiguracion</span><span class="p">();</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">Fatalf</span><span class="p">(</span><span class="s">"Fallo de inicialización: %v"</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span> <span class="c">// Termina con os.Exit(1)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="3-diferencias-entre-panic-y-fatal">3. <strong>Diferencias entre <code class="language-plaintext highlighter-rouge">Panic</code> y <code class="language-plaintext highlighter-rouge">Fatal</code></strong></h3>
+<ul>
+  <li><strong><code class="language-plaintext highlighter-rouge">log.Panic</code></strong>: Genera un panic (recuperable con <code class="language-plaintext highlighter-rouge">recover</code>)
+    <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">defer</span> <span class="k">func</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="n">r</span> <span class="o">:=</span> <span class="nb">recover</span><span class="p">();</span> <span class="n">r</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Recuperado de panic:"</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}()</span>
+<span class="n">log</span><span class="o">.</span><span class="n">Panic</span><span class="p">(</span><span class="s">"Error grave pero recuperable"</span><span class="p">)</span>
+</code></pre></div>    </div>
+  </li>
+  <li><strong><code class="language-plaintext highlighter-rouge">log.Fatal</code></strong>: Termina el programa inmediatamente
+    <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="n">conn</span> <span class="o">==</span> <span class="no">nil</span> <span class="p">{</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">Fatal</span><span class="p">(</span><span class="s">"Conexión de base de datos no disponible"</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<hr />
+
+<h2 id="configuración-avanzada">Configuración Avanzada</h2>
+
+<h3 id="4-personalización-de-formato">4. <strong>Personalización de Formato</strong></h3>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// Configurar prefijo y formato</span>
+<span class="n">log</span><span class="o">.</span><span class="n">SetFlags</span><span class="p">(</span><span class="n">log</span><span class="o">.</span><span class="n">Ldate</span> <span class="o">|</span> <span class="n">log</span><span class="o">.</span><span class="n">Ltime</span> <span class="o">|</span> <span class="n">log</span><span class="o">.</span><span class="n">Lmicroseconds</span> <span class="o">|</span> <span class="n">log</span><span class="o">.</span><span class="n">Lshortfile</span><span class="p">)</span>
+<span class="n">log</span><span class="o">.</span><span class="n">SetPrefix</span><span class="p">(</span><span class="s">"[APP] "</span><span class="p">)</span>
+
+<span class="c">// Output: [APP] 2023/10/25 14:35:09.123456 main.go:17: Evento importante</span>
+<span class="n">log</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Evento importante"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="5-redirección-de-logs">5. <strong>Redirección de Logs</strong></h3>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// Escribir en múltiples destinos</span>
+<span class="k">func</span> <span class="n">setupLogging</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">file</span><span class="p">,</span> <span class="n">_</span> <span class="o">:=</span> <span class="n">os</span><span class="o">.</span><span class="n">OpenFile</span><span class="p">(</span><span class="s">"app.log"</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">O_APPEND</span><span class="o">|</span><span class="n">os</span><span class="o">.</span><span class="n">O_CREATE</span><span class="o">|</span><span class="n">os</span><span class="o">.</span><span class="n">O_WRONLY</span><span class="p">,</span> <span class="m">0644</span><span class="p">)</span>
+    <span class="n">multiWriter</span> <span class="o">:=</span> <span class="n">io</span><span class="o">.</span><span class="n">MultiWriter</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">Stdout</span><span class="p">,</span> <span class="n">file</span><span class="p">)</span>
+    
+    <span class="n">log</span><span class="o">.</span><span class="n">SetOutput</span><span class="p">(</span><span class="n">multiWriter</span><span class="p">)</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Sistema de logging inicializado"</span><span class="p">)</span> <span class="c">// Escribe en consola y archivo</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="6-loggers-personalizados">6. <strong>Loggers Personalizados</strong></h3>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// Logger para módulo de autenticación</span>
+<span class="k">var</span> <span class="n">authLogger</span> <span class="o">=</span> <span class="n">log</span><span class="o">.</span><span class="n">New</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">Stdout</span><span class="p">,</span> <span class="s">"[AUTH] "</span><span class="p">,</span> <span class="n">log</span><span class="o">.</span><span class="n">LstdFlags</span><span class="o">|</span><span class="n">log</span><span class="o">.</span><span class="n">Lmsgprefix</span><span class="p">)</span>
+
+<span class="c">// Logger para módulo de base de datos</span>
+<span class="k">var</span> <span class="n">dbLogger</span> <span class="o">=</span> <span class="n">log</span><span class="o">.</span><span class="n">New</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">Stderr</span><span class="p">,</span> <span class="s">"[DB] "</span><span class="p">,</span> <span class="n">log</span><span class="o">.</span><span class="n">Lshortfile</span><span class="p">)</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">authLogger</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Intento de login desde 192.168.1.10"</span><span class="p">)</span>
+    <span class="n">dbLogger</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Query ejecutada: SELECT * FROM users"</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="mejores-prácticas">Mejores Prácticas</h2>
+
+<h3 id="7-estructuración-de-logs">7. <strong>Estructuración de Logs</strong></h3>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">type</span> <span class="n">LogEntry</span> <span class="k">struct</span> <span class="p">{</span>
+    <span class="n">Timestamp</span> <span class="n">time</span><span class="o">.</span><span class="n">Time</span>
+    <span class="n">Level</span>     <span class="kt">string</span>
+    <span class="n">Component</span> <span class="kt">string</span>
+    <span class="n">Message</span>   <span class="kt">string</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="n">structuredLog</span><span class="p">(</span><span class="n">entry</span> <span class="n">LogEntry</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span>
+        <span class="s">"[%s] %s | %s: %s"</span><span class="p">,</span>
+        <span class="n">entry</span><span class="o">.</span><span class="n">Timestamp</span><span class="o">.</span><span class="n">Format</span><span class="p">(</span><span class="s">"2006-01-02T15:04:05Z07:00"</span><span class="p">),</span>
+        <span class="n">entry</span><span class="o">.</span><span class="n">Level</span><span class="p">,</span>
+        <span class="n">entry</span><span class="o">.</span><span class="n">Component</span><span class="p">,</span>
+        <span class="n">entry</span><span class="o">.</span><span class="n">Message</span><span class="p">,</span>
+    <span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c">// Uso:</span>
+<span class="n">structuredLog</span><span class="p">(</span><span class="n">LogEntry</span><span class="p">{</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">Now</span><span class="p">(),</span>
+    <span class="s">"ERROR"</span><span class="p">,</span>
+    <span class="s">"API"</span><span class="p">,</span>
+    <span class="s">"Timeout en solicitud a servicio externo"</span><span class="p">,</span>
+<span class="p">})</span>
+</code></pre></div></div>
+
+<h3 id="8-niveles-de-logging-implementación-básica">8. <strong>Niveles de Logging (Implementación Básica)</strong></h3>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">const</span> <span class="p">(</span>
+    <span class="n">LevelInfo</span>  <span class="o">=</span> <span class="s">"INFO"</span>
+    <span class="n">LevelWarn</span>  <span class="o">=</span> <span class="s">"WARN"</span>
+    <span class="n">LevelError</span> <span class="o">=</span> <span class="s">"ERROR"</span>
+<span class="p">)</span>
+
+<span class="k">func</span> <span class="n">Log</span><span class="p">(</span><span class="n">level</span> <span class="kt">string</span><span class="p">,</span> <span class="n">message</span> <span class="kt">string</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"[%s] %s"</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">message</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c">// Uso:</span>
+<span class="n">Log</span><span class="p">(</span><span class="n">LevelWarn</span><span class="p">,</span> <span class="s">"Uso de CPU sobre el 90%"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="escalando-el-logging">Escalando el Logging</h2>
+
+<h3 id="9-integración-con-sistemas-externos">9. <strong>Integración con Sistemas Externos</strong></h3>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// Ejemplo: Envío de logs a Syslog</span>
+<span class="k">func</span> <span class="n">syslogIntegration</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">syslogWriter</span><span class="p">,</span> <span class="n">_</span> <span class="o">:=</span> <span class="n">syslog</span><span class="o">.</span><span class="n">Dial</span><span class="p">(</span><span class="s">"udp"</span><span class="p">,</span> <span class="s">"logs.example.com:514"</span><span class="p">,</span> <span class="n">syslog</span><span class="o">.</span><span class="n">LOG_INFO</span><span class="p">,</span> <span class="s">"myapp"</span><span class="p">)</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">SetOutput</span><span class="p">(</span><span class="n">syslogWriter</span><span class="p">)</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Mensaje enviado a servidor remoto"</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="10-rotación-de-logs">10. <strong>Rotación de Logs</strong></h3>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// Uso de lumberjack para rotación</span>
+<span class="k">import</span> <span class="s">"gopkg.in/natefinch/lumberjack.v2"</span>
+
+<span class="k">func</span> <span class="n">rotatingLogs</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">SetOutput</span><span class="p">(</span><span class="o">&amp;</span><span class="n">lumberjack</span><span class="o">.</span><span class="n">Logger</span><span class="p">{</span>
+        <span class="n">Filename</span><span class="o">:</span>   <span class="s">"app.log"</span><span class="p">,</span>
+        <span class="n">MaxSize</span><span class="o">:</span>    <span class="m">100</span><span class="p">,</span> <span class="c">// MB</span>
+        <span class="n">MaxBackups</span><span class="o">:</span> <span class="m">3</span><span class="p">,</span>
+        <span class="n">MaxAge</span><span class="o">:</span>     <span class="m">28</span><span class="p">,</span> <span class="c">// días</span>
+    <span class="p">})</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="comparativa-con-bibliotecas-avanzadas">Comparativa con Bibliotecas Avanzadas</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Característica</th>
+      <th>Paquete <code class="language-plaintext highlighter-rouge">log</code></th>
+      <th>logrus</th>
+      <th>zap</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Niveles de logging</td>
+      <td>Básicos</td>
+      <td>Múltiples</td>
+      <td>Múltiples</td>
+    </tr>
+    <tr>
+      <td>Logging estructurado</td>
+      <td>Manual</td>
+      <td>Soporte nativo</td>
+      <td>Alto rendimiento</td>
+    </tr>
+    <tr>
+      <td>Rotación de logs</td>
+      <td>Requiere libs</td>
+      <td>Requiere libs</td>
+      <td>Requiere libs</td>
+    </tr>
+    <tr>
+      <td>Rendimiento</td>
+      <td>Alto</td>
+      <td>Medio</td>
+      <td>Muy alto</td>
+    </tr>
+    <tr>
+      <td>Contexto</td>
+      <td>Limitado</td>
+      <td>Campos extras</td>
+      <td>Campos anidados</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<h2 id="ejemplo-completo-sistema-de-logging-empresarial">Ejemplo Completo: Sistema de Logging Empresarial</h2>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="p">(</span>
+    <span class="s">"log"</span>
+    <span class="s">"os"</span>
+    <span class="s">"io"</span>
+    <span class="s">"gopkg.in/natefinch/lumberjack.v2"</span>
+<span class="p">)</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c">// Configurar logger principal</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">SetFlags</span><span class="p">(</span><span class="n">log</span><span class="o">.</span><span class="n">Ldate</span> <span class="o">|</span> <span class="n">log</span><span class="o">.</span><span class="n">Ltime</span> <span class="o">|</span> <span class="n">log</span><span class="o">.</span><span class="n">LUTC</span> <span class="o">|</span> <span class="n">log</span><span class="o">.</span><span class="n">Lshortfile</span><span class="p">)</span>
+    
+    <span class="c">// Redirección múltiple</span>
+    <span class="n">multiWriter</span> <span class="o">:=</span> <span class="n">io</span><span class="o">.</span><span class="n">MultiWriter</span><span class="p">(</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">Stdout</span><span class="p">,</span>
+        <span class="o">&amp;</span><span class="n">lumberjack</span><span class="o">.</span><span class="n">Logger</span><span class="p">{</span>
+            <span class="n">Filename</span><span class="o">:</span>   <span class="s">"app.log"</span><span class="p">,</span>
+            <span class="n">MaxSize</span><span class="o">:</span>    <span class="m">100</span><span class="p">,</span>
+            <span class="n">MaxBackups</span><span class="o">:</span> <span class="m">3</span><span class="p">,</span>
+            <span class="n">MaxAge</span><span class="o">:</span>     <span class="m">28</span><span class="p">,</span>
+        <span class="p">},</span>
+    <span class="p">)</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">SetOutput</span><span class="p">(</span><span class="n">multiWriter</span><span class="p">)</span>
+
+    <span class="c">// Logger especializado para API</span>
+    <span class="n">apiLogger</span> <span class="o">:=</span> <span class="n">log</span><span class="o">.</span><span class="n">New</span><span class="p">(</span><span class="n">multiWriter</span><span class="p">,</span> <span class="s">"[API] "</span><span class="p">,</span> <span class="n">log</span><span class="o">.</span><span class="n">Lmsgprefix</span><span class="p">)</span>
+    
+    <span class="c">// Simulación de uso</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Aplicación iniciada"</span><span class="p">)</span>
+    <span class="n">apiLogger</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"GET /api/users - 200 OK"</span><span class="p">)</span>
+    
+    <span class="k">defer</span> <span class="k">func</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="n">r</span> <span class="o">:=</span> <span class="nb">recover</span><span class="p">();</span> <span class="n">r</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"PANIC: %v"</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span>
+        <span class="p">}</span>
+    <span class="p">}()</span>
+    
+    <span class="c">// ... código de la aplicación ...</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<hr />
+
+<p>Esta guía ampliada proporciona técnicas profesionales para implementar un sistema de logging eficiente en Go. Desde configuraciones básicas hasta integración con sistemas externos y manejo de alto volumen, estos ejemplos muestran cómo aprovechar al máximo el paquete <code class="language-plaintext highlighter-rouge">log</code> estándar y cuándo considerar soluciones más avanzadas.</p>
+
+            </main>
+        </div>
+        
+        <!-- Componente flotante de GitHub -->
+<div class="github-floating">
+    <a href="https://github.com/" target="_blank" rel="noopener noreferrer" class="github-link" title="Ver en GitHub">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-github">
+            <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+        </svg>
+    </a>
+    
+    
+    <a href="https://github.com//MiguelP-Dev.github.io/blob/main/_pages/paquetes/log.md" target="_blank" rel="noopener noreferrer" class="edit-link" title="Editar esta página">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-2">
+            <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+        </svg>
+    </a>
+    
+</div>
+
+<style>
+    /* Estilos del componente SVG */
+    .github-corner:hover .octo-arm {
+        animation: octocat-wave 560ms ease-in-out;
+    }
+    
+    @keyframes octocat-wave {
+        0%, 100% { transform: rotate(0); }
+        20%, 60% { transform: rotate(-25deg); }
+        40%, 80% { transform: rotate(10deg); }
+    }
+    
+    @media (max-width: 500px) {
+        .github-corner:hover .octo-arm {
+            animation: none;
+        }
+        .github-corner .octo-arm {
+            animation: octocat-wave 560ms ease-in-out;
+        }
+    }
+</style>
+    </div>
+    
+    <script src="/assets/js/scripts.js"></script>
+</body>
+</html>

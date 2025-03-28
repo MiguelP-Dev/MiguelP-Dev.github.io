@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>html | Miguel's Programing Notes</title>
+    <link rel="stylesheet" href="/assets/css/styles.css">
+</head>
+<body>
+    <div class="app">
+        <nav class="navbar">
+    <div class="nav-container">
+        <a href="/" class="nav-brand">
+            Miguel's Programming Notes
+        </a>
+
+        <div class="nav-sections">
+            
+                
+                
+                
+                <a href="/paquetes/"
+                    class="nav-section active"
+                    data-section="paquetes">
+                    📦 Paquetes
+                </a>
+            
+                
+                
+                
+                <a href="/ejemplos/"
+                    class="nav-section "
+                    data-section="ejemplos">
+                    🧩 Ejemplos
+                </a>
+            
+        </div>
+    </div>
+</nav>
+        
+        <div class="container">
+            <button class="menu-toggle" aria-label="Abrir menú">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            
+            <aside class="sidebar" id="dynamic-sidebar">
+    <div class="sidebar-header">
+        <h3 class="sidebar-title">Miguel's Programming Notes</h3>
+    </div>
+    
+    <div class="sidebar-content">
+        
+            
+                <h3 class="sidebar-title">📦 Paquetes</h3>
+                <nav class="sidebar-nav">
+                    
+                        <a href="/paquetes/fmt/"
+                            class="sidebar-item "
+                            data-item="fmt">
+                            fmt
+                        </a>
+                    
+                        <a href="/paquetes/net/"
+                            class="sidebar-item "
+                            data-item="net-http">
+                            net/http
+                        </a>
+                    
+                        <a href="/paquetes/encoding/"
+                            class="sidebar-item "
+                            data-item="encoding">
+                            encoding
+                        </a>
+                    
+                </nav>
+            
+        
+            
+        
+    </div>
+</aside>
+            
+            <main class="content">
+                <h1 id="paquete-html-en-go-guía-completa-para-manejo-seguro-de-html">Paquete <code class="language-plaintext highlighter-rouge">html</code> en Go: Guía Completa para Manejo Seguro de HTML</h1>
+
+<p>El paquete <code class="language-plaintext highlighter-rouge">html</code> en Go proporciona herramientas esenciales para trabajar con contenido HTML de manera segura, previniendo ataques comunes como XSS (Cross-Site Scripting). Esta guía cubre tanto el paquete principal <code class="language-plaintext highlighter-rouge">html</code> como el subpaquete <code class="language-plaintext highlighter-rouge">html/template</code> con ejemplos avanzados y mejores prácticas.</p>
+
+<hr />
+
+<h2 id="1-funciones-principales-del-paquete-html">1. Funciones Principales del Paquete <code class="language-plaintext highlighter-rouge">html</code></h2>
+
+<h3 id="11-htmlescapestring">1.1 <strong><code class="language-plaintext highlighter-rouge">html.EscapeString</code></strong></h3>
+<p><strong>Propósito</strong>: Convertir caracteres especiales en entidades HTML para prevenir inyección de código.<br />
+<strong>Caracteres Escapados</strong>:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">&lt;</code> → <code class="language-plaintext highlighter-rouge">&amp;lt;</code></li>
+  <li><code class="language-plaintext highlighter-rouge">&gt;</code> → <code class="language-plaintext highlighter-rouge">&amp;gt;</code></li>
+  <li><code class="language-plaintext highlighter-rouge">&amp;</code> → <code class="language-plaintext highlighter-rouge">&amp;amp;</code></li>
+  <li><code class="language-plaintext highlighter-rouge">"</code> → <code class="language-plaintext highlighter-rouge">&amp;quot;</code></li>
+  <li><code class="language-plaintext highlighter-rouge">'</code> → <code class="language-plaintext highlighter-rouge">&amp;#39;</code></li>
+</ul>
+
+<p><strong>Ejemplo Detallado</strong>:</p>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="p">(</span>
+    <span class="s">"fmt"</span>
+    <span class="s">"html"</span>
+<span class="p">)</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">userInput</span> <span class="o">:=</span> <span class="s">`&lt;script&gt;alert("Hacked!")&lt;/script&gt;`</span>
+    <span class="n">safeOutput</span> <span class="o">:=</span> <span class="n">html</span><span class="o">.</span><span class="n">EscapeString</span><span class="p">(</span><span class="n">userInput</span><span class="p">)</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">safeOutput</span><span class="p">)</span>
+    <span class="c">// Output: &amp;lt;script&amp;gt;alert(&amp;#34;Hacked!&amp;#34;)&amp;lt;/script&amp;gt;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="12-htmlunescapestring">1.2 <strong><code class="language-plaintext highlighter-rouge">html.UnescapeString</code></strong></h3>
+<p><strong>Propósito</strong>: Revertir entidades HTML a sus caracteres originales.<br />
+<strong>Casos de Uso</strong>:</p>
+<ul>
+  <li>Procesar contenido almacenado previamente escapado</li>
+  <li>Mostrar texto original en editores HTML</li>
+</ul>
+
+<p><strong>Ejemplo con Entidades Complejas</strong>:</p>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">escaped</span> <span class="o">:=</span> <span class="s">"&amp;lt;div class=&amp;quot;alert&amp;quot;&amp;gt;&amp;amp;Atención&amp;lt;/div&amp;gt;"</span>
+    <span class="n">unescaped</span> <span class="o">:=</span> <span class="n">html</span><span class="o">.</span><span class="n">UnescapeString</span><span class="p">(</span><span class="n">escaped</span><span class="p">)</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">unescaped</span><span class="p">)</span> 
+    <span class="c">// Output: &lt;div class="alert"&gt;&amp;Atención&lt;/div&gt;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="2-subpaquete-htmltemplate-plantillas-seguras">2. Subpaquete <code class="language-plaintext highlighter-rouge">html/template</code>: Plantillas Seguras</h2>
+
+<h3 id="21-creación-de-plantillas">2.1 <strong>Creación de Plantillas</strong></h3>
+<p><strong>Flujo Básico</strong>:</p>
+<ol>
+  <li>Definir plantillas</li>
+  <li>Parsear contenido</li>
+  <li>Ejecutar con datos</li>
+</ol>
+
+<p><strong>Ejemplo de Plantilla con Estructuras</strong>:</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">type</span> <span class="n">User</span> <span class="k">struct</span> <span class="p">{</span>
+    <span class="n">Name</span>    <span class="kt">string</span>
+    <span class="n">Email</span>   <span class="kt">string</span>
+    <span class="n">IsAdmin</span> <span class="kt">bool</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">const</span> <span class="n">tpl</span> <span class="o">=</span> <span class="s">`
+    &lt;!DOCTYPE html&gt;
+    &lt;html&gt;
+        &lt;head&gt;
+            &lt;title&gt;Perfil de {{.Name}} &lt;/title&gt;
+        &lt;/head&gt;
+        &lt;body&gt;
+            &lt;h1&gt;{{.Name}}&lt;/h1&gt;
+            {{if .IsAdmin}}&lt;p class="admin"&gt;Administrador&lt;/p&gt;{{end}}
+            &lt;p&gt;Contacto: &lt;a href="mailto:{{.Email}}"&gt;{{.Email}}&lt;/a&gt;&lt;/p&gt;
+        &lt;/body&gt;
+    &lt;/html&gt;`</span>
+    <span class="n">tmpl</span> <span class="o">:=</span> <span class="n">template</span><span class="o">.</span><span class="n">Must</span><span class="p">(</span><span class="n">template</span><span class="o">.</span><span class="n">New</span><span class="p">(</span><span class="s">"profile"</span><span class="p">)</span><span class="o">.</span><span class="n">Parse</span><span class="p">(</span><span class="n">tpl</span><span class="p">))</span>
+    <span class="n">user</span> <span class="o">:=</span> <span class="n">User</span><span class="p">{</span><span class="s">"Ana"</span><span class="p">,</span> <span class="s">"ana@example.com"</span><span class="p">,</span> <span class="no">true</span><span class="p">}</span>
+    <span class="n">tmpl</span><span class="o">.</span><span class="n">Execute</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">Stdout</span><span class="p">,</span> <span class="n">user</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="22-funciones-de-plantilla-personalizadas">2.2 <strong>Funciones de Plantilla Personalizadas</strong></h3>
+<p><strong>Registro de Funciones</strong>:</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">formatDate</span><span class="p">(</span><span class="n">t</span> <span class="n">time</span><span class="o">.</span><span class="n">Time</span><span class="p">)</span> <span class="kt">string</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">t</span><span class="o">.</span><span class="n">Format</span><span class="p">(</span><span class="s">"2006-01-02"</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">tmpl</span> <span class="o">:=</span> <span class="n">template</span><span class="o">.</span><span class="n">Must</span><span class="p">(</span><span class="n">template</span><span class="o">.</span><span class="n">New</span><span class="p">(</span><span class="s">""</span><span class="p">)</span><span class="o">.</span><span class="n">Funcs</span><span class="p">(</span><span class="n">template</span><span class="o">.</span><span class="n">FuncMap</span><span class="p">{</span>
+        <span class="s">"formatDate"</span><span class="o">:</span> <span class="n">formatDate</span><span class="p">,</span>
+    <span class="p">})</span><span class="o">.</span><span class="n">Parse</span><span class="p">(</span><span class="s">`&lt;p&gt;Fecha: {{. | formatDate}}&lt;/p&gt;`</span><span class="p">))</span>
+    
+    <span class="n">tmpl</span><span class="o">.</span><span class="n">Execute</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">Stdout</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">Now</span><span class="p">())</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="3-características-avanzadas-de-htmltemplate">3. Características Avanzadas de <code class="language-plaintext highlighter-rouge">html/template</code></h2>
+
+<h3 id="31-herencia-de-plantillas">3.1 <strong>Herencia de Plantillas</strong></h3>
+<p><strong>Estructura de Archivos</strong>:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>templates/
+├── base.html
+└── home.html
+</code></pre></div></div>
+
+<p><strong>base.html</strong>:</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{{define "base"}}
+<span class="cp">&lt;!DOCTYPE html&gt;</span>
+<span class="nt">&lt;html&gt;</span>
+<span class="nt">&lt;head&gt;</span>
+    <span class="nt">&lt;title&gt;</span>{{template "title" .}}<span class="nt">&lt;/title&gt;</span>
+<span class="nt">&lt;/head&gt;</span>
+<span class="nt">&lt;body&gt;</span>
+    {{template "content" .}}
+<span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+{{end}}
+</code></pre></div></div>
+
+<p><strong>home.html</strong>:</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{{define "title"}}Inicio{{end}}
+{{define "content"}}
+    <span class="nt">&lt;h1&gt;</span>Bienvenido, {{.User.Name}}<span class="nt">&lt;/h1&gt;</span>
+{{end}}
+</code></pre></div></div>
+
+<p><strong>Código Go</strong>:</p>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">tmpl</span> <span class="o">:=</span> <span class="n">template</span><span class="o">.</span><span class="n">Must</span><span class="p">(</span><span class="n">template</span><span class="o">.</span><span class="n">ParseGlob</span><span class="p">(</span><span class="s">"templates/*.html"</span><span class="p">))</span>
+    <span class="n">data</span> <span class="o">:=</span> <span class="k">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="k">interface</span><span class="p">{}{</span>
+        <span class="s">"User"</span><span class="o">:</span> <span class="n">User</span><span class="p">{</span><span class="n">Name</span><span class="o">:</span> <span class="s">"Carlos"</span><span class="p">},</span>
+    <span class="p">}</span>
+    <span class="n">tmpl</span><span class="o">.</span><span class="n">ExecuteTemplate</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">Stdout</span><span class="p">,</span> <span class="s">"base"</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="32-protección-automática-contra-xss">3.2 <strong>Protección Automática contra XSS</strong></h3>
+<p><strong>Característica Clave</strong>: Todas las variables insertadas se escapan automáticamente.<br />
+<strong>Excepciones Controladas</strong>:</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// Usar tipo template.HTML para contenido confiable</span>
+<span class="n">tmpl</span> <span class="o">:=</span> <span class="n">template</span><span class="o">.</span><span class="n">Must</span><span class="p">(</span><span class="n">template</span><span class="o">.</span><span class="n">New</span><span class="p">(</span><span class="s">""</span><span class="p">)</span><span class="o">.</span><span class="n">Parse</span><span class="p">(</span><span class="s">`
+    &lt;div&gt;{{.SafeContent}}&lt;/div&gt;
+`</span><span class="p">))</span>
+<span class="n">tmpl</span><span class="o">.</span><span class="n">Execute</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">Stdout</span><span class="p">,</span> <span class="k">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="k">interface</span><span class="p">{}{</span>
+    <span class="s">"SafeContent"</span><span class="o">:</span> <span class="n">template</span><span class="o">.</span><span class="n">HTML</span><span class="p">(</span><span class="s">"&lt;b&gt;Texto seguro&lt;/b&gt;"</span><span class="p">),</span>
+<span class="p">})</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="4-mejores-prácticas-y-seguridad">4. Mejores Prácticas y Seguridad</h2>
+
+<h3 id="41-reglas-de-escape-contextual">4.1 <strong>Reglas de Escape Contextual</strong></h3>
+<ul>
+  <li><strong>Atributos HTML</strong>: Escape automático de <code class="language-plaintext highlighter-rouge">"</code> y espacios</li>
+  <li><strong>URLs</strong>: Validación de esquemas (<code class="language-plaintext highlighter-rouge">javascript:</code> bloqueado)</li>
+  <li><strong>CSS/JS</strong>: Requiere tratamiento especial</li>
+</ul>
+
+<h3 id="42-validación-de-datos">4.2 <strong>Validación de Datos</strong></h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">sanitizeInput</span><span class="p">(</span><span class="n">input</span> <span class="kt">string</span><span class="p">)</span> <span class="kt">string</span> <span class="p">{</span>
+    <span class="c">// Eliminar etiquetas HTML</span>
+    <span class="k">return</span> <span class="n">html</span><span class="o">.</span><span class="n">EscapeString</span><span class="p">(</span><span class="n">input</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c">// Uso en plantillas:</span>
+<span class="n">tmpl</span><span class="o">.</span><span class="n">Parse</span><span class="p">(</span><span class="s">`&lt;p&gt;{{. | sanitizeInput}}&lt;/p&gt;`</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="43-manejo-de-errores">4.3 <strong>Manejo de Errores</strong></h3>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">tmpl</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">template</span><span class="o">.</span><span class="n">ParseFiles</span><span class="p">(</span><span class="s">"plantilla.html"</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">Fatalf</span><span class="p">(</span><span class="s">"Error cargando plantilla: %v"</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="n">err</span> <span class="o">=</span> <span class="n">tmpl</span><span class="o">.</span><span class="n">Execute</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">Stdout</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Error renderizando: %v"</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="5-comparativa-de-métodos">5. Comparativa de Métodos</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Método</th>
+      <th>Uso Recomendado</th>
+      <th>Seguridad</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">html.EscapeString</code></td>
+      <td>Escape manual en código dinámico</td>
+      <td>Alta</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">text/template</code></td>
+      <td>Contenido no HTML</td>
+      <td>Baja</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">html/template</code></td>
+      <td>Cualquier salida HTML</td>
+      <td>Máxima</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<h2 id="6-ejemplo-completo-sistema-de-comentarios">6. Ejemplo Completo: Sistema de Comentarios</h2>
+
+<p><strong>Estructura de Datos</strong>:</p>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">type</span> <span class="n">Comment</span> <span class="k">struct</span> <span class="p">{</span>
+    <span class="n">Author</span>  <span class="kt">string</span>
+    <span class="n">Content</span> <span class="kt">string</span>
+    <span class="n">Date</span>    <span class="n">time</span><span class="o">.</span><span class="n">Time</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><strong>Plantilla</strong> (<code class="language-plaintext highlighter-rouge">comments.html</code>):</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{{define "comment"}}
+<span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"comment"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;h3&gt;</span>{{.Author}}<span class="nt">&lt;/h3&gt;</span>
+    <span class="nt">&lt;p</span> <span class="na">class=</span><span class="s">"content"</span><span class="nt">&gt;</span>{{.Content}}<span class="nt">&lt;/p&gt;</span>
+    <span class="nt">&lt;small&gt;</span>{{.Date | formatDate}}<span class="nt">&lt;/small&gt;</span>
+<span class="nt">&lt;/div&gt;</span>
+{{end}}
+</code></pre></div></div>
+
+<p><strong>Código</strong>:</p>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">comments</span> <span class="o">:=</span> <span class="p">[]</span><span class="n">Comment</span><span class="p">{</span>
+        <span class="p">{</span><span class="s">"Alice"</span><span class="p">,</span> <span class="s">"¡Gran publicación!"</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">Now</span><span class="p">()},</span>
+        <span class="p">{</span><span class="s">"Bob"</span><span class="p">,</span> <span class="s">"&lt;script&gt;alert('XSS')&lt;/script&gt;"</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">Now</span><span class="p">()},</span>
+    <span class="p">}</span>
+
+    <span class="n">tmpl</span> <span class="o">:=</span> <span class="n">template</span><span class="o">.</span><span class="n">Must</span><span class="p">(</span><span class="n">template</span><span class="o">.</span><span class="n">New</span><span class="p">(</span><span class="s">""</span><span class="p">)</span><span class="o">.</span><span class="n">Funcs</span><span class="p">(</span><span class="n">template</span><span class="o">.</span><span class="n">FuncMap</span><span class="p">{</span>
+        <span class="s">"formatDate"</span><span class="o">:</span> <span class="n">formatDate</span><span class="p">,</span>
+    <span class="p">})</span><span class="o">.</span><span class="n">ParseFiles</span><span class="p">(</span><span class="s">"comments.html"</span><span class="p">))</span>
+    
+    <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">c</span> <span class="o">:=</span> <span class="k">range</span> <span class="n">comments</span> <span class="p">{</span>
+        <span class="n">tmpl</span><span class="o">.</span><span class="n">ExecuteTemplate</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">Stdout</span><span class="p">,</span> <span class="s">"comment"</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
+        <span class="c">// El contenido de Bob se escapa automáticamente</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<hr />
+
+<p>Esta guía ampliada proporciona un entendimiento profundo del paquete <code class="language-plaintext highlighter-rouge">html</code> en Go, incluyendo técnicas avanzadas de plantillas y prácticas esenciales de seguridad. Los ejemplos prácticos demuestran cómo implementar funcionalidades reales manteniendo la protección contra vulnerabilidades comunes.</p>
+
+            </main>
+        </div>
+        
+        <!-- Componente flotante de GitHub -->
+<div class="github-floating">
+    <a href="https://github.com/" target="_blank" rel="noopener noreferrer" class="github-link" title="Ver en GitHub">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-github">
+            <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+        </svg>
+    </a>
+    
+    
+    <a href="https://github.com//MiguelP-Dev.github.io/blob/main/_pages/paquetes/html.md" target="_blank" rel="noopener noreferrer" class="edit-link" title="Editar esta página">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-2">
+            <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+        </svg>
+    </a>
+    
+</div>
+
+<style>
+    /* Estilos del componente SVG */
+    .github-corner:hover .octo-arm {
+        animation: octocat-wave 560ms ease-in-out;
+    }
+    
+    @keyframes octocat-wave {
+        0%, 100% { transform: rotate(0); }
+        20%, 60% { transform: rotate(-25deg); }
+        40%, 80% { transform: rotate(10deg); }
+    }
+    
+    @media (max-width: 500px) {
+        .github-corner:hover .octo-arm {
+            animation: none;
+        }
+        .github-corner .octo-arm {
+            animation: octocat-wave 560ms ease-in-out;
+        }
+    }
+</style>
+    </div>
+    
+    <script src="/assets/js/scripts.js"></script>
+</body>
+</html>

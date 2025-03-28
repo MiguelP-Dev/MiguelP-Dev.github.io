@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>database/sql | Miguel's Programing Notes</title>
+    <link rel="stylesheet" href="/assets/css/styles.css">
+</head>
+<body>
+    <div class="app">
+        <nav class="navbar">
+    <div class="nav-container">
+        <a href="/" class="nav-brand">
+            Miguel's Programming Notes
+        </a>
+
+        <div class="nav-sections">
+            
+                
+                
+                
+                <a href="/paquetes/"
+                    class="nav-section active"
+                    data-section="paquetes">
+                    📦 Paquetes
+                </a>
+            
+                
+                
+                
+                <a href="/ejemplos/"
+                    class="nav-section "
+                    data-section="ejemplos">
+                    🧩 Ejemplos
+                </a>
+            
+        </div>
+    </div>
+</nav>
+        
+        <div class="container">
+            <button class="menu-toggle" aria-label="Abrir menú">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            
+            <aside class="sidebar" id="dynamic-sidebar">
+    <div class="sidebar-header">
+        <h3 class="sidebar-title">Miguel's Programming Notes</h3>
+    </div>
+    
+    <div class="sidebar-content">
+        
+            
+                <h3 class="sidebar-title">📦 Paquetes</h3>
+                <nav class="sidebar-nav">
+                    
+                        <a href="/paquetes/fmt/"
+                            class="sidebar-item "
+                            data-item="fmt">
+                            fmt
+                        </a>
+                    
+                        <a href="/paquetes/net/"
+                            class="sidebar-item "
+                            data-item="net-http">
+                            net/http
+                        </a>
+                    
+                        <a href="/paquetes/encoding/"
+                            class="sidebar-item "
+                            data-item="encoding">
+                            encoding
+                        </a>
+                    
+                </nav>
+            
+        
+            
+        
+    </div>
+</aside>
+            
+            <main class="content">
+                <h1 id="paquete-databasesql-en-go">Paquete database/sql en Go</h1>
+
+<p>El paquete <code class="language-plaintext highlighter-rouge">database/sql</code> en Go proporciona una interfaz genérica para interactuar con bases de datos SQL. Este documento explora en detalle sus funcionalidades y usos prácticos.</p>
+
+<h2 id="1-conceptos-básicos">1. Conceptos Básicos</h2>
+
+<h3 id="11-conexión-a-la-base-de-datos">1.1 Conexión a la Base de Datos</h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// filepath: /home/miguel/Documentos/Programación/Paquetes de go explicados/ejemplos/database/conexion.go</span>
+<span class="k">package</span> <span class="n">database</span>
+
+<span class="k">import</span> <span class="p">(</span>
+    <span class="s">"database/sql"</span>
+    <span class="s">"fmt"</span>
+    <span class="s">"time"</span>
+    <span class="n">_</span> <span class="s">"github.com/go-sql-driver/mysql"</span>
+<span class="p">)</span>
+
+<span class="k">type</span> <span class="n">DBConfig</span> <span class="k">struct</span> <span class="p">{</span>
+    <span class="n">Driver</span>   <span class="kt">string</span>
+    <span class="n">User</span>     <span class="kt">string</span>
+    <span class="n">Password</span> <span class="kt">string</span>
+    <span class="n">Host</span>     <span class="kt">string</span>
+    <span class="n">Port</span>     <span class="kt">int</span>
+    <span class="n">DBName</span>   <span class="kt">string</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="n">NewConnection</span><span class="p">(</span><span class="n">config</span> <span class="n">DBConfig</span><span class="p">)</span> <span class="p">(</span><span class="o">*</span><span class="n">sql</span><span class="o">.</span><span class="n">DB</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">dsn</span> <span class="o">:=</span> <span class="n">fmt</span><span class="o">.</span><span class="n">Sprintf</span><span class="p">(</span><span class="s">"%s:%s@tcp(%s:%d)/%s?parseTime=true"</span><span class="p">,</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">User</span><span class="p">,</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">Password</span><span class="p">,</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">Host</span><span class="p">,</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">Port</span><span class="p">,</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">DBName</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">db</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">sql</span><span class="o">.</span><span class="n">Open</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">Driver</span><span class="p">,</span> <span class="n">dsn</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="no">nil</span><span class="p">,</span> <span class="n">fmt</span><span class="o">.</span><span class="n">Errorf</span><span class="p">(</span><span class="s">"error abriendo conexión: %w"</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="c">// Configurar el pool de conexiones</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">SetMaxOpenConns</span><span class="p">(</span><span class="m">25</span><span class="p">)</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">SetMaxIdleConns</span><span class="p">(</span><span class="m">5</span><span class="p">)</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">SetConnMaxLifetime</span><span class="p">(</span><span class="m">5</span> <span class="o">*</span> <span class="n">time</span><span class="o">.</span><span class="n">Minute</span><span class="p">)</span>
+
+    <span class="c">// Verificar conexión</span>
+    <span class="k">if</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">db</span><span class="o">.</span><span class="n">Ping</span><span class="p">();</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="no">nil</span><span class="p">,</span> <span class="n">fmt</span><span class="o">.</span><span class="n">Errorf</span><span class="p">(</span><span class="s">"error verificando conexión: %w"</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">db</span><span class="p">,</span> <span class="no">nil</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="12-modelos-y-estructuras">1.2 Modelos y Estructuras</h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// filepath: /home/miguel/Documentos/Programación/Paquetes de go explicados/ejemplos/database/models.go</span>
+<span class="k">package</span> <span class="n">database</span>
+
+<span class="k">import</span> <span class="s">"time"</span>
+
+<span class="k">type</span> <span class="n">Usuario</span> <span class="k">struct</span> <span class="p">{</span>
+    <span class="n">ID</span>        <span class="kt">int64</span>     <span class="s">`db:"id"`</span>
+    <span class="n">Nombre</span>    <span class="kt">string</span>    <span class="s">`db:"nombre"`</span>
+    <span class="n">Email</span>     <span class="kt">string</span>    <span class="s">`db:"email"`</span>
+    <span class="n">Edad</span>      <span class="kt">int</span>       <span class="s">`db:"edad"`</span>
+    <span class="n">CreatedAt</span> <span class="n">time</span><span class="o">.</span><span class="n">Time</span> <span class="s">`db:"created_at"`</span>
+    <span class="n">UpdatedAt</span> <span class="n">time</span><span class="o">.</span><span class="n">Time</span> <span class="s">`db:"updated_at"`</span>
+<span class="p">}</span>
+
+<span class="k">type</span> <span class="n">Producto</span> <span class="k">struct</span> <span class="p">{</span>
+    <span class="n">ID</span>          <span class="kt">int64</span>     <span class="s">`db:"id"`</span>
+    <span class="n">Nombre</span>      <span class="kt">string</span>    <span class="s">`db:"nombre"`</span>
+    <span class="n">Precio</span>      <span class="kt">float64</span>   <span class="s">`db:"precio"`</span>
+    <span class="n">Stock</span>       <span class="kt">int</span>       <span class="s">`db:"stock"`</span>
+    <span class="n">CategoriaID</span> <span class="kt">int64</span>     <span class="s">`db:"categoria_id"`</span>
+    <span class="n">CreatedAt</span>   <span class="n">time</span><span class="o">.</span><span class="n">Time</span> <span class="s">`db:"created_at"`</span>
+    <span class="n">UpdatedAt</span>   <span class="n">time</span><span class="o">.</span><span class="n">Time</span> <span class="s">`db:"updated_at"`</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="2-operaciones-crud">2. Operaciones CRUD</h2>
+
+<h3 id="21-implementación-del-repositorio">2.1 Implementación del Repositorio</h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// filepath: /home/miguel/Documentos/Programación/Paquetes de go explicados/ejemplos/database/repository.go</span>
+<span class="k">package</span> <span class="n">database</span>
+
+<span class="k">import</span> <span class="p">(</span>
+    <span class="s">"context"</span>
+    <span class="s">"database/sql"</span>
+    <span class="s">"fmt"</span>
+    <span class="s">"time"</span>
+<span class="p">)</span>
+
+<span class="k">type</span> <span class="n">Repository</span> <span class="k">struct</span> <span class="p">{</span>
+    <span class="n">db</span> <span class="o">*</span><span class="n">sql</span><span class="o">.</span><span class="n">DB</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="n">NewRepository</span><span class="p">(</span><span class="n">db</span> <span class="o">*</span><span class="n">sql</span><span class="o">.</span><span class="n">DB</span><span class="p">)</span> <span class="o">*</span><span class="n">Repository</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="o">&amp;</span><span class="n">Repository</span><span class="p">{</span><span class="n">db</span><span class="o">:</span> <span class="n">db</span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c">// CreateUser inserta un nuevo usuario</span>
+<span class="k">func</span> <span class="p">(</span><span class="n">r</span> <span class="o">*</span><span class="n">Repository</span><span class="p">)</span> <span class="n">CreateUser</span><span class="p">(</span><span class="n">ctx</span> <span class="n">context</span><span class="o">.</span><span class="n">Context</span><span class="p">,</span> <span class="n">u</span> <span class="o">*</span><span class="n">Usuario</span><span class="p">)</span> <span class="kt">error</span> <span class="p">{</span>
+    <span class="n">query</span> <span class="o">:=</span> <span class="s">`
+        INSERT INTO usuarios (nombre, email, edad, created_at, updated_at)
+        VALUES (?, ?, ?, ?, ?)
+    `</span>
+    <span class="n">now</span> <span class="o">:=</span> <span class="n">time</span><span class="o">.</span><span class="n">Now</span><span class="p">()</span>
+    <span class="n">result</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">r</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">ExecContext</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span>
+        <span class="n">u</span><span class="o">.</span><span class="n">Nombre</span><span class="p">,</span>
+        <span class="n">u</span><span class="o">.</span><span class="n">Email</span><span class="p">,</span>
+        <span class="n">u</span><span class="o">.</span><span class="n">Edad</span><span class="p">,</span>
+        <span class="n">now</span><span class="p">,</span>
+        <span class="n">now</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">fmt</span><span class="o">.</span><span class="n">Errorf</span><span class="p">(</span><span class="s">"error creando usuario: %w"</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="n">id</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">result</span><span class="o">.</span><span class="n">LastInsertId</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">fmt</span><span class="o">.</span><span class="n">Errorf</span><span class="p">(</span><span class="s">"error obteniendo ID: %w"</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="n">u</span><span class="o">.</span><span class="n">ID</span> <span class="o">=</span> <span class="n">id</span>
+    <span class="n">u</span><span class="o">.</span><span class="n">CreatedAt</span> <span class="o">=</span> <span class="n">now</span>
+    <span class="n">u</span><span class="o">.</span><span class="n">UpdatedAt</span> <span class="o">=</span> <span class="n">now</span>
+    <span class="k">return</span> <span class="no">nil</span>
+<span class="p">}</span>
+
+<span class="c">// GetUserByID obtiene un usuario por su ID</span>
+<span class="k">func</span> <span class="p">(</span><span class="n">r</span> <span class="o">*</span><span class="n">Repository</span><span class="p">)</span> <span class="n">GetUserByID</span><span class="p">(</span><span class="n">ctx</span> <span class="n">context</span><span class="o">.</span><span class="n">Context</span><span class="p">,</span> <span class="n">id</span> <span class="kt">int64</span><span class="p">)</span> <span class="p">(</span><span class="o">*</span><span class="n">Usuario</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">query</span> <span class="o">:=</span> <span class="s">`
+        SELECT id, nombre, email, edad, created_at, updated_at
+        FROM usuarios
+        WHERE id = ?
+    `</span>
+    
+    <span class="n">u</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="n">Usuario</span><span class="p">{}</span>
+    <span class="n">err</span> <span class="o">:=</span> <span class="n">r</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">QueryRowContext</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">id</span><span class="p">)</span><span class="o">.</span><span class="n">Scan</span><span class="p">(</span>
+        <span class="o">&amp;</span><span class="n">u</span><span class="o">.</span><span class="n">ID</span><span class="p">,</span>
+        <span class="o">&amp;</span><span class="n">u</span><span class="o">.</span><span class="n">Nombre</span><span class="p">,</span>
+        <span class="o">&amp;</span><span class="n">u</span><span class="o">.</span><span class="n">Email</span><span class="p">,</span>
+        <span class="o">&amp;</span><span class="n">u</span><span class="o">.</span><span class="n">Edad</span><span class="p">,</span>
+        <span class="o">&amp;</span><span class="n">u</span><span class="o">.</span><span class="n">CreatedAt</span><span class="p">,</span>
+        <span class="o">&amp;</span><span class="n">u</span><span class="o">.</span><span class="n">UpdatedAt</span><span class="p">,</span>
+    <span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">err</span> <span class="o">==</span> <span class="n">sql</span><span class="o">.</span><span class="n">ErrNoRows</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="no">nil</span><span class="p">,</span> <span class="n">fmt</span><span class="o">.</span><span class="n">Errorf</span><span class="p">(</span><span class="s">"usuario no encontrado: %d"</span><span class="p">,</span> <span class="n">id</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="no">nil</span><span class="p">,</span> <span class="n">fmt</span><span class="o">.</span><span class="n">Errorf</span><span class="p">(</span><span class="s">"error consultando usuario: %w"</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span>
+    <span class="p">}</span>
+    
+    <span class="k">return</span> <span class="n">u</span><span class="p">,</span> <span class="no">nil</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="22-transacciones">2.2 Transacciones</h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// filepath: /home/miguel/Documentos/Programación/Paquetes de go explicados/ejemplos/database/transactions.go</span>
+<span class="k">package</span> <span class="n">database</span>
+
+<span class="k">import</span> <span class="p">(</span>
+    <span class="s">"context"</span>
+    <span class="s">"database/sql"</span>
+    <span class="s">"fmt"</span>
+<span class="p">)</span>
+
+<span class="k">type</span> <span class="n">Transferencia</span> <span class="k">struct</span> <span class="p">{</span>
+    <span class="n">OrigenID</span>      <span class="kt">int64</span>
+    <span class="n">DestinoID</span>     <span class="kt">int64</span>
+    <span class="n">Monto</span>         <span class="kt">float64</span>
+    <span class="n">Descripcion</span>   <span class="kt">string</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="p">(</span><span class="n">r</span> <span class="o">*</span><span class="n">Repository</span><span class="p">)</span> <span class="n">RealizarTransferencia</span><span class="p">(</span><span class="n">ctx</span> <span class="n">context</span><span class="o">.</span><span class="n">Context</span><span class="p">,</span> <span class="n">t</span> <span class="o">*</span><span class="n">Transferencia</span><span class="p">)</span> <span class="kt">error</span> <span class="p">{</span>
+    <span class="n">tx</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">r</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">BeginTx</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">sql</span><span class="o">.</span><span class="n">TxOptions</span><span class="p">{</span>
+        <span class="n">Isolation</span><span class="o">:</span> <span class="n">sql</span><span class="o">.</span><span class="n">LevelSerializable</span><span class="p">,</span>
+    <span class="p">})</span>
+    <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">fmt</span><span class="o">.</span><span class="n">Errorf</span><span class="p">(</span><span class="s">"error iniciando transacción: %w"</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="k">defer</span> <span class="n">tx</span><span class="o">.</span><span class="n">Rollback</span><span class="p">()</span>
+
+    <span class="c">// Verificar saldo origen</span>
+    <span class="k">var</span> <span class="n">saldoOrigen</span> <span class="kt">float64</span>
+    <span class="n">err</span> <span class="o">=</span> <span class="n">tx</span><span class="o">.</span><span class="n">QueryRowContext</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span>
+        <span class="s">"SELECT saldo FROM cuentas WHERE id = ? FOR UPDATE"</span><span class="p">,</span>
+        <span class="n">t</span><span class="o">.</span><span class="n">OrigenID</span><span class="p">,</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">Scan</span><span class="p">(</span><span class="o">&amp;</span><span class="n">saldoOrigen</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">fmt</span><span class="o">.</span><span class="n">Errorf</span><span class="p">(</span><span class="s">"error verificando saldo origen: %w"</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="n">saldoOrigen</span> <span class="o">&lt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Monto</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">fmt</span><span class="o">.</span><span class="n">Errorf</span><span class="p">(</span><span class="s">"saldo insuficiente"</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="c">// Actualizar saldos</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">err</span> <span class="o">=</span> <span class="n">tx</span><span class="o">.</span><span class="n">ExecContext</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span>
+        <span class="s">"UPDATE cuentas SET saldo = saldo - ? WHERE id = ?"</span><span class="p">,</span>
+        <span class="n">t</span><span class="o">.</span><span class="n">Monto</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">OrigenID</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">fmt</span><span class="o">.</span><span class="n">Errorf</span><span class="p">(</span><span class="s">"error actualizando saldo origen: %w"</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="n">_</span><span class="p">,</span> <span class="n">err</span> <span class="o">=</span> <span class="n">tx</span><span class="o">.</span><span class="n">ExecContext</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span>
+        <span class="s">"UPDATE cuentas SET saldo = saldo + ? WHERE id = ?"</span><span class="p">,</span>
+        <span class="n">t</span><span class="o">.</span><span class="n">Monto</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">DestinoID</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">fmt</span><span class="o">.</span><span class="n">Errorf</span><span class="p">(</span><span class="s">"error actualizando saldo destino: %w"</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="c">// Registrar movimiento</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">err</span> <span class="o">=</span> <span class="n">tx</span><span class="o">.</span><span class="n">ExecContext</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span>
+        <span class="s">`INSERT INTO movimientos (origen_id, destino_id, monto, descripcion)
+         VALUES (?, ?, ?, ?)`</span><span class="p">,</span>
+        <span class="n">t</span><span class="o">.</span><span class="n">OrigenID</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">DestinoID</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">Monto</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">Descripcion</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">fmt</span><span class="o">.</span><span class="n">Errorf</span><span class="p">(</span><span class="s">"error registrando movimiento: %w"</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">tx</span><span class="o">.</span><span class="n">Commit</span><span class="p">();</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">fmt</span><span class="o">.</span><span class="n">Errorf</span><span class="p">(</span><span class="s">"error commit transacción: %w"</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="no">nil</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="3-consultas-avanzadas">3. Consultas Avanzadas</h2>
+
+<h3 id="31-consultas-con-joins">3.1 Consultas con Joins</h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// filepath: /home/miguel/Documentos/Programación/Paquetes de go explicados/ejemplos/database/queries.go</span>
+<span class="k">package</span> <span class="n">database</span>
+
+<span class="k">type</span> <span class="n">ProductoDetalle</span> <span class="k">struct</span> <span class="p">{</span>
+    <span class="n">Producto</span>
+    <span class="n">CategoriaNombre</span> <span class="kt">string</span>    <span class="s">`db:"categoria_nombre"`</span>
+    <span class="n">Proveedor</span>      <span class="kt">string</span>    <span class="s">`db:"proveedor"`</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="p">(</span><span class="n">r</span> <span class="o">*</span><span class="n">Repository</span><span class="p">)</span> <span class="n">GetProductosDetallados</span><span class="p">(</span><span class="n">ctx</span> <span class="n">context</span><span class="o">.</span><span class="n">Context</span><span class="p">)</span> <span class="p">([]</span><span class="n">ProductoDetalle</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">query</span> <span class="o">:=</span> <span class="s">`
+        SELECT 
+            p.id,
+            p.nombre,
+            p.precio,
+            p.stock,
+            p.categoria_id,
+            c.nombre as categoria_nombre,
+            prov.nombre as proveedor,
+            p.created_at,
+            p.updated_at
+        FROM productos p
+        LEFT JOIN categorias c ON p.categoria_id = c.id
+        LEFT JOIN proveedores prov ON p.proveedor_id = prov.id
+        WHERE p.stock &gt; 0
+        ORDER BY p.nombre
+    `</span>
+
+    <span class="n">rows</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">r</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">QueryContext</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">query</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="no">nil</span><span class="p">,</span> <span class="n">fmt</span><span class="o">.</span><span class="n">Errorf</span><span class="p">(</span><span class="s">"error consultando productos: %w"</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="k">defer</span> <span class="n">rows</span><span class="o">.</span><span class="n">Close</span><span class="p">()</span>
+
+    <span class="k">var</span> <span class="n">productos</span> <span class="p">[]</span><span class="n">ProductoDetalle</span>
+    <span class="k">for</span> <span class="n">rows</span><span class="o">.</span><span class="n">Next</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">var</span> <span class="n">p</span> <span class="n">ProductoDetalle</span>
+        <span class="n">err</span> <span class="o">:=</span> <span class="n">rows</span><span class="o">.</span><span class="n">Scan</span><span class="p">(</span>
+            <span class="o">&amp;</span><span class="n">p</span><span class="o">.</span><span class="n">ID</span><span class="p">,</span>
+            <span class="o">&amp;</span><span class="n">p</span><span class="o">.</span><span class="n">Nombre</span><span class="p">,</span>
+            <span class="o">&amp;</span><span class="n">p</span><span class="o">.</span><span class="n">Precio</span><span class="p">,</span>
+            <span class="o">&amp;</span><span class="n">p</span><span class="o">.</span><span class="n">Stock</span><span class="p">,</span>
+            <span class="o">&amp;</span><span class="n">p</span><span class="o">.</span><span class="n">CategoriaID</span><span class="p">,</span>
+            <span class="o">&amp;</span><span class="n">p</span><span class="o">.</span><span class="n">CategoriaNombre</span><span class="p">,</span>
+            <span class="o">&amp;</span><span class="n">p</span><span class="o">.</span><span class="n">Proveedor</span><span class="p">,</span>
+            <span class="o">&amp;</span><span class="n">p</span><span class="o">.</span><span class="n">CreatedAt</span><span class="p">,</span>
+            <span class="o">&amp;</span><span class="n">p</span><span class="o">.</span><span class="n">UpdatedAt</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="no">nil</span><span class="p">,</span> <span class="n">fmt</span><span class="o">.</span><span class="n">Errorf</span><span class="p">(</span><span class="s">"error escaneando producto: %w"</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span>
+        <span class="p">}</span>
+        <span class="n">productos</span> <span class="o">=</span> <span class="nb">append</span><span class="p">(</span><span class="n">productos</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">rows</span><span class="o">.</span><span class="n">Err</span><span class="p">();</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="no">nil</span><span class="p">,</span> <span class="n">fmt</span><span class="o">.</span><span class="n">Errorf</span><span class="p">(</span><span class="s">"error iterando resultados: %w"</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">productos</span><span class="p">,</span> <span class="no">nil</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="4-mejores-prácticas">4. Mejores Prácticas</h2>
+
+<ol>
+  <li><strong>Manejo de Conexiones</strong>
+    <ul>
+      <li>Usar un pool de conexiones</li>
+      <li>Configurar timeouts apropiados</li>
+      <li>Cerrar recursos adecuadamente</li>
+    </ul>
+  </li>
+  <li><strong>Seguridad</strong>
+    <ul>
+      <li>Usar consultas preparadas</li>
+      <li>Escapar valores adecuadamente</li>
+      <li>Implementar control de acceso</li>
+    </ul>
+  </li>
+  <li><strong>Rendimiento</strong>
+    <ul>
+      <li>Indexar columnas frecuentemente consultadas</li>
+      <li>Optimizar consultas complejas</li>
+      <li>Monitorear tiempos de respuesta</li>
+    </ul>
+  </li>
+</ol>
+
+<h2 id="5-referencias">5. Referencias</h2>
+
+<ul>
+  <li><a href="https://golang.org/pkg/database/sql/">Documentación oficial de database/sql</a></li>
+  <li><a href="http://go-database-sql.org/">Go Database/SQL tutorial</a></li>
+  <li><a href="https://use-the-index-luke.com/">Effective SQL</a></li>
+</ul>
+
+            </main>
+        </div>
+        
+        <!-- Componente flotante de GitHub -->
+<div class="github-floating">
+    <a href="https://github.com/" target="_blank" rel="noopener noreferrer" class="github-link" title="Ver en GitHub">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-github">
+            <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+        </svg>
+    </a>
+    
+    
+    <a href="https://github.com//MiguelP-Dev.github.io/blob/main/_pages/paquetes/database.md" target="_blank" rel="noopener noreferrer" class="edit-link" title="Editar esta página">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-2">
+            <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+        </svg>
+    </a>
+    
+</div>
+
+<style>
+    /* Estilos del componente SVG */
+    .github-corner:hover .octo-arm {
+        animation: octocat-wave 560ms ease-in-out;
+    }
+    
+    @keyframes octocat-wave {
+        0%, 100% { transform: rotate(0); }
+        20%, 60% { transform: rotate(-25deg); }
+        40%, 80% { transform: rotate(10deg); }
+    }
+    
+    @media (max-width: 500px) {
+        .github-corner:hover .octo-arm {
+            animation: none;
+        }
+        .github-corner .octo-arm {
+            animation: octocat-wave 560ms ease-in-out;
+        }
+    }
+</style>
+    </div>
+    
+    <script src="/assets/js/scripts.js"></script>
+</body>
+</html>

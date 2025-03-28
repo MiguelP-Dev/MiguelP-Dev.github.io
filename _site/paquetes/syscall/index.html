@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>syscall | Miguel's Programing Notes</title>
+    <link rel="stylesheet" href="/assets/css/styles.css">
+</head>
+<body>
+    <div class="app">
+        <nav class="navbar">
+    <div class="nav-container">
+        <a href="/" class="nav-brand">
+            Miguel's Programming Notes
+        </a>
+
+        <div class="nav-sections">
+            
+                
+                
+                
+                <a href="/paquetes/"
+                    class="nav-section active"
+                    data-section="paquetes">
+                    📦 Paquetes
+                </a>
+            
+                
+                
+                
+                <a href="/ejemplos/"
+                    class="nav-section "
+                    data-section="ejemplos">
+                    🧩 Ejemplos
+                </a>
+            
+        </div>
+    </div>
+</nav>
+        
+        <div class="container">
+            <button class="menu-toggle" aria-label="Abrir menú">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            
+            <aside class="sidebar" id="dynamic-sidebar">
+    <div class="sidebar-header">
+        <h3 class="sidebar-title">Miguel's Programming Notes</h3>
+    </div>
+    
+    <div class="sidebar-content">
+        
+            
+                <h3 class="sidebar-title">📦 Paquetes</h3>
+                <nav class="sidebar-nav">
+                    
+                        <a href="/paquetes/fmt/"
+                            class="sidebar-item "
+                            data-item="fmt">
+                            fmt
+                        </a>
+                    
+                        <a href="/paquetes/net/"
+                            class="sidebar-item "
+                            data-item="net-http">
+                            net/http
+                        </a>
+                    
+                        <a href="/paquetes/encoding/"
+                            class="sidebar-item "
+                            data-item="encoding">
+                            encoding
+                        </a>
+                    
+                </nav>
+            
+        
+            
+        
+    </div>
+</aside>
+            
+            <main class="content">
+                <h1 id="paquete-syscall-en-go">Paquete <code class="language-plaintext highlighter-rouge">syscall</code> en Go</h1>
+
+<p>El paquete <code class="language-plaintext highlighter-rouge">syscall</code> proporciona acceso directo a las llamadas del sistema en Go. Esta guía ampliada profundiza en su uso con ejemplos avanzados, mejores prácticas y consideraciones de portabilidad.</p>
+
+<hr />
+
+<h2 id="funciones-clave">Funciones Clave</h2>
+
+<h3 id="1-syscallopen">1. <strong><code class="language-plaintext highlighter-rouge">syscall.Open</code></strong></h3>
+
+<p><strong>Descripción</strong>: Abre o crea un archivo, devolviendo un descriptor de archivo.</p>
+
+<p><strong>Ejemplo con Combinación de Flags y Permisos</strong>:</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>  
+
+<span class="k">import</span> <span class="p">(</span>  
+    <span class="s">"fmt"</span>  
+    <span class="s">"syscall"</span>  
+<span class="p">)</span>  
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>  
+    <span class="c">// Abrir en modo lectura/escritura, crear si no existe, truncar y añadir al final  </span>
+    <span class="n">fd</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">syscall</span><span class="o">.</span><span class="n">Open</span><span class="p">(</span>  
+        <span class="s">"datos.log"</span><span class="p">,</span>  
+        <span class="n">syscall</span><span class="o">.</span><span class="n">O_RDWR</span><span class="o">|</span><span class="n">syscall</span><span class="o">.</span><span class="n">O_CREAT</span><span class="o">|</span><span class="n">syscall</span><span class="o">.</span><span class="n">O_TRUNC</span><span class="o">|</span><span class="n">syscall</span><span class="o">.</span><span class="n">O_APPEND</span><span class="p">,</span>  
+        <span class="kt">uint32</span><span class="p">(</span><span class="n">syscall</span><span class="o">.</span><span class="n">S_IRUSR</span><span class="o">|</span><span class="n">syscall</span><span class="o">.</span><span class="n">S_IWUSR</span><span class="p">),</span> <span class="c">// 0600  </span>
+    <span class="p">)</span>  
+    <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>  
+        <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Error al abrir:"</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span>  
+        <span class="k">return</span>  
+    <span class="p">}</span>  
+    <span class="k">defer</span> <span class="n">syscall</span><span class="o">.</span><span class="n">Close</span><span class="p">(</span><span class="n">fd</span><span class="p">)</span>  
+
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Descriptor:"</span><span class="p">,</span> <span class="n">fd</span><span class="p">)</span>  
+<span class="p">}</span>  
+</code></pre></div></div>
+
+<p><strong>Notas</strong>:</p>
+
+<ul>
+  <li>Las banderas se combinan con <code class="language-plaintext highlighter-rouge">|</code>.</li>
+  <li>Los permisos siguen la notación octal (ej: <code class="language-plaintext highlighter-rouge">0600</code> = usuario tiene lectura/escritura).</li>
+</ul>
+
+<hr />
+
+<h3 id="2-syscallread-y-syscallwrite">2. <strong><code class="language-plaintext highlighter-rouge">syscall.Read</code> y <code class="language-plaintext highlighter-rouge">syscall.Write</code></strong></h3>
+
+<p><strong>Descripción</strong>: Lectura/escritura de bajo nivel con buffers.</p>
+
+<p><strong>Ejemplo con Lectura en Bucle y Escritura Segura</strong>:</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">leerEscribirArchivo</span><span class="p">()</span> <span class="p">{</span>  
+    <span class="n">fd</span><span class="p">,</span> <span class="n">_</span> <span class="o">:=</span> <span class="n">syscall</span><span class="o">.</span><span class="n">Open</span><span class="p">(</span><span class="s">"datos.bin"</span><span class="p">,</span> <span class="n">syscall</span><span class="o">.</span><span class="n">O_RDWR</span><span class="p">,</span> <span class="m">0600</span><span class="p">)</span>  
+    <span class="k">defer</span> <span class="n">syscall</span><span class="o">.</span><span class="n">Close</span><span class="p">(</span><span class="n">fd</span><span class="p">)</span>  
+
+    <span class="c">// Leer todo el contenido  </span>
+    <span class="k">var</span> <span class="n">buf</span> <span class="p">[</span><span class="m">4096</span><span class="p">]</span><span class="kt">byte</span>  
+    <span class="n">total</span> <span class="o">:=</span> <span class="m">0</span>  
+    <span class="k">for</span> <span class="p">{</span>  
+        <span class="n">n</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">syscall</span><span class="o">.</span><span class="n">Read</span><span class="p">(</span><span class="n">fd</span><span class="p">,</span> <span class="n">buf</span><span class="p">[</span><span class="n">total</span><span class="o">:</span><span class="p">])</span>  
+        <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="o">||</span> <span class="n">n</span> <span class="o">==</span> <span class="m">0</span> <span class="p">{</span>  
+            <span class="k">break</span>  
+        <span class="p">}</span>  
+        <span class="n">total</span> <span class="o">+=</span> <span class="n">n</span>  
+    <span class="p">}</span>  
+
+    <span class="c">// Escribir datos cifrados  </span>
+    <span class="n">datos</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">{</span><span class="m">0x48</span><span class="p">,</span> <span class="m">0x65</span><span class="p">,</span> <span class="m">0x6c</span><span class="p">,</span> <span class="m">0x6c</span><span class="p">,</span> <span class="m">0x6f</span><span class="p">}</span> <span class="c">// "Hello"  </span>
+    <span class="k">if</span> <span class="n">_</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">syscall</span><span class="o">.</span><span class="n">Write</span><span class="p">(</span><span class="n">fd</span><span class="p">,</span> <span class="n">datos</span><span class="p">);</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>  
+        <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Error al escribir:"</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span>  
+    <span class="p">}</span>  
+<span class="p">}</span>  
+</code></pre></div></div>
+
+<hr />
+
+<h3 id="3-syscallexec">3. <strong><code class="language-plaintext highlighter-rouge">syscall.Exec</code></strong></h3>
+
+<p><strong>Descripción</strong>: Reemplaza el proceso actual.</p>
+
+<p><strong>Ejemplo con Variables de Entorno y Argumentos Dinámicos</strong>:</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">ejecutarProceso</span><span class="p">()</span> <span class="p">{</span>  
+    <span class="n">argv</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">string</span><span class="p">{</span><span class="s">"/usr/bin/env"</span><span class="p">,</span> <span class="s">"bash"</span><span class="p">,</span> <span class="s">"-c"</span><span class="p">,</span> <span class="s">"echo $USER"</span><span class="p">}</span>  
+    <span class="n">env</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">string</span><span class="p">{</span><span class="s">"USER=usuario_go"</span><span class="p">,</span> <span class="s">"PATH=/usr/bin"</span><span class="p">}</span>  
+
+    <span class="n">err</span> <span class="o">:=</span> <span class="n">syscall</span><span class="o">.</span><span class="n">Exec</span><span class="p">(</span>  
+        <span class="s">"/usr/bin/env"</span><span class="p">,</span>  
+        <span class="n">argv</span><span class="p">,</span>  
+        <span class="n">env</span><span class="p">,</span>  
+    <span class="p">)</span>  
+    <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>  
+        <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Error al ejecutar:"</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span>  
+    <span class="p">}</span>  
+<span class="p">}</span>  
+</code></pre></div></div>
+
+<p><strong>Advertencia</strong>: Tras <code class="language-plaintext highlighter-rouge">Exec</code>, el proceso original termina.</p>
+
+<hr />
+
+<h3 id="4-syscallsocket-y-syscallconnect">4. <strong><code class="language-plaintext highlighter-rouge">syscall.Socket</code> y <code class="language-plaintext highlighter-rouge">syscall.Connect</code></strong></h3>
+
+<p><strong>Descripción</strong>: Comunicación de red de bajo nivel.</p>
+
+<p><strong>Ejemplo de Cliente TCP</strong>:</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">conectarServidor</span><span class="p">()</span> <span class="p">{</span>  
+    <span class="n">fd</span><span class="p">,</span> <span class="n">_</span> <span class="o">:=</span> <span class="n">syscall</span><span class="o">.</span><span class="n">Socket</span><span class="p">(</span><span class="n">syscall</span><span class="o">.</span><span class="n">AF_INET</span><span class="p">,</span> <span class="n">syscall</span><span class="o">.</span><span class="n">SOCK_STREAM</span><span class="p">,</span> <span class="m">0</span><span class="p">)</span>  
+
+    <span class="n">addr</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="n">syscall</span><span class="o">.</span><span class="n">SockaddrInet4</span><span class="p">{</span>  
+        <span class="n">Port</span><span class="o">:</span> <span class="m">8080</span><span class="p">,</span>  
+        <span class="n">Addr</span><span class="o">:</span> <span class="p">[</span><span class="m">4</span><span class="p">]</span><span class="kt">byte</span><span class="p">{</span><span class="m">127</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">1</span><span class="p">},</span>  
+    <span class="p">}</span>  
+
+    <span class="k">if</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">syscall</span><span class="o">.</span><span class="n">Connect</span><span class="p">(</span><span class="n">fd</span><span class="p">,</span> <span class="n">addr</span><span class="p">);</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>  
+        <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Error de conexión:"</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span>  
+        <span class="k">return</span>  
+    <span class="p">}</span>  
+
+    <span class="n">mensaje</span> <span class="o">:=</span> <span class="s">"GET / HTTP/1.1</span><span class="se">\r\n\r\n</span><span class="s">"</span>  
+    <span class="n">syscall</span><span class="o">.</span><span class="n">Write</span><span class="p">(</span><span class="n">fd</span><span class="p">,</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">(</span><span class="n">mensaje</span><span class="p">))</span>  
+
+    <span class="c">// Leer respuesta  </span>
+    <span class="n">buf</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">byte</span><span class="p">,</span> <span class="m">1024</span><span class="p">)</span>  
+    <span class="n">n</span><span class="p">,</span> <span class="n">_</span> <span class="o">:=</span> <span class="n">syscall</span><span class="o">.</span><span class="n">Read</span><span class="p">(</span><span class="n">fd</span><span class="p">,</span> <span class="n">buf</span><span class="p">)</span>  
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Respuesta:"</span><span class="p">,</span> <span class="kt">string</span><span class="p">(</span><span class="n">buf</span><span class="p">[</span><span class="o">:</span><span class="n">n</span><span class="p">]))</span>  
+<span class="p">}</span>  
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="constantes-y-combinaciones-comunes">Constantes y Combinaciones Comunes</h2>
+
+<h3 id="banderas-de-apertura-de-archivos">Banderas de Apertura de Archivos</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Combinación</th>
+      <th>Comportamiento</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">O_RDONLY + O_CREAT</code></td>
+      <td>Lectura, crea si no existe</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">O_WRONLY + O_TRUNC</code></td>
+      <td>Escritura, trunca el archivo</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">O_RDWR + O_APPEND</code></td>
+      <td>Lectura/escritura, añade al final</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Ejemplo de Permisos</strong>:</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">permisos</span> <span class="o">:=</span> <span class="kt">uint32</span><span class="p">(</span><span class="n">syscall</span><span class="o">.</span><span class="n">S_IRUSR</span> <span class="o">|</span> <span class="n">syscall</span><span class="o">.</span><span class="n">S_IWGRP</span> <span class="o">|</span> <span class="n">syscall</span><span class="o">.</span><span class="n">S_IROTH</span><span class="p">)</span> <span class="c">// 0640  </span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="mejores-prácticas">Mejores Prácticas</h2>
+
+<ol>
+  <li><strong>Portabilidad</strong>:
+    <ul>
+      <li>El paquete <code class="language-plaintext highlighter-rouge">syscall</code> varía entre sistemas operativos. Usa <code class="language-plaintext highlighter-rouge">golang.org/x/sys/unix</code> para código multiplataforma.</li>
+      <li>
+        <p>Ejemplo para Linux vs Windows:</p>
+
+        <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// En Linux  </span>
+<span class="n">syscall</span><span class="o">.</span><span class="n">Syscall</span><span class="p">(</span><span class="n">syscall</span><span class="o">.</span><span class="n">SYS_GETPID</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">0</span><span class="p">)</span>  
+
+<span class="c">// En Windows (no compatible)  </span>
+</code></pre></div>        </div>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p><strong>Manejo de Errores</strong>:</p>
+
+    <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="n">_</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">syscall</span><span class="o">.</span><span class="n">Write</span><span class="p">(</span><span class="n">fd</span><span class="p">,</span> <span class="n">data</span><span class="p">);</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>  
+    <span class="k">if</span> <span class="n">err</span> <span class="o">==</span> <span class="n">syscall</span><span class="o">.</span><span class="n">EPIPE</span> <span class="p">{</span>  
+        <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Error: tubería rota"</span><span class="p">)</span>  
+    <span class="p">}</span>  
+<span class="p">}</span>  
+</code></pre></div>    </div>
+  </li>
+  <li><strong>Alternativas de Alto Nivel</strong>:
+    <ul>
+      <li>Usa <code class="language-plaintext highlighter-rouge">os.Open</code> en lugar de <code class="language-plaintext highlighter-rouge">syscall.Open</code> para manejo automático de errores y cierre.</li>
+      <li>Para procesos, prefiere <code class="language-plaintext highlighter-rouge">os/exec</code>.</li>
+    </ul>
+  </li>
+</ol>
+
+<hr />
+
+<h2 id="casos-de-uso-avanzados">Casos de Uso Avanzados</h2>
+
+<h3 id="1-mapeo-de-memoria-con-syscallmmap">1. <strong>Mapeo de Memoria con <code class="language-plaintext highlighter-rouge">syscall.Mmap</code></strong></h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">mapearArchivo</span><span class="p">()</span> <span class="p">{</span>  
+    <span class="n">fd</span><span class="p">,</span> <span class="n">_</span> <span class="o">:=</span> <span class="n">syscall</span><span class="o">.</span><span class="n">Open</span><span class="p">(</span><span class="s">"datos.bin"</span><span class="p">,</span> <span class="n">syscall</span><span class="o">.</span><span class="n">O_RDWR</span><span class="p">,</span> <span class="m">0600</span><span class="p">)</span>  
+    <span class="k">defer</span> <span class="n">syscall</span><span class="o">.</span><span class="n">Close</span><span class="p">(</span><span class="n">fd</span><span class="p">)</span>  
+
+    <span class="c">// Mapear 1KB del archivo  </span>
+    <span class="n">data</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">syscall</span><span class="o">.</span><span class="n">Mmap</span><span class="p">(</span>  
+        <span class="n">fd</span><span class="p">,</span>  
+        <span class="m">0</span><span class="p">,</span>  
+        <span class="m">1024</span><span class="p">,</span>  
+        <span class="n">syscall</span><span class="o">.</span><span class="n">PROT_READ</span><span class="o">|</span><span class="n">syscall</span><span class="o">.</span><span class="n">PROT_WRITE</span><span class="p">,</span>  
+        <span class="n">syscall</span><span class="o">.</span><span class="n">MAP_SHARED</span><span class="p">,</span>  
+    <span class="p">)</span>  
+    <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>  
+        <span class="nb">panic</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>  
+    <span class="p">}</span>  
+    <span class="k">defer</span> <span class="n">syscall</span><span class="o">.</span><span class="n">Munmap</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>  
+
+    <span class="c">// Modificar contenido directamente  </span>
+    <span class="nb">copy</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">(</span><span class="s">"Nuevos datos"</span><span class="p">))</span>  
+<span class="p">}</span>  
+</code></pre></div></div>
+
+<h3 id="2-señales-del-sistema-con-syscallkill">2. <strong>Señales del Sistema con <code class="language-plaintext highlighter-rouge">syscall.Kill</code></strong></h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">enviarSenal</span><span class="p">()</span> <span class="p">{</span>  
+    <span class="n">pid</span> <span class="o">:=</span> <span class="m">12345</span> <span class="c">// ID del proceso  </span>
+    <span class="n">err</span> <span class="o">:=</span> <span class="n">syscall</span><span class="o">.</span><span class="n">Kill</span><span class="p">(</span><span class="n">pid</span><span class="p">,</span> <span class="n">syscall</span><span class="o">.</span><span class="n">SIGTERM</span><span class="p">)</span>  
+    <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>  
+        <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Error al enviar señal:"</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span>  
+    <span class="p">}</span>  
+<span class="p">}</span>  
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="advertencias-comunes">Advertencias Comunes</h2>
+
+<ol>
+  <li>
+    <p><strong>Fugas de Descriptores</strong>:</p>
+
+    <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">fd</span><span class="p">,</span> <span class="n">_</span> <span class="o">:=</span> <span class="n">syscall</span><span class="o">.</span><span class="n">Open</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>  
+<span class="c">// Olvidar syscall.Close(fd) → Fuga de recurso  </span>
+</code></pre></div>    </div>
+
+    <p><strong>Solución</strong>: Usar <code class="language-plaintext highlighter-rouge">defer</code> sistemáticamente.</p>
+  </li>
+  <li><strong>Uso en Windows</strong>:
+    <ul>
+      <li>Muchas funciones de <code class="language-plaintext highlighter-rouge">syscall</code> (ej: <code class="language-plaintext highlighter-rouge">SockaddrInet4</code>) no son compatibles.</li>
+    </ul>
+  </li>
+  <li><strong>Bloqueos en Llamadas de Red</strong>:
+    <ul>
+      <li>Las operaciones como <code class="language-plaintext highlighter-rouge">Read</code> en sockets pueden bloquearse indefinidamente.</li>
+    </ul>
+  </li>
+</ol>
+
+<hr />
+
+<h2 id="conclusión">Conclusión</h2>
+
+<p>El paquete <code class="language-plaintext highlighter-rouge">syscall</code> es una herramienta poderosa para operaciones de bajo nivel, pero requiere un manejo cuidadoso de recursos y errores. Para la mayoría de casos, se recomienda usar paquetes de nivel superior como <code class="language-plaintext highlighter-rouge">os</code> o <code class="language-plaintext highlighter-rouge">net</code>, reservando <code class="language-plaintext highlighter-rouge">syscall</code> para situaciones que requieran control absoluto del sistema.</p>
+
+            </main>
+        </div>
+        
+        <!-- Componente flotante de GitHub -->
+<div class="github-floating">
+    <a href="https://github.com/" target="_blank" rel="noopener noreferrer" class="github-link" title="Ver en GitHub">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-github">
+            <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+        </svg>
+    </a>
+    
+    
+    <a href="https://github.com//MiguelP-Dev.github.io/blob/main/_pages/paquetes/syscall.md" target="_blank" rel="noopener noreferrer" class="edit-link" title="Editar esta página">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-2">
+            <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+        </svg>
+    </a>
+    
+</div>
+
+<style>
+    /* Estilos del componente SVG */
+    .github-corner:hover .octo-arm {
+        animation: octocat-wave 560ms ease-in-out;
+    }
+    
+    @keyframes octocat-wave {
+        0%, 100% { transform: rotate(0); }
+        20%, 60% { transform: rotate(-25deg); }
+        40%, 80% { transform: rotate(10deg); }
+    }
+    
+    @media (max-width: 500px) {
+        .github-corner:hover .octo-arm {
+            animation: none;
+        }
+        .github-corner .octo-arm {
+            animation: octocat-wave 560ms ease-in-out;
+        }
+    }
+</style>
+    </div>
+    
+    <script src="/assets/js/scripts.js"></script>
+</body>
+</html>

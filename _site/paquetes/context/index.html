@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>context | Miguel's Programing Notes</title>
+    <link rel="stylesheet" href="/assets/css/styles.css">
+</head>
+<body>
+    <div class="app">
+        <nav class="navbar">
+    <div class="nav-container">
+        <a href="/" class="nav-brand">
+            Miguel's Programming Notes
+        </a>
+
+        <div class="nav-sections">
+            
+                
+                
+                
+                <a href="/paquetes/"
+                    class="nav-section active"
+                    data-section="paquetes">
+                    📦 Paquetes
+                </a>
+            
+                
+                
+                
+                <a href="/ejemplos/"
+                    class="nav-section "
+                    data-section="ejemplos">
+                    🧩 Ejemplos
+                </a>
+            
+        </div>
+    </div>
+</nav>
+        
+        <div class="container">
+            <button class="menu-toggle" aria-label="Abrir menú">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            
+            <aside class="sidebar" id="dynamic-sidebar">
+    <div class="sidebar-header">
+        <h3 class="sidebar-title">Miguel's Programming Notes</h3>
+    </div>
+    
+    <div class="sidebar-content">
+        
+            
+                <h3 class="sidebar-title">📦 Paquetes</h3>
+                <nav class="sidebar-nav">
+                    
+                        <a href="/paquetes/fmt/"
+                            class="sidebar-item "
+                            data-item="fmt">
+                            fmt
+                        </a>
+                    
+                        <a href="/paquetes/net/"
+                            class="sidebar-item "
+                            data-item="net-http">
+                            net/http
+                        </a>
+                    
+                        <a href="/paquetes/encoding/"
+                            class="sidebar-item "
+                            data-item="encoding">
+                            encoding
+                        </a>
+                    
+                </nav>
+            
+        
+            
+        
+    </div>
+</aside>
+            
+            <main class="content">
+                <h1 id="paquete-context-en-go">Paquete context en Go</h1>
+
+<p>El paquete <code class="language-plaintext highlighter-rouge">context</code> en Go es fundamental para el manejo de cancelaciones, timeouts y valores a través de la jerarquía de llamadas. Este documento explora en detalle sus características y usos comunes.</p>
+
+<h2 id="1-conceptos-básicos">1. Conceptos Básicos</h2>
+
+<h3 id="11-contextos-base">1.1 Contextos Base</h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// Contextos base sin valores ni cancelación</span>
+<span class="k">func</span> <span class="n">ejemplosContextosBase</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c">// Background - para uso general</span>
+    <span class="n">ctx</span> <span class="o">:=</span> <span class="n">context</span><span class="o">.</span><span class="n">Background</span><span class="p">()</span>
+    
+    <span class="c">// TODO - para cuando aún no está claro qué contexto usar</span>
+    <span class="n">ctxTodo</span> <span class="o">:=</span> <span class="n">context</span><span class="o">.</span><span class="n">TODO</span><span class="p">()</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="12-cancelación-manual">1.2 Cancelación Manual</h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">ejemploCancelacion</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c">// Crear contexto con cancelación</span>
+    <span class="n">ctx</span><span class="p">,</span> <span class="n">cancel</span> <span class="o">:=</span> <span class="n">context</span><span class="o">.</span><span class="n">WithCancel</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">Background</span><span class="p">())</span>
+    <span class="k">defer</span> <span class="n">cancel</span><span class="p">()</span>
+
+    <span class="c">// Ejecutar tarea en goroutine</span>
+    <span class="k">go</span> <span class="k">func</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">for</span> <span class="p">{</span>
+            <span class="k">select</span> <span class="p">{</span>
+            <span class="k">case</span> <span class="o">&lt;-</span><span class="n">ctx</span><span class="o">.</span><span class="n">Done</span><span class="p">()</span><span class="o">:</span>
+                <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Tarea cancelada"</span><span class="p">)</span>
+                <span class="k">return</span>
+            <span class="k">default</span><span class="o">:</span>
+                <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Trabajando..."</span><span class="p">)</span>
+                <span class="n">time</span><span class="o">.</span><span class="n">Sleep</span><span class="p">(</span><span class="m">500</span> <span class="o">*</span> <span class="n">time</span><span class="o">.</span><span class="n">Millisecond</span><span class="p">)</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}()</span>
+
+    <span class="c">// Simular trabajo por 2 segundos</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">Sleep</span><span class="p">(</span><span class="m">2</span> <span class="o">*</span> <span class="n">time</span><span class="o">.</span><span class="n">Second</span><span class="p">)</span>
+    <span class="n">cancel</span><span class="p">()</span> <span class="c">// Cancelar la tarea</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="2-timeouts-y-deadlines">2. Timeouts y Deadlines</h2>
+
+<h3 id="21-timeout-simple">2.1 Timeout Simple</h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">ejemploTimeout</span><span class="p">()</span> <span class="kt">error</span> <span class="p">{</span>
+    <span class="c">// Crear contexto con timeout de 2 segundos</span>
+    <span class="n">ctx</span><span class="p">,</span> <span class="n">cancel</span> <span class="o">:=</span> <span class="n">context</span><span class="o">.</span><span class="n">WithTimeout</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">Background</span><span class="p">(),</span> <span class="m">2</span><span class="o">*</span><span class="n">time</span><span class="o">.</span><span class="n">Second</span><span class="p">)</span>
+    <span class="k">defer</span> <span class="n">cancel</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">realizarOperacionLenta</span><span class="p">(</span><span class="n">ctx</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="n">realizarOperacionLenta</span><span class="p">(</span><span class="n">ctx</span> <span class="n">context</span><span class="o">.</span><span class="n">Context</span><span class="p">)</span> <span class="kt">error</span> <span class="p">{</span>
+    <span class="n">doneChan</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="k">chan</span> <span class="k">struct</span><span class="p">{})</span>
+    
+    <span class="k">go</span> <span class="k">func</span><span class="p">()</span> <span class="p">{</span>
+        <span class="c">// Simular operación lenta</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">Sleep</span><span class="p">(</span><span class="m">3</span> <span class="o">*</span> <span class="n">time</span><span class="o">.</span><span class="n">Second</span><span class="p">)</span>
+        <span class="nb">close</span><span class="p">(</span><span class="n">doneChan</span><span class="p">)</span>
+    <span class="p">}()</span>
+
+    <span class="k">select</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="o">&lt;-</span><span class="n">ctx</span><span class="o">.</span><span class="n">Done</span><span class="p">()</span><span class="o">:</span>
+        <span class="k">return</span> <span class="n">fmt</span><span class="o">.</span><span class="n">Errorf</span><span class="p">(</span><span class="s">"operación cancelada por timeout: %w"</span><span class="p">,</span> <span class="n">ctx</span><span class="o">.</span><span class="n">Err</span><span class="p">())</span>
+    <span class="k">case</span> <span class="o">&lt;-</span><span class="n">doneChan</span><span class="o">:</span>
+        <span class="k">return</span> <span class="no">nil</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="22-deadline-específica">2.2 Deadline Específica</h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">ejemploDeadline</span><span class="p">()</span> <span class="kt">error</span> <span class="p">{</span>
+    <span class="c">// Crear contexto que expira a medianoche</span>
+    <span class="n">midnight</span> <span class="o">:=</span> <span class="n">time</span><span class="o">.</span><span class="n">Now</span><span class="p">()</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="m">24</span> <span class="o">*</span> <span class="n">time</span><span class="o">.</span><span class="n">Hour</span><span class="p">)</span>
+    <span class="n">midnight</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">Date</span><span class="p">(</span>
+        <span class="n">midnight</span><span class="o">.</span><span class="n">Year</span><span class="p">(),</span>
+        <span class="n">midnight</span><span class="o">.</span><span class="n">Month</span><span class="p">(),</span>
+        <span class="n">midnight</span><span class="o">.</span><span class="n">Day</span><span class="p">(),</span>
+        <span class="m">0</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span>
+        <span class="n">midnight</span><span class="o">.</span><span class="n">Location</span><span class="p">(),</span>
+    <span class="p">)</span>
+
+    <span class="n">ctx</span><span class="p">,</span> <span class="n">cancel</span> <span class="o">:=</span> <span class="n">context</span><span class="o">.</span><span class="n">WithDeadline</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">Background</span><span class="p">(),</span> <span class="n">midnight</span><span class="p">)</span>
+    <span class="k">defer</span> <span class="n">cancel</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">realizarTareasProgramadas</span><span class="p">(</span><span class="n">ctx</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="3-valores-en-contexto">3. Valores en Contexto</h2>
+
+<h3 id="31-gestión-de-valores">3.1 Gestión de Valores</h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">type</span> <span class="n">ctxKey</span> <span class="kt">string</span>
+
+<span class="k">func</span> <span class="n">ejemploValores</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">const</span> <span class="p">(</span>
+        <span class="n">userIDKey</span>   <span class="n">ctxKey</span> <span class="o">=</span> <span class="s">"userID"</span>
+        <span class="n">sessionKey</span>  <span class="n">ctxKey</span> <span class="o">=</span> <span class="s">"session"</span>
+        <span class="n">requestKey</span>  <span class="n">ctxKey</span> <span class="o">=</span> <span class="s">"requestID"</span>
+    <span class="p">)</span>
+
+    <span class="n">ctx</span> <span class="o">:=</span> <span class="n">context</span><span class="o">.</span><span class="n">Background</span><span class="p">()</span>
+    <span class="n">ctx</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">WithValue</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">userIDKey</span><span class="p">,</span> <span class="s">"123"</span><span class="p">)</span>
+    <span class="n">ctx</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">WithValue</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">sessionKey</span><span class="p">,</span> <span class="s">"abc-456"</span><span class="p">)</span>
+    <span class="n">ctx</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">WithValue</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">requestKey</span><span class="p">,</span> <span class="s">"req-789"</span><span class="p">)</span>
+
+    <span class="n">procesarSolicitud</span><span class="p">(</span><span class="n">ctx</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="n">procesarSolicitud</span><span class="p">(</span><span class="n">ctx</span> <span class="n">context</span><span class="o">.</span><span class="n">Context</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c">// Extraer valores de forma segura</span>
+    <span class="k">if</span> <span class="n">userID</span><span class="p">,</span> <span class="n">ok</span> <span class="o">:=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">Value</span><span class="p">(</span><span class="n">userIDKey</span><span class="p">)</span><span class="o">.</span><span class="p">(</span><span class="kt">string</span><span class="p">);</span> <span class="n">ok</span> <span class="p">{</span>
+        <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Procesando solicitud para usuario: %s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">userID</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="4-patrones-de-uso-común">4. Patrones de Uso Común</h2>
+
+<h3 id="41-cliente-http-con-timeout">4.1 Cliente HTTP con Timeout</h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">clienteHTTPConTimeout</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">client</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="n">http</span><span class="o">.</span><span class="n">Client</span><span class="p">{}</span>
+    
+    <span class="n">ctx</span><span class="p">,</span> <span class="n">cancel</span> <span class="o">:=</span> <span class="n">context</span><span class="o">.</span><span class="n">WithTimeout</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">Background</span><span class="p">(),</span> <span class="m">5</span><span class="o">*</span><span class="n">time</span><span class="o">.</span><span class="n">Second</span><span class="p">)</span>
+    <span class="k">defer</span> <span class="n">cancel</span><span class="p">()</span>
+
+    <span class="n">req</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">http</span><span class="o">.</span><span class="n">NewRequestWithContext</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="s">"GET"</span><span class="p">,</span> <span class="s">"https://api.ejemplo.com"</span><span class="p">,</span> <span class="no">nil</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">Fatal</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="n">resp</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">client</span><span class="o">.</span><span class="n">Do</span><span class="p">(</span><span class="n">req</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="n">ctx</span><span class="o">.</span><span class="n">Err</span><span class="p">()</span> <span class="o">==</span> <span class="n">context</span><span class="o">.</span><span class="n">DeadlineExceeded</span> <span class="p">{</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"La solicitud excedió el timeout"</span><span class="p">)</span>
+            <span class="k">return</span>
+        <span class="p">}</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">Fatal</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="k">defer</span> <span class="n">resp</span><span class="o">.</span><span class="n">Body</span><span class="o">.</span><span class="n">Close</span><span class="p">()</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="42-propagación-de-cancelación">4.2 Propagación de Cancelación</h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">trabajoConcurrente</span><span class="p">()</span> <span class="kt">error</span> <span class="p">{</span>
+    <span class="n">ctx</span><span class="p">,</span> <span class="n">cancel</span> <span class="o">:=</span> <span class="n">context</span><span class="o">.</span><span class="n">WithCancel</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">Background</span><span class="p">())</span>
+    <span class="k">defer</span> <span class="n">cancel</span><span class="p">()</span>
+
+    <span class="n">errChan</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="k">chan</span> <span class="kt">error</span><span class="p">,</span> <span class="m">3</span><span class="p">)</span>
+    
+    <span class="c">// Iniciar múltiples trabajadores</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="o">:=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="m">3</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span> <span class="p">{</span>
+        <span class="k">go</span> <span class="k">func</span><span class="p">(</span><span class="n">id</span> <span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">errChan</span> <span class="o">&lt;-</span> <span class="n">trabajador</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">id</span><span class="p">)</span>
+        <span class="p">}(</span><span class="n">i</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="c">// Si cualquier trabajador falla, cancelar todos</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="o">:=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="m">3</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="n">err</span> <span class="o">:=</span> <span class="o">&lt;-</span><span class="n">errChan</span><span class="p">;</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+            <span class="n">cancel</span><span class="p">()</span> <span class="c">// Cancela otros trabajadores</span>
+            <span class="k">return</span> <span class="n">fmt</span><span class="o">.</span><span class="n">Errorf</span><span class="p">(</span><span class="s">"error en trabajador: %w"</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="no">nil</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="n">trabajador</span><span class="p">(</span><span class="n">ctx</span> <span class="n">context</span><span class="o">.</span><span class="n">Context</span><span class="p">,</span> <span class="n">id</span> <span class="kt">int</span><span class="p">)</span> <span class="kt">error</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">{</span>
+        <span class="k">select</span> <span class="p">{</span>
+        <span class="k">case</span> <span class="o">&lt;-</span><span class="n">ctx</span><span class="o">.</span><span class="n">Done</span><span class="p">()</span><span class="o">:</span>
+            <span class="k">return</span> <span class="n">ctx</span><span class="o">.</span><span class="n">Err</span><span class="p">()</span>
+        <span class="k">default</span><span class="o">:</span>
+            <span class="c">// Realizar trabajo</span>
+            <span class="n">time</span><span class="o">.</span><span class="n">Sleep</span><span class="p">(</span><span class="m">100</span> <span class="o">*</span> <span class="n">time</span><span class="o">.</span><span class="n">Millisecond</span><span class="p">)</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="5-mejores-prácticas">5. Mejores Prácticas</h2>
+
+<h3 id="51-middleware-con-contexto">5.1 Middleware con Contexto</h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">middlewareConContexto</span><span class="p">(</span><span class="n">next</span> <span class="n">http</span><span class="o">.</span><span class="n">Handler</span><span class="p">)</span> <span class="n">http</span><span class="o">.</span><span class="n">Handler</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">http</span><span class="o">.</span><span class="n">HandlerFunc</span><span class="p">(</span><span class="k">func</span><span class="p">(</span><span class="n">w</span> <span class="n">http</span><span class="o">.</span><span class="n">ResponseWriter</span><span class="p">,</span> <span class="n">r</span> <span class="o">*</span><span class="n">http</span><span class="o">.</span><span class="n">Request</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c">// Agregar valores al contexto</span>
+        <span class="n">ctx</span> <span class="o">:=</span> <span class="n">r</span><span class="o">.</span><span class="n">Context</span><span class="p">()</span>
+        <span class="n">ctx</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">WithValue</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="s">"requestID"</span><span class="p">,</span> <span class="n">uuid</span><span class="o">.</span><span class="n">New</span><span class="p">()</span><span class="o">.</span><span class="n">String</span><span class="p">())</span>
+        <span class="n">ctx</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">WithValue</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="s">"startTime"</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">Now</span><span class="p">())</span>
+
+        <span class="c">// Establecer timeout para la solicitud</span>
+        <span class="n">ctx</span><span class="p">,</span> <span class="n">cancel</span> <span class="o">:=</span> <span class="n">context</span><span class="o">.</span><span class="n">WithTimeout</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="m">30</span><span class="o">*</span><span class="n">time</span><span class="o">.</span><span class="n">Second</span><span class="p">)</span>
+        <span class="k">defer</span> <span class="n">cancel</span><span class="p">()</span>
+
+        <span class="c">// Llamar al siguiente handler con el contexto modificado</span>
+        <span class="n">next</span><span class="o">.</span><span class="n">ServeHTTP</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">WithContext</span><span class="p">(</span><span class="n">ctx</span><span class="p">))</span>
+    <span class="p">})</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="6-consideraciones-y-buenas-prácticas">6. Consideraciones y Buenas Prácticas</h2>
+
+<ol>
+  <li><strong>Cancelación</strong>
+    <ul>
+      <li>Siempre llamar a <code class="language-plaintext highlighter-rouge">cancel()</code> cuando termines</li>
+      <li>Usar <code class="language-plaintext highlighter-rouge">defer cancel()</code> cuando sea posible</li>
+      <li>Propagar la cancelación a todas las goroutines</li>
+    </ul>
+  </li>
+  <li><strong>Valores</strong>
+    <ul>
+      <li>Usar tipos personalizados para las claves</li>
+      <li>No almacenar valores nil</li>
+      <li>Mantener el contexto inmutable</li>
+    </ul>
+  </li>
+  <li><strong>Timeouts</strong>
+    <ul>
+      <li>Establecer timeouts apropiados</li>
+      <li>Considerar el timeout total de la operación</li>
+      <li>Manejar timeouts en cascada</li>
+    </ul>
+  </li>
+  <li><strong>Errores</strong>
+    <ul>
+      <li>Verificar <code class="language-plaintext highlighter-rouge">ctx.Err()</code> para determinar la causa</li>
+      <li>Propagar errores de contexto apropiadamente</li>
+      <li>No ignorar cancelaciones</li>
+    </ul>
+  </li>
+</ol>
+
+<h2 id="7-referencias">7. Referencias</h2>
+
+<ul>
+  <li><a href="https://golang.org/pkg/context/">Documentación oficial de context</a></li>
+  <li><a href="https://blog.golang.org/context">Go Blog: Context</a></li>
+  <li><a href="https://golang.org/doc/effective_go.html">Effective Go</a></li>
+</ul>
+
+            </main>
+        </div>
+        
+        <!-- Componente flotante de GitHub -->
+<div class="github-floating">
+    <a href="https://github.com/" target="_blank" rel="noopener noreferrer" class="github-link" title="Ver en GitHub">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-github">
+            <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+        </svg>
+    </a>
+    
+    
+    <a href="https://github.com//MiguelP-Dev.github.io/blob/main/_pages/paquetes/context.md" target="_blank" rel="noopener noreferrer" class="edit-link" title="Editar esta página">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-2">
+            <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+        </svg>
+    </a>
+    
+</div>
+
+<style>
+    /* Estilos del componente SVG */
+    .github-corner:hover .octo-arm {
+        animation: octocat-wave 560ms ease-in-out;
+    }
+    
+    @keyframes octocat-wave {
+        0%, 100% { transform: rotate(0); }
+        20%, 60% { transform: rotate(-25deg); }
+        40%, 80% { transform: rotate(10deg); }
+    }
+    
+    @media (max-width: 500px) {
+        .github-corner:hover .octo-arm {
+            animation: none;
+        }
+        .github-corner .octo-arm {
+            animation: octocat-wave 560ms ease-in-out;
+        }
+    }
+</style>
+    </div>
+    
+    <script src="/assets/js/scripts.js"></script>
+</body>
+</html>

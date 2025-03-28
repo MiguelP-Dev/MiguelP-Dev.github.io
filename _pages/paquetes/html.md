@@ -89,7 +89,6 @@ func main() {
             <p>Contacto: <a href="mailto:{{.Email}}">{{.Email}}</a></p>
         </body>
     </html>`
-        {% endraw %}
     tmpl := template.Must(template.New("profile").Parse(tpl))
     user := User{"Ana", "ana@example.com", true}
     tmpl.Execute(os.Stdout, user)
