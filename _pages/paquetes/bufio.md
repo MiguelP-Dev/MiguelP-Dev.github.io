@@ -30,6 +30,7 @@ Un buffer es un área temporal de memoria que almacena datos antes de procesarlo
 
 ### 2.1 Creación y Uso Básico
 
+{% raw %}
 ```go
 func ejemploBasicoReader() {
     input := strings.NewReader("Hola\nmundo\ndesde\nGo")
@@ -48,9 +49,10 @@ func ejemploBasicoReader() {
     }
 }
 ```
+{% end raw %}
 
 ### 2.2 Ejemplo de Peek
-
+{% raw %}
 ```go
 func ejemploPeek() error {
     archivo, err := os.Open("documento.txt")
@@ -78,6 +80,7 @@ func ejemploPeek() error {
     return nil
 }
 ```
+{% endraw %}
 
 ### 2.3 Manejo de Errores Robusto
 

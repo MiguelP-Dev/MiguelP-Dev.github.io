@@ -12,7 +12,6 @@ icon: 🧪
 Go incluye un framework de testing simple pero potente en su biblioteca estándar. Esta sección muestra cómo realizar diferentes tipos de pruebas en Go, desde tests unitarios básicos hasta benchmarks y tests de integración.
 
 ## Ejemplos disponibles
-
 <div class="grid-container">
 {% assign test_examples = site.pages | where:"categories","ejemplos" | where_exp:"page", "page.url contains '/ejemplos/tests/'" | where_exp:"page", "page.url != '/ejemplos/tests/'" | sort:"title" %}
 {% for example in test_examples %}

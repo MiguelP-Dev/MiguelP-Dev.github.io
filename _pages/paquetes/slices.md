@@ -21,7 +21,7 @@ El paquete `slices`, parte de `golang.org/x/exp/slices`, ofrece funciones útile
 **Sintaxis**: `func Append[S ~[]E, E any](s S, elems ...E) S`  
 
 **Ejemplo Ampliado**:
-
+{% raw %}
 ```go  
 package main  
 
@@ -40,6 +40,7 @@ func main() {
     fmt.Printf("Después de Append: %v, Nueva Capacidad: %d\n", s, cap(s)) // [1 2 3 4 5], 6  
 }  
 ```
+{% endraw %}
 
 **Nota**: Al exceder la capacidad, `Append` crea un nuevo array con capacidad ampliada (normalmente el doble del tamaño anterior).  
 
@@ -51,7 +52,7 @@ func main() {
 **Sintaxis**: `func Clone[S ~[]E, E any](s S) S`  
 
 **Ejemplo con Structs**:
-
+{% raw %}
 ```go  
 type Persona struct {  
     Nombre string  
@@ -67,7 +68,7 @@ func main() {
     fmt.Println("Copia:", copia[0].Edad)       // 31  
 }  
 ```  
-
+{% endraw %}
 ---
 
 ### 3. **`slices.Delete`**
@@ -75,7 +76,7 @@ func main() {
 **Descripción**: Elimina elementos desde el índice `i` hasta `j` (sin incluir `j`). Si los índices son inválidos, se genera un panic.  
 
 **Ejemplo con Manejo de Errores**:
-
+{% raw %}
 ```go  
 func main() {  
     s := []string{"a", "b", "c", "d"}  
@@ -93,6 +94,7 @@ func main() {
     slices.Delete(s, 5, 10) // Genera panic  
 }  
 ```  
+{% endraw %}
 
 ---
 

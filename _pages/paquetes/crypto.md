@@ -117,7 +117,6 @@ func cifrarArchivo(inputPath, outputPath string, key []byte) error {
 ## 2. crypto/rsa
 
 ### 2.1 Cifrado y Descifrado RSA
-
 ```go
 package main
 
@@ -200,6 +199,7 @@ func generarGuardarClaves() error {
 
 ### 2.3 Firmar y Verificar Documentos con RSA
 
+{% raw %}
 ```go
 type DocumentoFirmado struct {
     Contenido    []byte
@@ -234,6 +234,7 @@ func verificarFirma(doc *DocumentoFirmado, publicKey *rsa.PublicKey) error {
     return rsa.VerifyPSS(publicKey, crypto.SHA256, hashed[:], doc.Firma, nil)
 }
 ```
+{% endraw %}
 
 ## 3. crypto/md5
 
@@ -367,7 +368,7 @@ func generarPassword(longitud int) (string, error) {
 ```
 
 ### 6.2 Hash de Contraseña
-
+{% raw %}
 ```go
 func hashPassword(password string) (string, error) {
     // Generar salt aleatorio
@@ -384,6 +385,7 @@ func hashPassword(password string) (string, error) {
     return encoded, nil
 }
 ```
+{% endraw %}
 
 ### Mejores Prácticas
 

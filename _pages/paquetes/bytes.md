@@ -251,7 +251,7 @@ func ejemploProcesamiento() {
 ```
 
 ### 4.2 Manipulación de Templates
-
+{% raw %}
 ```go
 func ejemploTemplates() {
     // Template simple con reemplazo de variables
@@ -276,6 +276,7 @@ func ejemploTemplates() {
     final := reemplazarVariables(template, vars)
 }
 ```
+{% endraw %}
 
 ## 5. Optimizaciones y Mejores Prácticas
 

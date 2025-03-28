@@ -1,8 +1,83 @@
-title: Miguel's Programing Notes
+# Configuración básica
+title: Miguel's Programming Notes
+description: Plataforma de documentación para desarrollo backend y arquitectura de software
+baseurl: ""
+url: "https://miguelp-dev.github.io"
+
+# Autor y contacto
+author:
+  name: Miguel Portillo
+  email: miguelportillo2475@gmail.com
+  github: MiguelP-Dev
+  twitter: MiguelP_Dev
+
+# Configuración de Jekyll
 theme: minima
 markdown: kramdown
 permalink: pretty
 include: ['_pages']
+
+# Configuración de SASS
 sass:
   sass_dir: _sass
-github_username: MiguelP-Dev
+  style: compressed
+
+# Configuración de plugins
+plugins:
+  - jekyll-seo-tag
+  - jekyll-sitemap
+  - jekyll-feed
+  - jekyll-include-cache
+
+# Configuración de SEO
+seo:
+  title: Miguel's Programming Notes - Desarrollo Backend y Arquitectura de Software
+  description: Recursos y documentación sobre desarrollo backend, arquitectura de software y mejores prácticas de programación
+  keywords: desarrollo backend, arquitectura de software, programación, documentación técnica
+  canonical_url: https://miguelp-dev.github.io
+  og:
+    type: website
+    locale: es_ES
+    site_name: Miguel's Programming Notes
+    image: /assets/images/og-image.jpg
+    image_width: 1200
+    image_height: 630
+  twitter:
+    card: summary_large_image
+    site: @MiguelP_Dev
+    creator: @MiguelP_Dev
+
+# Configuración de feed
+feed:
+  path: atom.xml
+  template: feed.xml
+  limit: 10
+
+# Configuración de paginación
+paginate: 10
+paginate_path: "/blog/page:num/"
+
+# Configuración de colecciones
+collections:
+  paquetes:
+    output: true
+    permalink: /:collection/:path/
+  tutoriales:
+    output: true
+    permalink: /:collection/:path/
+
+# Configuración de build
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor
+  - .git
+  - .github
+  - .gitignore
+  - README.md
+
+# Configuración de desarrollo
+development:
+  url: http://localhost:4000
+  baseurl: ""

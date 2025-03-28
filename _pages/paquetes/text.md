@@ -20,15 +20,16 @@ Generación dinámica de texto mediante plantillas.
 ### Funciones Clave
 
 1. **`template.New` + `Parse`**
-
+{% raw %}
    ```go  
    tmpl := template.Must(template.New("saludo").Parse("Hola, {{.Nombre}}!"))  
    tmpl.Execute(os.Stdout, struct{ Nombre string }{Nombre: "Ana"})  
    // Output: Hola, Ana!  
    ```  
+{% endraw %}
 
 2. **Plantillas con Lógica**
-
+{% raw %}
    ```go  
    const tpl = `  
    {{range .Productos}}  
@@ -52,9 +53,10 @@ Generación dinámica de texto mediante plantillas.
       - Mouse (Stock: 25)  
    */  
    ```  
+{% endraw %}
 
 3. **Funciones Personalizadas**
-
+{% raw %}
    ```go  
    funcMap := template.FuncMap{  
        "mayusculas": strings.ToUpper,  
@@ -65,6 +67,7 @@ Generación dinámica de texto mediante plantillas.
    )  
    tmpl.Execute(os.Stdout, "hola") // HOLA  
    ```  
+{% endraw %}
 
 **Mejores Prácticas**:
 
@@ -168,7 +171,7 @@ Manejo de propiedades Unicode.
 ## Integración entre Subpaquetes  
 
 ### Generar Reporte Estructurado
-
+{% raw %}
 ```go  
 // 1. Parsear datos con scanner  
 // 2. Procesar con lógica de negocio  
@@ -185,14 +188,15 @@ tmpl.Execute(w, []struct{ Nombre, Pais string; Edad int }{
     {"Bob", "EEUU", 25},  
 })  
 w.Flush()  
-```  
+```
+{% endraw %}
 
 ---
 
 ## Errores Comunes  
 
 ### 1. Inyección en Plantillas
-
+{% raw %}
 ```go  
 // ❌ Peligroso con datos no confiables  
 tmpl.Parse("Hola, {{.}}") // Si . es "<script>", genera XSS  
@@ -210,6 +214,7 @@ writer := tabwriter.NewWriter(os.Stdout, 0, 0, 1, ' ', 0)
 // ✅ Configuración óptima  
 writer := tabwriter.NewWriter(os.Stdout, 0, 0, 2, ' ', tabwriter.AlignRight)  
 ```  
+{% endraw %}
 
 ---
 
