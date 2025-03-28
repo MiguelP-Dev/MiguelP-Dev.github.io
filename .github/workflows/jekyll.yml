@@ -1,22 +1,39 @@
-name: Jekyll site build
+name: Build and Deploy
 
 on:
   push:
-    branches: [main]
+    branches: [ "main" ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      
-      - uses: actions/cache@v2
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          path: vendor/bundle
-          key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile') }}
-          restore-keys: |
-            ${{ runner.os }}-gems-
-            
-      - uses: helaili/jekyll-action@2
+          node-version: 18.x
+
+      - name: Cache Node modules
+        uses: actions/cache@v4  # Versión actualizada
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build with Jekyll
+        uses: actions/jekyll-build-pages@v1
+        with:
+          source: ./
+          destination: ./_site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v2
